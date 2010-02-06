@@ -1,0 +1,32 @@
+#summary How to install jsonengine
+
+== How to install jsonengine ==
+
+jsonengine can be installed by the following steps:
+
+  * Installing the Java JDK
+  * Installing the App Engine SDK
+  * Download jsonengine
+  * Registering and uploading your application
+
+=== Requirements ===
+
+To install jsonengine, the followings are required:
+
+  * Windows, Mac or Linux PC
+  * Your Google account
+
+=== Install Java JDK ===
+
+jsonengine runs on Java 6. If you do not have installed Java 6 on your environment yet, download and install the Java SDK 6 from here:
+
+  * [http://java.sun.com/javase/downloads/index.jsp Java SDK for Windows and Linux user]
+  * [http://developer.apple.com/java/ Java SDK for Mac user]
+
+After installing the JDK, please check if the following commands can be run on command prompt/shell and would show proper version numbers.
+
+{{{
+> java -version
+
+> javac -version
+}}}
