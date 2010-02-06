@@ -9,11 +9,11 @@ jsonengine provides REST API described below for creating, reading, updating and
 To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter (there is no difference on behavior between the two methods).
 
 {{{
-/POST /<docType>
+/POST /_je/<docType>
 }}}
 
 {{{
-/PUT /<docType>
+/PUT /_je/<docType>
 }}}
 
   * HTTP Request URI values
@@ -39,7 +39,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 To get an existing JSON document, you can use GET method.
 
 {{{
-/GET /<docType>/<docId>
+/GET /_je/<docType>/<docId>
 }}}
 
   * HTTP Request URI values
@@ -63,11 +63,11 @@ To get an existing JSON document, you can use GET method.
 To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "delete=true" parameter.
 
 {{{
-/DELETE /<docType>/<docId>
+/DELETE /_je/<docType>/<docId>
 }}}
 
 {{{
-/POST /<docType>/<docId>
+/POST /_je/<docType>/<docId>
 }}}
 
   * HTTP Request URI values
