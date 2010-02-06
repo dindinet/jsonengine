@@ -108,7 +108,10 @@ jsonengine can handle arbitrary JSON documents with the features below.
 
 The following properties are handled specially in jsonengine and client may not modify those values (except for the `_`<any property name>).
 
-  * *`_`docId*: an unique ID of each JSON document. 
+  * *`_`docId*: an unique ID of each JSON document.
+  * *`_`createdAt*: a long value of timestamp when the JSON document has been created.
+  * *`_`createdBy*: An user ID of the person created the JSON document.
   * *`_`updatedAt*: a long value of timestamp when the JSON document has been updated.
+  * *`_`updatedBy*: An user ID of the person updatedthe JSON document.
   * *`_`<any property name>*: if you put any property name starts with "`_`", the property will not be added to the index.
   * These rules will not be applied to any child JSON documents.
