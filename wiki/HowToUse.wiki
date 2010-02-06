@@ -17,7 +17,8 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 }}}
 
   * HTTP Request URI values
-    * *docType* (required): DocType (document type) of the JSON doc. e.g. "address" for saving an address info JSON doct. Similar to table in RDB.
+    * *docType* (required): DocType (document type) of the JSON doc.
+      * Similar to table name or class name. For example, "address" docType may be for saving an address info JSON doc. 
 
   * HTTP Request parameters
     * *doc* (required): JSON doc to be created/updated.
@@ -25,8 +26,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
       * If this JSON doc has a `_`docId property, jsonengine will try to update the existing JSON doc. If not found, create and save a new JSON doc.
       * If this JSON doc has no `_`docId property, jsonengine will create and save a new JSON doc. 
       * If a new JSON doc has created, client can retrieve a auto-generated `_`docId property for it from the result JSON doc.
-    * *cc* (optional): set "true" if you need checking update confliction.
-      * If true, jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already, and jsonengine will return Status code 409 (Conflict) without updating it.
+    * *cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
 
   * HTTP Response
     * Status code 200: Created or updated the JSON doc successfully.
@@ -34,14 +34,63 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
-  * Notes
-
-
 === GET ===
 
+To get an existing JSON document, you can use GET method.
+
+{{{
+/GET /<docType>/<docId>
+}}}
+
+  * HTTP Request URI values
+    * *docType* (required): DocType (document type) of the JSON doc. 
+    * *docId* (required): DocID (document id) of the JSON doc to be retrieved.
+
+  * HTTP Request parameters
+    * *cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
+    * *doc* (optional): JSON doc for checking the update conflict.
+      * Use this parameter in conjunction with *cc* parameter.
+      * The JSON doc should be URL encoded.
+
+  * HTTP Response
+    * Status code 200: Retrieved the JSON doc successfully.
+      * Response body: retrived JSON doc.
+    * Status code 404: If there is no such JSON doc stored in jsonengine.
+    * Status code 500: Caught an unexpected system error.
 
 === DELETE ===
 
+To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "delete=true" parameter.
+
+{{{
+/DELETE /<docType>/<docId>
+}}}
+
+{{{
+/POST /<docType>/<docId>
+}}}
+
+  * HTTP Request URI values
+    * *docType* (required): DocType (document type) of the JSON doc. 
+    * *docId* (required): DocID (document id) of the JSON doc to be deleted.
+
+  * HTTP Request parameters
+    * *delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
+    * *cc* (optional): set "true" if client need checking update conflict. See "Update conflict detection" section below.
+    * *doc* (optional): JSON doc for checking the update conflict.
+      * Use this parameter in conjunction with *cc* parameter.
+      * The JSON doc should be URL encoded.
+
+  * HTTP Response
+    * Status code 200: Deleted the JSON doc successfully.
+      * Response body: empty.
+    * Status code 404: If there is no such JSON doc stored in jsonengine.
+    * Status code 409: Detected update conflict.
+    * Status code 500: Caught an unexpected system error.
+
+=== Update conflict detection ===
+
+jsonengine provides an "update conflict detection" as an optional feature. If client set "cc" parameter to true on POST/PUT/GET/DELETE methods, jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already, and jsonengine will return Status code 409 (Conflict) without updating it.
 
 == JSON Document Format ==
 
