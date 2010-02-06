@@ -94,16 +94,19 @@ jsonengine provides an "update conflict detection" as an optional feature. A cli
 
 == JSON Document Format ==
 
-jsonengine can handle any kind of JSON documents, with the following rules.
+jsonengine can handle arbitrary JSON documents with the features below.
+
+  * Schemaless: even though you need to specify the DocType when you store a JSON doc on jsonengine, each JSON doc can have different schema (DocType is just a "tag" for grouping JSON docs and it does not represent any fixed schema).
+  * Nested: You can let JSON doc having children or grand-children JSON docs. But only the top-level literal properties can be used as filtering/sorting condition on query.
 
 === Restrictions ===
 
-  * Size: because of the restriction of App Engine, a JSON document should be smaller than 1MB.
-  * Indexed property: any properties with literal value (i.e. string, boolean and number) will be added to the jsonengine's internal index automatically, so that the document can be filtered or sorted by the property on queries. The size of the indexed property (= the property name length + property value length) should be less than 500 characters. If you want to store property value longer than 500 characters, you need to exclude the property from index by putting "`_`" on the property name as described below.
+  * JSON doc size: because of the restriction of App Engine, a JSON document should be smaller than 1MB.
+  * Indexed property size: any properties with literal value (i.e. string, boolean and number) will be added to the jsonengine's internal index automatically, so that the document can be filtered or sorted by the property on queries. The size of the indexed property (= the property name length + property value length) should be less than 500 characters. If you want to store property value longer than 500 characters, you need to exclude the property from index by putting "`_`" on the property name as described below.
 
 === Special properties ===
 
-The following properties are handled specially in jsonengine:
+The following properties are handled specially in jsonengine and client may not modify those values (except for the `_`<any property name>).
 
   * *`_`docId*: an unique ID of each JSON document. 
   * *`_`updatedAt*: a long value of timestamp when the JSON document has been updated.
