@@ -7,7 +7,7 @@ To Install jsonengine, all you need are the followings:
   * Windows, Mac or Linux PC with internet connection
   * Your Google account
 
-jsonengine can be installed easily by the following steps and you can start using it instantly. No programming required.
+jsonengine can be installed easily by the following steps and you can start using it instantly. No programming or complex configuration required.
 
   * Installing the Java JDK
   * Installing the App Engine SDK for Java
@@ -47,7 +47,5 @@ Download the latest jsonengine package from the download page.
 Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "jsonengine". In the following, the directory will be refered as _%jsonengine%_.
 
 === Registering your App Engine application ID ===
-
-
 
 
