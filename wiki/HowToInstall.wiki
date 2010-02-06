@@ -38,7 +38,7 @@ Download the App Engine SDK for Java. jsonengine supports SDK version 1.3.0 or l
 
   * [http://code.google.com/intl/en/appengine/downloads.html#Google_App_Engine_SDK_for_Java App Engine SDK for Java]
 
-Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "appengine-java-sdk-x.x.x". In the following, the directory will be refered as _appengine-java-sdk_.
+Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "appengine-java-sdk-x.x.x". In the following, the directory will be refered as _appengine-java-sdk-dir_.
 
 === Downloading jsonengine package ===
 
@@ -46,7 +46,7 @@ Download the latest jsonengine package from the download page.
 
   * [http://code.google.com/p/jsonengine/downloads/list jsonengine downloads]
 
-Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "jsonengine". In the following, the directory will be refered as _jsonengine_.
+Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "jsonengine". In the following, the directory will be refered as _jsonengine-dir_.
 
 === Registering your App Engine application ID ===
 
@@ -65,25 +65,25 @@ Once you signed up with App Engine, create an application for jsonengine with th
 
 Now you upload your jsonengine to App Engine. 
 
-  * Open _jsonengine_/war/WEB-INF/appengine-web.xml filen with an editor and insert your app id into the application element:
+  * Open _jsonengine-dir_/war/WEB-INF/appengine-web.xml file with an editor and insert your app id into the application element:
 
 {{{
 <application>my-jsonengine-appid</application>
 }}}
 
-  * change current directory to _appengine-java-sdk_/bin
+  * change current directory to _appengine-java-sdk-dir_/bin
   * run appcfg tool to upload jsonengine
 
 On Windows command prompt:
 {{{
-> cd appengine-java-sdk\bin
-> appcfg.cmd update jsonengine\war
+> cd appengine-java-sdk-dir\bin
+> appcfg.cmd update jsonengine-dir\war
 }}}
 
 On Mac/Linux shell:
 {{{
-> cd appengine-java-sdk/bin
-> appcfg.sh update jsonengine/war
+> cd appengine-java-sdk-dir/bin
+> appcfg.sh update jsonengine-dir/war
 }}}
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
