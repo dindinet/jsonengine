@@ -17,7 +17,7 @@ jsonengine can be installed easily by the following steps and you can start usin
 
 === Installing the Java JDK ===
 
-jsonengine runs on Java 6. If you do not have installed Java 6 on your environment yet, download and install the Java SDK 6 from here:
+jsonengine runs on Java 6. If you do not have installed Java 6 on your PC yet, download and install the Java SDK 6 from here:
 
   * [http://java.sun.com/javase/downloads/index.jsp Java SDK for Windows and Linux user]
   * [http://developer.apple.com/java/ Java SDK for Mac user]
@@ -26,7 +26,9 @@ After installing the JDK, please check if the following commands can be run on c
 
 {{{
 > java -version
+}}}
 
+{{{
 > javac -version
 }}}
 
@@ -48,4 +50,46 @@ Once you download the file, unpack the archive in a convenient location on your 
 
 === Registering your App Engine application ID ===
 
+jsonengine will be running as an App Engine application that is registered by your Google account. If you have not used App Engine yet, click the following link and sign up to App Engine with your Google account.
 
+  * https://appengine.google.com/
+
+Once you signed up with App Engine, create an application for jsonengine with the follwing steps:
+
+  * Click the "Create an Application" button on "Applications Overview" page
+  * Type your favorite Application Identifier (app id) and Application Title for the application. For example, if you name it as "my-jsonengine", your jsonengine will be run on "http://my-jsonengine.appspot.com". In the following, the app id will be refered as _%my-jsonengine%_.
+  * Click the "Check Availability" button to check if the app id is unique
+  * Click the "Save" button and now your app id is registered
+
+=== Uploading the jsonengine package with the ID ===
+
+Now you upload your jsonengine to App Engine. 
+
+  * Open _%jsonengine%_/war/WEB-INF/appengine-web.xml filen with an editor and insert your app id into the application element:
+
+{{{
+<application>%my-jsonengine%</application>
+}}}
+
+  * change current directory to _%appengine-java-sdk%_/bin
+  * run appcfg tool to upload jsonengine
+
+On Windows command prompt:
+{{{
+> cd %appengine-java-sdk%\bin
+> appcfg.cmd update %jsonengine%\war
+}}}
+
+On Mac/Linux shell:
+{{{
+> cd %appengine-java-sdk%/\bin
+> appcfg.cmd update %jsonengine%/war
+}}}
+
+  * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
+
+=== Accessing the jsonengine ===
+
+Now your jsonengine is ready. You can check if it is working by accessing the following URL with your browser
+
+  * http://%my-jsonengine%.appspot.com/
