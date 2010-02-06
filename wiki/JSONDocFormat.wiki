@@ -10,4 +10,4 @@ The following properties are handled specially in jsonengine:
 
   * *`_`docId*: an unique ID of each JSON document. 
   * *`_`updatedAt*: a long value of timestamp when the JSON document has been updated.
-  * *`_`<any property name>*: if you put any property name starts with "`_`", the property name and value will be added as an entry of the jsonengine's internal index. So that the document will be able to filtered/sorted by the property. Note that the index entry should be smaller than 500 characters per document.
+  * *`_`<any property name>*: if you put any property name starts with "`_`", the property name and value will be added as an entry of the jsonengine's internal index, so that the document will be able to filtered/sorted by the property. Note that the index entry should be smaller than 500 characters per document.
