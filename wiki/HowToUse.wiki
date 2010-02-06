@@ -6,7 +6,7 @@ jsonengine provides REST API described below for creating, reading, updating and
 
 === POST/PUT ===
 
-To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter.
+To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter (there is no difference on behavior between the two methods).
 
 {{{
 /POST /<docType>
