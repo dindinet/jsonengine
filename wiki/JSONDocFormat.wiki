@@ -8,6 +8,8 @@ jsonengine can handle any kind of JSON documents, with the following rules.
 
 Any properties with literal value (i.e. string, boolean and number) will be added to the jsonengine's internal index, so that the document can be filtered or sorted by the property on queries.
 
+The indexed property's size (= the property name length + property value length) should be less than 500 characters. If you want to store longer property value, you need to exclude the property from index by putting "`_`" on the property name as described below.
+
 == Special properties ==
 
 The following properties are handled specially in jsonengine:
