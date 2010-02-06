@@ -90,7 +90,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
 === Update conflict detection ===
 
-jsonengine provides an "update conflict detection" as an optional feature. A client may set "cc" parameter to true on POST/PUT/GET/DELETE methods along with "doc" parameter set to the latest JSON doc the client has. Then jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc was not the latest. In this case jsonengine will return Status code 409 (Conflict) without updating it so that the web application maintain the data integrity (a.k.a. optimistic concurrency control).
+jsonengine provides an "update conflict detection" as an optional feature. A client may set "cc" parameter to true on POST/PUT/GET/DELETE methods along with "doc" parameter set to the latest JSON doc the client has. Then jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
 
 == JSON Document Format ==
 
