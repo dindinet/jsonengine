@@ -4,11 +4,11 @@
 
 jsonengine can handle any kind of JSON documents, with the following rules.
 
-= Auto indexing for query = 
+== Auto indexing for query ==
 
 Any properties with literal value (i.e. string, boolean and number) will be added to the jsonengine's internal index, so that the document can be filtered or sorted by the property on queries.
 
-= Special properties =
+== Special properties ==
 
 The following properties are handled specially in jsonengine:
 
