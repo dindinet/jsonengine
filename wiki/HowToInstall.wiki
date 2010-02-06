@@ -2,7 +2,7 @@
 
 == How to install jsonengine ==
 
-To Install jsonengine, all you need are the followings:
+The requirements for installing jsonengine are:
 
   * Windows, Mac or Linux PC with internet connection
   * Your Google account
