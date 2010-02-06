@@ -7,7 +7,7 @@ The requirements for installing jsonengine are:
   * Windows, Mac or Linux PC with internet connection
   * Your Google account
 
-jsonengine can be installed easily by the following steps and you can start using it instantly. No programming or complex configuration required.
+jsonengine can be installed easily by the following steps and you can start using it instantly. No server-side programming or complex configuration required.
 
   * Installing the Java JDK
   * Installing the App Engine SDK for Java
