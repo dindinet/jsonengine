@@ -17,7 +17,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 }}}
 
   * HTTP Request URI values
-    * *docType* (required): DocType (document type) of the JSON doc.
+    * *docType* (required): docType (document type) of the JSON doc.
       * Similar to table name or class name. For example, "address" docType may be for saving an address info JSON doc. 
 
   * HTTP Request parameters
@@ -43,8 +43,8 @@ To get an existing JSON document, you can use GET method.
 }}}
 
   * HTTP Request URI values
-    * *docType* (required): DocType (document type) of the JSON doc. 
-    * *docId* (required): DocID (document id) of the JSON doc to be retrieved.
+    * *docType* (required): docType (document type) of the JSON doc. 
+    * *docId* (required): docID (document id) of the JSON doc to be retrieved.
 
   * HTTP Request parameters
     * *cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
@@ -71,8 +71,8 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 }}}
 
   * HTTP Request URI values
-    * *docType* (required): DocType (document type) of the JSON doc. 
-    * *docId* (required): DocID (document id) of the JSON doc to be deleted.
+    * *docType* (required): docType (document type) of the JSON doc. 
+    * *docId* (required): docID (document id) of the JSON doc to be deleted.
 
   * HTTP Request parameters
     * *delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
@@ -96,7 +96,7 @@ jsonengine provides an "update conflict detection" as an optional feature. A cli
 
 jsonengine can handle arbitrary JSON documents with the features below.
 
-  * Schemaless: even though you need to specify the DocType when you store a JSON doc on jsonengine, each JSON doc can have different schema (DocType is just a "tag" for grouping JSON docs and it does not represent any fixed schema).
+  * Schemaless: even though you need to specify the docType when you store a JSON doc on jsonengine, each JSON doc can have different schema. A docType is just a "tag" for grouping JSON docs and it does not represent any fixed schema.
   * Nested: You can let JSON doc having children or grand-children JSON docs. But only the top-level literal properties can be used as filtering/sorting condition on query.
 
 === Restrictions ===
