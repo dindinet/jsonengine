@@ -83,7 +83,7 @@ On Windows command prompt:
 On Mac/Linux shell:
 {{{
 > cd appengine-java-sdk/bin
-> appcfg.cmd update jsonengine/war
+> appcfg.sh update jsonengine/war
 }}}
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
