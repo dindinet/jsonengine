@@ -13,7 +13,7 @@ jsonengine can be installed easily by the following steps and you can start usin
   * Installing the App Engine SDK for Java
   * Downloading jsonengine package
   * Registering your App Engine application ID
-  * Uploading the jsonengine package with the ID
+  * Uploading jsonengine and your HTML client to App Engine
 
 === Installing the Java JDK ===
 
@@ -61,9 +61,9 @@ Once you signed up with App Engine, create an application for jsonengine with th
   * Click the "Check Availability" button to check if the app id is unique
   * Click the "Save" button and now your app id is registered
 
-=== Uploading the jsonengine package with the ID ===
+=== Uploading jsonengine and your HTML client to App Engine ===
 
-Now you upload your jsonengine to App Engine. 
+Now you upload the jsonengine along with your HTML client to App Engine. 
 
   * Open _jsonengine-dir_/war/WEB-INF/appengine-web.xml file with an editor and insert your app id into the application element:
 
@@ -71,7 +71,7 @@ Now you upload your jsonengine to App Engine.
 <application>my-jsonengine-appid</application>
 }}}
 
-  * _jsonengine-dir\war_ is the document root of your application. If you have any HTML contents you want to deploy on App Engine (including Flash or jQuery code), copy them into this directory
+  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents (including Flash or jQuery code) into this directory to deploy them to App Engine. If you do not have anything at this time and just want to upload jsonengine for testing, skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
   * run appcfg tool to upload jsonengine
 
