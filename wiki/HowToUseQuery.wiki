@@ -37,7 +37,7 @@ This query would return an array of JSON documents that satisfies:
 
 == Restrictions ==
 
-  * Only one `<`propertyName`>` can be put in one query URI.
+  * Only one kind of `<`propertyName`>` can be used in one query URI. e.g. You can not use "age" property and "name" property at the same time.
   * You may put `<`condFilter`>` 0 to 2 times. Two `<`condFilter`>`s will be combined by AND operation.
   * You may put `<`sortFilter`>` and `<`limitFilter`>` 0 to 1 times.
   * The URI should be URL encoded.
