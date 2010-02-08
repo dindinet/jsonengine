@@ -1,0 +1,42 @@
+#summary How to use query on jsonengine
+
+== Query URI format ==
+
+You can do query on jsonengine with the following request format:
+
+{{{
+/GET /_q/<docType>[/<queryFilter>]
+}}}
+
+where `[`/`<`queryFilter`>``]` means 0 or more repeatation of `<`queryFilter`>` as defined below.
+
+{{{
+<queryFilter> ::= <condFilter> | <sortFilter> | <limitFilter>
+
+<condFilter> ::= cond.<propertyName>.<comparator>.<propertyValue>
+<comparator> ::= eq | lt | le | gt | ge 
+
+<sortFilter> ::= sort.<propertyName>.<sortOrder>
+<sortOrder> ::= asc | desc
+
+<limitFilter> ::= limit.<integer>
+}}}
+
+== Example query ==
+
+{{{
+/GET /_q/myDoc/cond.age.ge.20/cond.age.lt.60/sort.age.asc/limit.10
+}}}
+
+This query would return an array of JSON documents that satisfies:
+
+  * docType is "myDoc".
+  * "age" property is greater equal to 20 and less than 60.
+  * sorted by "age" property in ascending order.
+  * number of returned documents will be limited to 10.
+
+== Restrictions ==
+
+  * You can put `<`condFilter`>` 0 to 2 times. Two `<`condFilter`>`s will be combined by AND operation.
+  * You can put `<`sortFilter`>` and `<`limitFilter`>` 0 to 1 times.
+  * Only one `<`propertyName`>` can be put in one query URI.
