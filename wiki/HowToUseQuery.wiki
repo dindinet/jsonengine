@@ -5,10 +5,10 @@
 You can issue simple queries on jsonengine with the following request format:
 
 {{{
-/GET /_q/<docType>[/<queryFilter>]
+/GET /_q/<docType>{/<queryFilter>}
 }}}
 
-where `[`/`<`queryFilter`>``]` means 0 or more repeatation of `<`queryFilter`>` as defined below.
+where `{`/`<`queryFilter`>``}` means 0 or more repeatation of `<`queryFilter`>` as defined below.
 
 {{{
 <queryFilter> ::= <condFilter> | <sortFilter> | <limitFilter>
