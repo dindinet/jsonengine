@@ -11,15 +11,15 @@ You can issue simple queries on jsonengine with the following request format:
 where `{`/`<`queryFilter`>``}` means 0 or more repeatation of `<`queryFilter`>` as defined below.
 
 {{{
-<queryFilter> ::= <condFilter> | <sortFilter> | <limitFilter>
+<queryFilter> = <condFilter> | <sortFilter> | <limitFilter>
 
-<condFilter> ::= cond.<propertyName>.<comparator>.<propertyValue>
-<comparator> ::= eq | lt | le | gt | ge 
+<condFilter> = cond.<propertyName>.<comparator>.<propertyValue>
+<comparator> = eq | lt | le | gt | ge 
 
-<sortFilter> ::= sort.<propertyName>.<sortOrder>
-<sortOrder> ::= asc | desc
+<sortFilter> = sort.<propertyName>.<sortOrder>
+<sortOrder> = asc | desc
 
-<limitFilter> ::= limit.<integer>
+<limitFilter> = limit.<integer>
 }}}
 
 == Example query ==
