@@ -2,7 +2,7 @@
 
 == Query URI format ==
 
-You can do query on jsonengine with the following request format:
+You can issue simple queries on jsonengine with the following request format:
 
 {{{
 /GET /_q/<docType>[/<queryFilter>]
@@ -32,11 +32,12 @@ This query would return an array of JSON documents that satisfies:
 
   * docType is "myDoc".
   * "age" property is greater or equal to 20 and less than 60.
-  * sorted by "age" property in ascending order.
-  * number of returned documents will be limited to 10.
+  * Sorted by "age" property in ascending order.
+  * Number of returned documents will be limited to 10.
 
 == Restrictions ==
 
-  * You can put `<`condFilter`>` 0 to 2 times. Two `<`condFilter`>`s will be combined by AND operation.
-  * You can put `<`sortFilter`>` and `<`limitFilter`>` 0 to 1 times.
   * Only one `<`propertyName`>` can be put in one query URI.
+  * You may put `<`condFilter`>` 0 to 2 times. Two `<`condFilter`>`s will be combined by AND operation.
+  * You may put `<`sortFilter`>` and `<`limitFilter`>` 0 to 1 times.
+  * The URI should be URL encoded.
