@@ -71,7 +71,7 @@ Now you upload the jsonengine along with your HTML client to App Engine.
 <application>my-jsonengine-appid</application>
 }}}
 
-  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents (including Flash or jQuery code) into this directory to deploy them to App Engine. If you do not have anything at this time and just want to upload jsonengine for testing, skip this step.
+  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory to deploy them to App Engine. If you do not have anything to upload (just want to test jsonengine, or you have another server to host HTML contents or other clients), you may skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
   * run appcfg tool to upload jsonengine
 
