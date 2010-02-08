@@ -31,7 +31,7 @@ where `[`/`<`queryFilter`>``]` means 0 or more repeatation of `<`queryFilter`>` 
 This query would return an array of JSON documents that satisfies:
 
   * docType is "myDoc".
-  * "age" property is greater equal to 20 and less than 60.
+  * "age" property is greater or equal to 20 and less than 60.
   * sorted by "age" property in ascending order.
   * number of returned documents will be limited to 10.
 
