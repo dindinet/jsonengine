@@ -26,13 +26,13 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 {{{
 <queryFilter> = <condFilter> | <sortFilter> | <limitFilter>
 
-<condFilter> = cond=<propertyName>.<comparator>.<propertyValue>
-<comparator> = eq | lt | le | gt | ge 
+<condFilter> = 'cond=' <propertyName> '.' <comparator> '.' <propertyValue>
+<comparator> = 'eq' | 'lt' | 'le' | 'gt' | 'ge' 
 
-<sortFilter> = sort=<propertyName>.<sortOrder>
-<sortOrder> = asc | desc
+<sortFilter> = 'sort=' <propertyName> '.' <sortOrder>
+<sortOrder> = 'asc' | 'desc'
 
-<limitFilter> = limit=<integer>
+<limitFilter> = 'limit=' <integer>
 }}}
 
 == Restrictions ==
