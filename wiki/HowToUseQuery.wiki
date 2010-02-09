@@ -1,5 +1,18 @@
 #summary How to use query on jsonengine
 
+== Example query ==
+
+{{{
+/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
+}}}
+
+This query would return an array of JSON documents that satisfies:
+
+  * docType is "myDoc".
+  * "age" property is greater or equal to 20 and less than 60.
+  * Sorted by "age" property in ascending order.
+  * Number of returned documents will be limited to 10.
+
 == Query URI format ==
 
 You can issue simple queries on jsonengine with the following request format:
@@ -21,19 +34,6 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 
 <limitFilter> = limit=<integer>
 }}}
-
-== Example query ==
-
-{{{
-/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
-}}}
-
-This query would return an array of JSON documents that satisfies:
-
-  * docType is "myDoc".
-  * "age" property is greater or equal to 20 and less than 60.
-  * Sorted by "age" property in ascending order.
-  * Number of returned documents will be limited to 10.
 
 == Restrictions ==
 
