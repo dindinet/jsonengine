@@ -5,27 +5,27 @@
 You can issue simple queries on jsonengine with the following request format:
 
 {{{
-/GET /_q/<docType>{/<queryFilter>}
+/GET /_q/<docType>[?<queryFilter>{&<queryFilter>}]
 }}}
 
-where `{`/`<`queryFilter`>``}` means 0 or more repeatation of `<`queryFilter`>` as defined below.
+where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or more `<`queryFilter`>` as query string on the URI. `<`queryFilter`>` is defined below.
 
 {{{
 <queryFilter> = <condFilter> | <sortFilter> | <limitFilter>
 
-<condFilter> = cond.<propertyName>.<comparator>.<propertyValue>
+<condFilter> = cond=<propertyName>.<comparator>.<propertyValue>
 <comparator> = eq | lt | le | gt | ge 
 
-<sortFilter> = sort.<propertyName>.<sortOrder>
+<sortFilter> = sort=<propertyName>.<sortOrder>
 <sortOrder> = asc | desc
 
-<limitFilter> = limit.<integer>
+<limitFilter> = limit=<integer>
 }}}
 
 == Example query ==
 
 {{{
-/GET /_q/myDoc/cond.age.ge.20/cond.age.lt.60/sort.age.asc/limit.10
+/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
 }}}
 
 This query would return an array of JSON documents that satisfies:
