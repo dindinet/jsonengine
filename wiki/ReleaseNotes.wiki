@@ -1,0 +1,12 @@
+#summary Release notes
+
+=== release 0.1.20100213 (Feb 13, 2010) ===
+
+ * The first alpha release
+ * Implemented CRUD operations and tests
+
+=== Roadmap of the alpha version ===
+
+ * Query
+ * Security
+ * Sample JS/Flash client
