@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.crud;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,6 +14,9 @@ import net.arnx.jsonic.JSON;
 import org.junit.Test;
 import org.slim3.tester.AppEngineTestCase;
 
+import com.jsonengine.common.JEConflictException;
+import com.jsonengine.common.JENotFoundException;
+import com.jsonengine.common.JEUtils;
 import com.jsonengine.model.JEDoc;
 
 /**

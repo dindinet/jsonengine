@@ -1,6 +1,5 @@
-package com.jsonengine.service;
+package com.jsonengine.crud;
 
-import java.math.BigDecimal;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +12,10 @@ import org.slim3.datastore.EntityNotFoundRuntimeException;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
+import com.jsonengine.common.JEConflictException;
+import com.jsonengine.common.JENotFoundException;
+import com.jsonengine.common.JERequest;
+import com.jsonengine.common.JEUtils;
 import com.jsonengine.model.JEDoc;
 
 /**
@@ -40,7 +43,7 @@ public class CRUDService {
      * checks if anyone has already updated the same document. If yes, it throws
      * a {@link JEConflictException}.
      * 
-     * @param jeReq
+     * @condParam jeReq
      *            {@link CRUDRequest}
      * @return the saved JSON document with _docId and _updatedAt properties
      * @throws JEConflictException
@@ -131,7 +134,7 @@ public class CRUDService {
             }
 
             // an index entry will be like: <docType>:<propName>:<propValue>
-            final String propValue = encodePropValue(docValues.get(propName));
+            final String propValue = JEUtils.i.encodePropValue(docValues.get(propName));
             if (propValue != null) {
                 indexEntries.add(jeReq.getDocType()
                     + ":"
@@ -143,27 +146,13 @@ public class CRUDService {
         return indexEntries;
     }
 
-    private String encodePropValue(Object val) {
-        if (val == null) {
-            return null;
-        } else if (val instanceof String) {
-            return (String) val;
-        } else if (val instanceof Boolean) {
-            return val.toString();
-        } else if (val instanceof BigDecimal) {
-            return JEUtils.i.convertBigDecimalToIndexKey((BigDecimal) val);
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Returns a JSON document specified by the CRUDRequest's docId. Throws a
      * {@link JENotFoundException} if there's no such JSON document with the
      * docId. You can also pass a JSON document in the {@link CRUDRequest} to
      * check if it has been updated or not.
      * 
-     * @param jeReq
+     * @condParam jeReq
      *            a CRUDRequest with docName to be retrieved.
      * @return a JSON document retrieved.
      * @throws JENotFoundException
@@ -199,9 +188,9 @@ public class CRUDService {
      * {@link CRUDRequest}, it checks if anyone has already updated the same
      * document. If yes, it throws a {@link JEConflictException}.
      * 
-     * @param json
+     * @condParam json
      *            JSON document string to be saved
-     * @param jeReq
+     * @condParam jeReq
      *            {@link CRUDRequest}
      * @return docId of the saved JSON document.
      * @throws JENotFoundException

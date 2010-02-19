@@ -1,6 +1,6 @@
 package com.jsonengine.meta;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "EA1-SNAPSHOT" }, date = "2010-02-13 20:13:29")
+//@javax.annotation.Generated(value = { "slim3-gen", "EA1-SNAPSHOT" }, date = "2010-02-19 11:17:06")
 /** */
 public final class JEDocMeta extends org.slim3.datastore.ModelMeta<com.jsonengine.model.JEDoc> {
 

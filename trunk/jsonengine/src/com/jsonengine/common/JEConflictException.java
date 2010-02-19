@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.common;
 
 /**
  * Represents the service has detected a conflict of updates between clients.

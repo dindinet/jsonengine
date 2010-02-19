@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.common;
 
 /**
  * Holds various request parameters required for processing jsonengine

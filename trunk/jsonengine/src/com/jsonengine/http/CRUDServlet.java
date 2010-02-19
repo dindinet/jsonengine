@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jsonengine.service.CRUDService;
-import com.jsonengine.service.JEConflictException;
-import com.jsonengine.service.JENotFoundException;
-import com.jsonengine.service.CRUDRequest;
-import com.jsonengine.service.JEUtils;
+import com.jsonengine.common.JEConflictException;
+import com.jsonengine.common.JENotFoundException;
+import com.jsonengine.common.JEUtils;
+import com.jsonengine.crud.CRUDRequest;
+import com.jsonengine.crud.CRUDService;
 
 /**
  * Provides REST API for jsonengine CRUD operations.
@@ -63,7 +63,7 @@ public class CRUDServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // if "delete" param is set true, doDelete. Otherwise, doPut
+        // if "delete" condParam is set true, doDelete. Otherwise, doPut
         if ("true".equals(req.getParameter(PARAM_NAME_DELETE))) {
             doDelete(req, resp);
         } else {

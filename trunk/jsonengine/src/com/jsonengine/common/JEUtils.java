@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.common;
 
 import java.math.BigDecimal;
 
@@ -23,7 +23,7 @@ public class JEUtils {
     }
 
     private static final String MC_KEY_TIMESTAMP =
-        "com.jsonengine.service.LogCounterService#timestamp";
+        "com.jsonengine.common.LogCounterService#timestamp";
 
     private static final MemcacheService mcService =
         MemcacheServiceFactory.getMemcacheService();
@@ -60,8 +60,7 @@ public class JEUtils {
      * 
      * TODO to support negative value.
      * 
-     * @param bd
-     *            a {@link BigDecimal} positive value
+     * @condParam bd a {@link BigDecimal} positive value
      * @return {@link String} key for building a index table for the value
      */
     public String convertBigDecimalToIndexKey(BigDecimal bd) {
@@ -93,7 +92,7 @@ public class JEUtils {
     /**
      * Generates a String with random characteres made of alpha numerics.
      * 
-     * @param digits
+     * @condParam digits
      * @return random alnum String
      */
     public String generateRandomAlnums(int digits) {
@@ -103,4 +102,27 @@ public class JEUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * Encodes a property value of JSON doc into a String for filtering or
+     * sorting. The value can be a String, Boolean or BigDecimal.
+     * 
+     * @param val
+     *            the value to be encoded
+     * @return encoded String
+     */
+    public String encodePropValue(Object val) {
+        if (val == null) {
+            return null;
+        } else if (val instanceof String) {
+            return (String) val;
+        } else if (val instanceof Boolean) {
+            return val.toString();
+        } else if (val instanceof BigDecimal) {
+            return JEUtils.i.convertBigDecimalToIndexKey((BigDecimal) val);
+        } else {
+            return null;
+        }
+    }
+    
 }
