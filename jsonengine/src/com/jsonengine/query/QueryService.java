@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.query;
 
 /**
  * Provides query service for jsonengine.

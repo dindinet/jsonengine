@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.query;
 
 import org.junit.Test;
 import org.slim3.tester.AppEngineTestCase;

@@ -1,4 +1,4 @@
-package com.jsonengine.service;
+package com.jsonengine.common;
 
 /**
  * Notifies that the specified JSON document has not found.

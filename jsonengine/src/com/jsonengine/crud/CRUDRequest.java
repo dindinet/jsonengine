@@ -1,8 +1,9 @@
-package com.jsonengine.service;
+package com.jsonengine.crud;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
+import com.jsonengine.common.JERequest;
 import com.jsonengine.model.JEDoc;
 
 import net.arnx.jsonic.JSON;
@@ -30,7 +31,7 @@ public class CRUDRequest extends JERequest {
     /**
      * Creates a CRUDRequest instance from specified JSON document.
      * 
-     * @param jsonDoc
+     * @condParam jsonDoc
      */
     @SuppressWarnings("unchecked")
     public CRUDRequest(String jsonDoc) {

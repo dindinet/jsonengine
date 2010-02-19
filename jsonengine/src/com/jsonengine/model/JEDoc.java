@@ -11,9 +11,9 @@ import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.jsonengine.service.CRUDRequest;
-import com.jsonengine.service.JERequest;
-import com.jsonengine.service.JEUtils;
+import com.jsonengine.common.JERequest;
+import com.jsonengine.common.JEUtils;
+import com.jsonengine.crud.CRUDRequest;
 
 /**
  * Represents an entity that stores a JSON document along with metadata like
@@ -39,7 +39,7 @@ public class JEDoc implements Serializable {
     /**
      * Creates an instance of JEDoc from specified {@link CRUDRequest}.
      * 
-     * @param jeReq
+     * @condParam jeReq
      * @return {@link JEDoc} instance
      */
     public static JEDoc createJEDoc(JERequest jeReq) {
