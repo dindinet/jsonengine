@@ -1,6 +1,5 @@
 package com.jsonengine.query;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import org.slim3.datastore.ModelQuery;
@@ -28,9 +27,9 @@ public abstract class QueryFilter<T> {
         this.docType = docType;
     }
 
-    public abstract ModelQuery<T> applyFilter(ModelQuery<T> mq);
+    public abstract ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> curMq);
 
-    public class CondFilter extends QueryFilter<T> {
+    public class CondFilter extends QueryFilter<JEDoc> {
 
         public final Comparator comparator;
 
@@ -49,7 +48,7 @@ public abstract class QueryFilter<T> {
         }
 
         @Override
-        public ModelQuery<T> applyFilter(ModelQuery<T> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
             final StringCollectionAttributeMeta<JEDoc, Set<String>> ie =
                 jeDocMeta.indexEntries;
             switch (comparator) {
@@ -68,7 +67,7 @@ public abstract class QueryFilter<T> {
         }
     }
 
-    public class LimitFilter extends QueryFilter<T> {
+    public class LimitFilter extends QueryFilter<JEDoc> {
 
         public final int limitCount;
 
@@ -78,12 +77,12 @@ public abstract class QueryFilter<T> {
         }
 
         @Override
-        public ModelQuery<T> applyFilter(ModelQuery<T> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
             return mq.limit(limitCount);
         }
     }
 
-    public class SortFilter extends QueryFilter<T> {
+    public class SortFilter extends QueryFilter<JEDoc> {
 
         public final String propName;
 
@@ -96,7 +95,7 @@ public abstract class QueryFilter<T> {
         }
 
         @Override
-        public ModelQuery<T> applyFilter(ModelQuery<T> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
             return mq; // TODO
         }
     }
