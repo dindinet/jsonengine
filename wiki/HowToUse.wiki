@@ -36,7 +36,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 
 === POST Example ===
 
-    * POST /`_`je/docType=myDoc?doc={"name":"Foo"}
+    * POST /`_`je/myDoc?doc={"name":"Foo"}
 
 === GET ===
 
