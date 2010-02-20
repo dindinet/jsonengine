@@ -44,6 +44,14 @@ public class CRUDRequest extends JERequest {
             jsonMap = null;
         }
     }
+    
+    /**
+     * Creates a CRUDRequest without any JSON document.
+     */
+    public CRUDRequest() {
+        jsonDoc = null;
+        jsonMap = null;        
+    }
 
     /**
      * Returns _updatedAt property value of this JSON document. Returns null if

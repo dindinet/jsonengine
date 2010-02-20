@@ -6,7 +6,6 @@ import java.util.List;
 import net.arnx.jsonic.JSON;
 
 import org.slim3.datastore.Datastore;
-import org.slim3.datastore.ModelQuery;
 
 import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
@@ -28,14 +27,26 @@ public class QueryService {
     private QueryService() {
     }
 
+    /**
+     * Executes query for the specified {@link QueryRequest}.
+     * 
+     * @param queryReq
+     *            {@link QueryRequest} which includes the filters for the query.
+     * @return JSON document of the results.
+     */
     public String query(QueryRequest queryReq) {
+
+        // execute query
         final List<JEDoc> resultJeDocs =
             queryReq.applyFilter(Datastore.query(jeDocMeta)).asList();
-        final List<Object> results = new LinkedList<Object>();
-        for (JEDoc jeDoc : resultJeDocs) {
-            results.add(jeDoc.getDocValues());
-        }
-        return JSON.encode(results);
-    }
 
+        // extract docValues from the result JEDocs
+        final List<Object> resultValues = new LinkedList<Object>();
+        for (JEDoc jeDoc : resultJeDocs) {
+            resultValues.add(jeDoc.getDocValues());
+        }
+
+        // return the results by JSON
+        return JSON.encode(resultValues);
+    }
 }

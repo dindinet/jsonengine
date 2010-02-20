@@ -16,16 +16,16 @@ import com.jsonengine.model.JEDoc;
  */
 public class QueryRequest extends JERequest {
 
-    private final Set<QueryFilter<JEDoc>> queryFilters =
-        new HashSet<QueryFilter<JEDoc>>();
+    private final Set<QueryFilter> queryFilters =
+        new HashSet<QueryFilter>();
 
-    public void addQueryFilter(QueryFilter<JEDoc> qf) {
+    public void addQueryFilter(QueryFilter qf) {
         queryFilters.add(qf);
     }
 
     public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
         ModelQuery<JEDoc> curMq = mq;
-        for (QueryFilter<JEDoc> qf : queryFilters) {
+        for (QueryFilter qf : queryFilters) {
             curMq = qf.applyFilter(curMq);
         }
         return curMq;
