@@ -6,6 +6,7 @@ import java.util.Set;
 import org.slim3.datastore.ModelQuery;
 
 import com.jsonengine.common.JERequest;
+import com.jsonengine.model.JEDoc;
 
 /**
  * Holds various request parameters required for processing jsonengine query
@@ -13,17 +14,18 @@ import com.jsonengine.common.JERequest;
  * 
  * @author @kazunori_279
  */
-public class QueryRequest<T> extends JERequest {
-    
-    private final Set<QueryFilter<T>> queryFilters = new HashSet<QueryFilter<T>>();
+public class QueryRequest extends JERequest {
 
-    public void addQueryFilter(QueryFilter<T> qf) {
+    private final Set<QueryFilter<JEDoc>> queryFilters =
+        new HashSet<QueryFilter<JEDoc>>();
+
+    public void addQueryFilter(QueryFilter<JEDoc> qf) {
         queryFilters.add(qf);
     }
-    
-    public ModelQuery<T> applyFilter(ModelQuery<T> mq) {
-        ModelQuery<T> curMq = mq;
-        for (QueryFilter<T> qf : queryFilters) {
+
+    public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
+        ModelQuery<JEDoc> curMq = mq;
+        for (QueryFilter<JEDoc> qf : queryFilters) {
             curMq = qf.applyFilter(curMq);
         }
         return curMq;

@@ -4,10 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 import net.arnx.jsonic.JSON;
 
@@ -16,7 +13,7 @@ import org.slim3.tester.AppEngineTestCase;
 
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
-import com.jsonengine.common.JEUtils;
+import com.jsonengine.common.JETestUtils;
 import com.jsonengine.model.JEDoc;
 
 /**
@@ -24,20 +21,17 @@ import com.jsonengine.model.JEDoc;
  * 
  * @author @kazunori_279
  */
-//public class CRUDServiceTest extends TestCase {
+// public class CRUDServiceTest extends TestCase {
 public class CRUDServiceTest extends AppEngineTestCase {
-
-    private static final String TEST_USERNAME = "tester";
-    private static final String TEST_DOCTYPE = "test";
 
     @SuppressWarnings("unchecked")
     @Test
     public void testCRUD() throws JEConflictException, JENotFoundException {
 
         // save a test data
-        final Map<String, String> testMap = createTestMap();
+        final Map<String, String> testMap = JETestUtils.i.createTestMap();
         final CRUDRequest jeReq =
-            createTestJERequestContext(JSON.encode(testMap));
+            JETestUtils.i.createTestCRUDRequest(JSON.encode(testMap));
         final String savedJson = CRUDService.i.put(jeReq);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
@@ -61,7 +55,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         testMap.put("004", "hoge");
         testMap.remove("002");
         final CRUDRequest jeReq2 =
-            createTestJERequestContext(JSON.encode(testMap));
+            JETestUtils.i.createTestCRUDRequest(JSON.encode(testMap));
         jeReq2.setCheckConflict(false);
         jeReq2.setDocId(docId);
         CRUDService.i.put(jeReq2);
@@ -109,23 +103,4 @@ public class CRUDServiceTest extends AppEngineTestCase {
         }
     }
 
-    private Map<String, String> createTestMap() {
-        final Map<String, String> testData = new HashMap<String, String>();
-        testData.put("001", "foo");
-        testData.put("002", "bar");
-        testData.put("003", "baz");
-        testData.put("bigPropValue1", JEUtils.i.generateRandomAlnums(400));
-        testData.put("bigPropValue2", JEUtils.i.generateRandomAlnums(400));
-        testData.put("bigPropValue3", JEUtils.i.generateRandomAlnums(400));
-        return testData;
-    }
-
-    private CRUDRequest createTestJERequestContext(String json) {
-        final CRUDRequest jeReq = new CRUDRequest(json);
-        jeReq.setCheckConflict(true);
-        jeReq.setDocType(TEST_DOCTYPE);
-        jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
-        jeReq.setRequestedBy(TEST_USERNAME);
-        return jeReq;
-    }
 }
