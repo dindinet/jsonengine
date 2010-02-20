@@ -9,17 +9,17 @@ import com.jsonengine.common.JEUtils;
 import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
 
-public abstract class QueryFilter<T> {
+public abstract class QueryFilter {
 
-    enum Comparator {
+    public enum Comparator {
         LT, LE, GT, GE, EQ
     };
 
-    enum SortOrder {
+    public enum SortOrder {
         ASC, DESC
     };
 
-    private final JEDocMeta jeDocMeta = JEDocMeta.get();
+    private static final JEDocMeta jeDocMeta = JEDocMeta.get();
 
     public final String docType;
 
@@ -29,7 +29,7 @@ public abstract class QueryFilter<T> {
 
     public abstract ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> curMq);
 
-    public class CondFilter extends QueryFilter<JEDoc> {
+    public static class CondFilter extends QueryFilter {
 
         public final Comparator comparator;
 
@@ -67,7 +67,7 @@ public abstract class QueryFilter<T> {
         }
     }
 
-    public class LimitFilter extends QueryFilter<JEDoc> {
+    public static class LimitFilter extends QueryFilter {
 
         public final int limitCount;
 
@@ -82,7 +82,7 @@ public abstract class QueryFilter<T> {
         }
     }
 
-    public class SortFilter extends QueryFilter<JEDoc> {
+    public static class SortFilter extends QueryFilter {
 
         public final String propName;
 
