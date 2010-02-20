@@ -34,6 +34,10 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
+=== POST Example ===
+
+    * POST /`_`je/docType=myDoc?doc={"name":"Foo"}
+
 === GET ===
 
 To get an existing JSON document, you can use GET method.
