@@ -4,7 +4,16 @@
 
 jsonengine provides REST API described below for creating, reading, updating and deleting JSON documents. Client can use the API in a RESTful way (e.g. using GET/POST/PUT/DELETE HTTP methods) but can also use only GET and POST for accessing the all features (this would be useful for Flash client).
 
-=== POST/PUT ===
+== Saving a JSON document to the Datastore ==
+
+=== POST Example ===
+
+These following POST requests are same: both stores a JSON doc {"name":"Foo",age:20}.
+
+  * POST /`_`je/myDoc?name=Foo&age=20
+  * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
+
+=== POST/PUT syntax ===
 
 To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter (there is no difference on behavior between the two methods).
 
@@ -21,12 +30,12 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
       * Similar to table name or class name. For example, "address" docType may be for saving an address info JSON doc. 
 
   * HTTP Request parameters
-    * *doc* (required): JSON doc to be created/updated.
+    * *`_`doc* (optional): JSON doc to be created/updated.
       * The JSON doc should be URL encoded.
       * If this JSON doc has a `_`docId property, jsonengine will try to update the existing JSON doc. If not found, create and save a new JSON doc.
       * If this JSON doc has no `_`docId property, jsonengine will create and save a new JSON doc. 
       * If a new JSON doc has created, client can retrieve a auto-generated `_`docId property for it from the result JSON doc.
-    * *cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
+    * *`_`cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
 
   * HTTP Response
     * Status code 200: Created or updated the JSON doc successfully.
@@ -34,11 +43,15 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
-=== POST Example ===
+== Getting a JSON document from the Datastore ==
 
-    * POST /`_`je/myDoc?doc={"name":"Foo"}
+=== GET Example ===
 
-=== GET ===
+The following GET request gets a JSON doc from the Datastore.
+
+  * GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+
+=== GET syntax ===
 
 To get an existing JSON document, you can use GET method.
 
@@ -51,8 +64,8 @@ To get an existing JSON document, you can use GET method.
     * *docId* (required): docID (document id) of the JSON doc to be retrieved.
 
   * HTTP Request parameters
-    * *cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
-    * *doc* (optional): JSON doc for checking the update conflict.
+    * *`_`cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
+    * *`_`doc* (optional): JSON doc for checking the update conflict.
       * Use this parameter in conjunction with *cc* parameter.
       * The JSON doc should be URL encoded.
 
@@ -62,7 +75,16 @@ To get an existing JSON document, you can use GET method.
     * Status code 404: If there is no such JSON doc stored in jsonengine.
     * Status code 500: Caught an unexpected system error.
 
-=== DELETE ===
+== Deleting a JSON document from the Datastore ==
+
+=== DELETE example ===
+
+These following POST requests are same: both removes the JSON doc from the Datastore.
+
+  * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?`_`delete=true
+  * DELETE /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+
+=== DELETE syntax ===
 
 To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "delete=true" parameter.
 
@@ -79,9 +101,9 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
     * *docId* (required): docID (document id) of the JSON doc to be deleted.
 
   * HTTP Request parameters
-    * *delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
-    * *cc* (optional): set "true" if client need checking update conflict. See "Update conflict detection" section below.
-    * *doc* (optional): JSON doc for checking the update conflict.
+    * *`_`delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
+    * *`_`cc* (optional): set "true" if client need checking update conflict. See "Update conflict detection" section below.
+    * *`_`doc* (optional): JSON doc for checking the update conflict.
       * Use this parameter in conjunction with *cc* parameter.
       * The JSON doc should be URL encoded.
 
@@ -92,7 +114,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
-=== Update conflict detection ===
+== Update conflict detection ==
 
 jsonengine provides an "update conflict detection" as an optional feature. A client may set "cc" parameter to true on POST/PUT/GET/DELETE methods along with "doc" parameter set to the latest JSON doc the client has. Then jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
 
