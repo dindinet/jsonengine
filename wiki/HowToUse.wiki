@@ -35,7 +35,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
       * If this JSON doc has a `_`docId property, jsonengine will try to update the existing JSON doc. If not found, create and save a new JSON doc.
       * If this JSON doc has no `_`docId property, jsonengine will create and save a new JSON doc. 
       * If a new JSON doc has created, client can retrieve a auto-generated `_`docId property for it from the result JSON doc.
-    * *`_`cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
+    * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Response
     * Status code 200: Created or updated the JSON doc successfully.
@@ -64,10 +64,7 @@ To get an existing JSON document, you can use GET method.
     * *docId* (required): docID (document id) of the JSON doc to be retrieved.
 
   * HTTP Request parameters
-    * *`_`cc* (optional): set "true" if you need checking update conflict. See "Update conflict detection" section below.
-    * *`_`doc* (optional): JSON doc for checking the update conflict.
-      * Use this parameter in conjunction with *cc* parameter.
-      * The JSON doc should be URL encoded.
+    * None.
 
   * HTTP Response
     * Status code 200: Retrieved the JSON doc successfully.
@@ -102,10 +99,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
   * HTTP Request parameters
     * *`_`delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
-    * *`_`cc* (optional): set "true" if client need checking update conflict. See "Update conflict detection" section below.
-    * *`_`doc* (optional): JSON doc for checking the update conflict.
-      * Use this parameter in conjunction with *cc* parameter.
-      * The JSON doc should be URL encoded.
+    * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Response
     * Status code 200: Deleted the JSON doc successfully.
@@ -116,7 +110,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
 == Update conflict detection ==
 
-jsonengine provides an "update conflict detection" as an optional feature. A client may set "cc" parameter to true on POST/PUT/GET/DELETE methods along with "doc" parameter set to the latest JSON doc the client has. Then jsonengine will compare the `_`updatedAt property value between the JSON doc passed from client and the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
+jsonengine provides an "update conflict detection" as an optional feature. A client may set "`_`noUpdatesAfter" parameter to the `_`updatedAt value of the client-side copy of the JSON doc on POST/PUT/DELETE methods. Then jsonengine will compare it with the `_`updatedAt property value of the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
 
 == JSON Document Format ==
 
