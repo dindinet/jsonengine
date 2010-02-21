@@ -11,7 +11,7 @@ jsonengine provides REST API described below for creating, reading, updating and
 You can save a JSON doc on the Datastore with one of the following styles. Both of them stores a JSON doc {"name":"Foo",age:20}.
 
   * FORM parameter style
-    * POST /`_`je/myDoc?name=Foo&age=20 
+    * POST /`_`je/myDoc?name=Foo&age=20
 
   * JSON doc style
     * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
@@ -35,7 +35,7 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 You can save a JSON doc with one of the following parameter styles:
 
   * HTTP Request parameters (FORM parameter style)
-    * *<any property names>*: You can put any pairs of property names and values. They will be saved as properties of a JSON doc (Please note you can not use property names starting with `_`).
+    * *<any property names>*: You can put any pairs of property names and values. They will be saved as properties of a JSON doc (Please note you can not use property names starting with `_` with this style).
     * *`_`docId* (optional): docId of the JSON doc to be created/updated (see the following docId notes).
     * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
