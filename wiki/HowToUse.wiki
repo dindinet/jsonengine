@@ -19,7 +19,7 @@ You can save a JSON doc on the Datastore with one of the following styles. Both 
     * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
 
   * Response (for status code 200):
-    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",_updatedAt:1266738290619,...<snipped>}
+    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
 
 === POST/PUT syntax ===
 
@@ -72,7 +72,7 @@ The following GET request gets a JSON doc from the Datastore.
   * GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
 
   * Response (for status code 200):
-    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",_updatedAt:1266738290619,...<snipped>}
+    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
 
 === GET syntax ===
 
