@@ -18,6 +18,9 @@ You can save a JSON doc on the Datastore with one of the following styles. Both 
   * JSON doc style
     * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
 
+  * Response (for status code 200):
+    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",_updatedAt:1266738290619,...<snipped>}
+
 === POST/PUT syntax ===
 
 To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter (there is no difference on behavior between the two methods).
@@ -68,6 +71,9 @@ The following GET request gets a JSON doc from the Datastore.
 
   * GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
 
+  * Response (for status code 200):
+    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",_updatedAt:1266738290619,...<snipped>}
+
 === GET syntax ===
 
 To get an existing JSON document, you can use GET method.
@@ -97,6 +103,9 @@ These following POST requests are same: both removes the JSON doc from the Datas
 
   * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?`_`delete=true
   * DELETE /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+
+  * Response (for status code 200):
+    * None.
 
 === DELETE syntax ===
 
