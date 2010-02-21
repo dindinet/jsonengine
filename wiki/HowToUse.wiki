@@ -59,7 +59,7 @@ You can save a JSON doc with one of the following parameter styles:
     * Status code 500: Caught an unexpected system error.
 
   * Notes on "docId" of the JSON doc
-    * The client can provide `_`docId property via `_`docId parameter or `_`docId property inside the JSON doc passed with `_`doc parameter.
+    * The client can provide `_`docId property via `_`docId parameter (in the FORM parameter style) or `_`docId property (in the JSON doc style).
     * If the client provides a `_`docId property jsonengine will try to update the existing JSON doc. If not found, create and save a new JSON doc.
     * If the client does not provides a `_`docId property, jsonengine will create and save a new JSON doc. 
       * An auto-generated `_`docId can be retrived from the result JSON doc.
