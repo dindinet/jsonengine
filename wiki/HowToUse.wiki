@@ -10,8 +10,11 @@ jsonengine provides REST API described below for creating, reading, updating and
 
 You can save a JSON doc on the Datastore with one of the following styles. Both of them stores a JSON doc {"name":"Foo",age:20}.
 
-  * POST /`_`je/myDoc?name=Foo&age=20 (FORM parameter style)
-  * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20} (JSON doc style)
+  * FORM parameter style
+    * POST /`_`je/myDoc?name=Foo&age=20 
+
+  * JSON doc style
+    * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
 
 === POST/PUT syntax ===
 
