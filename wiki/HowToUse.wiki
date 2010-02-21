@@ -35,7 +35,9 @@ To create or update a JSON document, you can use POST or PUT HTTP method with "d
 You can save a JSON doc with one of the following parameter styles:
 
   * HTTP Request parameters (FORM parameter style)
-    * *<any property names>*: You can put any pairs of property names and values. They will be saved as properties of a JSON doc (Please note you can not use property names starting with `_` with this style).
+    * *<any property names>*: You can put any pairs of property names and values. They will be saved as properties of a JSON doc.
+      * Please note you can not use property names starting with `_` with this style.
+      * If you provide multiple property values with a same name, the values will be stored in an array in a JSON doc.
     * *`_`docId* (optional): docId of the JSON doc to be created/updated (see the following docId notes).
     * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
