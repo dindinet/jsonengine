@@ -47,7 +47,6 @@ You can save a JSON doc with one of the following parameter styles:
     * Restrictions: please use JSON doc style to avoid the following restrictions.
       * jsonengine will try to parse each parameter value as 1) a number, 2) a boolean and then 3) a string. If you want to specify exact types of properties, please use JSON doc style.
       * You can not use property names starting with `_`.
-      * You can not put children/grand-children JSON in the JSON doc. 
 
   * HTTP Request parameters (JSON doc style)
     * *`_`doc* (required): JSON doc to be created/updated.
