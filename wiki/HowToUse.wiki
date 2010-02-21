@@ -48,6 +48,7 @@ You can save a JSON doc with one of the following parameter styles:
 
   * HTTP Request parameters (JSON doc style)
     * *`_`doc* (required): JSON doc to be created/updated.
+      * You may include `_`docId property in the JSON doc to create/update it with the specified docId (see the following docId notes).
       * The JSON doc should be URL encoded.
     * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
