@@ -25,8 +25,8 @@ public class CRUDRequest extends JERequest {
     // JSON document ID
     private String docId;
 
-    // a flag to indicate if confliction should be checked or not
-    private boolean checkConflict;
+    // if not null, check update conflict
+    private Long checkUpdatesAfter;
 
     /**
      * Creates a CRUDRequest instance from specified JSON document.
@@ -87,12 +87,12 @@ public class CRUDRequest extends JERequest {
         this.docId = docId;
     }
 
-    public void setCheckConflict(boolean checkConflict) {
-        this.checkConflict = checkConflict;
+    public void setCheckUpdatesAfter(Long checkUpdatesAfter) {
+        this.checkUpdatesAfter = checkUpdatesAfter;
     }
 
-    public boolean isCheckConflict() {
-        return checkConflict;
+    public Long getCheckUpdatesAfter() {
+        return checkUpdatesAfter;
     }
 
 }

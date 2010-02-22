@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 import org.slim3.tester.AppEngineTestCase;
 

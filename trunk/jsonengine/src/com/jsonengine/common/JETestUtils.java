@@ -1,5 +1,6 @@
 package com.jsonengine.common;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,10 @@ public class JETestUtils {
      * 
      * @return a Map for testing.
      */
-    public Map<String, String> createTestMap() {
-        final Map<String, String> testData = new HashMap<String, String>();
+    public Map<String, Object> createTestMap() {
+        final Map<String, Object> testData = new HashMap<String, Object>();
         testData.put("name", "Foo");
-        testData.put("age", "20");
+        testData.put("age", 20);
         testData.put("email", "foo@example.com");
         testData.put("bigPropValue1", JEUtils.i.generateRandomAlnums(400));
         testData.put("bigPropValue2", JEUtils.i.generateRandomAlnums(400));
@@ -125,8 +126,7 @@ public class JETestUtils {
     @SuppressWarnings("unchecked")
     public String saveJsonMap(final Map<String, Object> map)
             throws JEConflictException {
-        final CRUDRequest jeReq =
-            JETestUtils.i.createTestCRUDRequest(JSON.encode(map));
+        final CRUDRequest jeReq = JETestUtils.i.createTestCRUDRequest(map);
         final String savedJson = CRUDService.i.put(jeReq);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
@@ -137,13 +137,14 @@ public class JETestUtils {
     /**
      * Creates a test CRUDRequest with a specified JSON document.
      * 
-     * @param json
-     *            JSON document
+     * @param testMap
+     *            a Map to create a JSON document
      * @return {@link CRUDRequest} for testing.
      */
-    public CRUDRequest createTestCRUDRequest(String json) {
-        final CRUDRequest jeReq = new CRUDRequest(json);
-        jeReq.setCheckConflict(true);
+    public CRUDRequest createTestCRUDRequest(Map<String, Object> testMap) {
+        final CRUDRequest jeReq = new CRUDRequest(JSON.encode(testMap));
+        jeReq.setCheckUpdatesAfter((Long) testMap
+            .get(JEDoc.PROP_NAME_UPDATED_AT));
         jeReq.setDocType(TEST_DOCTYPE);
         jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
         jeReq.setRequestedBy(TEST_USERNAME);
@@ -198,10 +199,15 @@ public class JETestUtils {
             }
             final Object obj1 = map1.get(key);
             final Object obj2 = map2.get(key);
-            if (!obj1.equals(obj2)) {
-                if (!obj1.toString().equals(obj2.toString())) {
-                    return false;
-                }
+            final boolean isEqual =
+                (obj1 == null && obj2 == null)
+                    || (obj1 != null && obj1.equals(obj2));
+            final boolean isEqualInString =
+                obj1 != null
+                    && obj2 != null
+                    && obj1.toString().equals(obj2.toString());
+            if (!isEqual && !isEqualInString) {
+                return false;
             }
         }
         return map1.size() == map2.size();
@@ -217,6 +223,19 @@ public class JETestUtils {
             newMap.put(key, origMap.get(key));
         }
         return newMap;
+    }
+
+    /**
+     * Extract the updatedAt value from specified Map and return it as a Long
+     * value.
+     * 
+     * @param testMap
+     *            Map for testing which include updatedAt value.
+     * @return Long value of updatedAt
+     */
+    public Long getUpdatedAtFromTestMap(Map<String, Object> testMap) {
+        return ((BigDecimal) testMap.get(JEDoc.PROP_NAME_UPDATED_AT))
+            .longValue();
     }
 
 }
