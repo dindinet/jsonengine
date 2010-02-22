@@ -1,7 +1,5 @@
 #summary How to use jsonengine
 
-= NOTE: THIS API HAS BEEN UPDATED AND NOT IMPLEMENTED YET. PLEASE WAIT A WHILE =
-
 == REST API ==
 
 jsonengine provides REST API described below for creating, reading, updating and deleting JSON documents. Client can use the API in a RESTful way (e.g. using GET/POST/PUT/DELETE HTTP methods) but can also use only GET and POST for accessing the all features (this would be useful for Flash client).
