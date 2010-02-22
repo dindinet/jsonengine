@@ -3,6 +3,7 @@ package com.jsonengine.query;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,38 +25,67 @@ public class QueryServiceTest extends AppEngineTestCase {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testQueryAll() throws JEConflictException, JENotFoundException {
+    public void queryAllUsers() throws JEConflictException, JENotFoundException {
 
-        // save a test users
+        // setup test users
         JETestUtils.i.storeTestUsers();
 
-        // get all users
+        // find all users
         final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
         final String resultJson = QueryService.i.query(qr);
         System.out.println(resultJson);
 
         // validate the result
-        final List<Map<String, Object>> results =
+        final List<Map<String, Object>> resultMaps =
             (List<Map<String, Object>>) JSON.decode(resultJson);
-        assertEquals(4, results.size());
+        assertEquals(4, resultMaps.size());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void queryWithEQ() throws JEConflictException, JENotFoundException {
+
+        // setup test users
+        JETestUtils.i.storeTestUsers();
 
         // get Betty by ID
-        final QueryRequest qr2 = JETestUtils.i.createTestQueryRequest();
-        final QueryFilter eqQf =
-            new QueryFilter.CondFilter(
-                qr2.getDocType(),
-                "id",
-                QueryFilter.Comparator.EQ,
-                "001");
-        qr2.addQueryFilter(eqQf);
-        final String resultJson2 = QueryService.i.query(qr2);
-        System.out.println(resultJson2);
+        final String resultJson =
+            findTestUsersByCondition("id", QueryFilter.Comparator.EQ, "001");
+        final List<Map<String, Object>> resultMaps =
+            (List<Map<String, Object>>) JSON.decode(resultJson);
 
-        // validate the result
-        final List<Map<String, Object>> results2 =
-            (List<Map<String, Object>>) JSON.decode(resultJson2);
-        assertEquals(1, results2.size());
-        assertTrue(JETestUtils.i.compareMaps(JETestUtils.i.getBetty(), results2
-            .get(0)));
+        // compare the result with Betty
+        assertEquals(1, resultMaps.size());
+        assertTrue(JETestUtils.i.compareMaps(
+            JETestUtils.i.getBetty(),
+            resultMaps.get(0)));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void queryWithLT() throws JEConflictException, JENotFoundException {
+
+        // setup test users
+        JETestUtils.i.storeTestUsers();
+
+        // get Betty by ID
+        final String resultJson =
+            findTestUsersByCondition("weight", QueryFilter.Comparator.LT, BigDecimal.valueOf(100.0));
+        final List<Map<String, Object>> resultMaps =
+            (List<Map<String, Object>>) JSON.decode(resultJson);
+
+        // TODO 
+    }
+    
+    
+    private String findTestUsersByCondition(String propName,
+            QueryFilter.Comparator cp, Object propValue) {
+        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryFilter eqQf =
+            new QueryFilter.CondFilter(qr.getDocType(), propName, cp, propValue);
+        qr.addQueryFilter(eqQf);
+        final String resultJson = QueryService.i.query(qr);
+        System.out.println(resultJson);
+        return resultJson;
     }
 }

@@ -2,6 +2,7 @@ package com.jsonengine.crud;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Map;
@@ -29,9 +30,8 @@ public class CRUDServiceTest extends AppEngineTestCase {
     public void testCRUD() throws JEConflictException, JENotFoundException {
 
         // save a test data
-        final Map<String, String> testMap = JETestUtils.i.createTestMap();
-        final CRUDRequest jeReq =
-            JETestUtils.i.createTestCRUDRequest(JSON.encode(testMap));
+        final Map<String, Object> testMap = JETestUtils.i.createTestMap();
+        final CRUDRequest jeReq = JETestUtils.i.createTestCRUDRequest(testMap);
         final String savedJson = CRUDService.i.put(jeReq);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
@@ -45,18 +45,17 @@ public class CRUDServiceTest extends AppEngineTestCase {
         // verify it
         final Map<String, Object> resultMap =
             (Map<String, Object>) JSON.decode(resultJson);
-        assertNotNull("_updatedAt must exists", resultMap
-            .remove(JEDoc.PROP_NAME_UPDATED_AT));
+        final Long updatedAt = JETestUtils.i.getUpdatedAtFromTestMap(resultMap);
+        assertNotNull("_updatedAt must exists", updatedAt);
         assertEquals(docId, resultMap.remove(JEDoc.PROP_NAME_DOCID));
-        assertEquals(testMap, resultMap);
+        assertTrue(JETestUtils.i.compareMaps(testMap, resultMap));
 
         // update the test data
         testMap.put("001", "foo2");
         testMap.put("004", "hoge");
         testMap.remove("002");
-        final CRUDRequest jeReq2 =
-            JETestUtils.i.createTestCRUDRequest(JSON.encode(testMap));
-        jeReq2.setCheckConflict(false);
+        final CRUDRequest jeReq2 = JETestUtils.i.createTestCRUDRequest(testMap);
+        jeReq2.setCheckUpdatesAfter(updatedAt);
         jeReq2.setDocId(docId);
         CRUDService.i.put(jeReq2);
         final String resultJson2 = CRUDService.i.get(jeReq2);
@@ -68,10 +67,11 @@ public class CRUDServiceTest extends AppEngineTestCase {
         assertNotNull("_updatedAt must exists", resultMap2
             .remove(JEDoc.PROP_NAME_UPDATED_AT));
         assertEquals(docId, resultMap2.remove(JEDoc.PROP_NAME_DOCID));
-        assertEquals(testMap, resultMap2);
+        assertTrue(JETestUtils.i.compareMaps(testMap, resultMap2));
 
         // try saving the old data again and check if the conflict detection is
         // working
+        jeReq.setCheckUpdatesAfter(updatedAt);
         try {
             CRUDService.i.put(jeReq);
             fail("Should throw a JEConflictionException");

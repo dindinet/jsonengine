@@ -110,7 +110,7 @@ public class CRUDService {
 
         // check update confliction by checking updatedAt
         if (jeDoc != null
-            && jeReq.isCheckConflict()
+            && jeReq.getCheckUpdatesAfter() != null
             && isConflicted(jeReq, jeDoc)) {
             throw new JEConflictException("Detedted a conflict by_updatedAt");
         }

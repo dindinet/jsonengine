@@ -3,11 +3,18 @@ package com.jsonengine.http;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.arnx.jsonic.JSON;
 
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
@@ -22,11 +29,14 @@ import com.jsonengine.crud.CRUDService;
  */
 public class CRUDServlet extends HttpServlet {
 
-    public static final String PARAM_NAME_DOC = "doc";
+    public static final String PARAM_NAME_DOC = "_doc";
 
-    public static final String PARAM_NAME_CHECK_CONFLICT = "cc";
+    public static final String PARAM_NAME_CHECK_UPDATES_AFTER =
+        "_checkUpdatesAfter";
 
-    public static final String PARAM_NAME_DELETE = "delete";
+    public static final String PARAM_NAME_DELETE = "_delete";
+
+    public static final String PARAM_NAME_DOCID = "_docId";
 
     private static final long serialVersionUID = 1L;
 
@@ -121,14 +131,23 @@ public class CRUDServlet extends HttpServlet {
         // set charset for reading parameters
         req.setCharacterEncoding(CHARSET);
 
-        // parse URI
+        // parse JSON doc
+        final String jsonDocParam = req.getParameter(PARAM_NAME_DOC);
+        final CRUDRequest jeReq;
+        if (jsonDocParam != null) {
+            // JSON style params
+            jeReq = new CRUDRequest(jsonDocParam);
+        } else {
+            // FORM style params
+            jeReq = new CRUDRequest(decodeFormStyleParams(req));
+        }
+         
+
+        // parse URI and put docType and docId into jeReq
         final String[] tokens = req.getRequestURI().split("/");
         if (tokens.length < 3) {
             throw new IllegalArgumentException("No docType found");
         }
-
-        // put docType and docId into jeReq
-        final CRUDRequest jeReq = new CRUDRequest(req.getParameter(PARAM_NAME_DOC));
         if (tokens.length >= 3) {
             jeReq.setDocType(tokens[2]);
         }
@@ -141,10 +160,75 @@ public class CRUDServlet extends HttpServlet {
             jeReq.setRequestedBy(req.getUserPrincipal().getName());
         }
         jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
-        jeReq.setCheckConflict("true".equals(req
-            .getParameter(PARAM_NAME_CHECK_CONFLICT)));
+        try {
+            jeReq.setCheckUpdatesAfter(Long.parseLong(req
+                .getParameter(PARAM_NAME_CHECK_UPDATES_AFTER)));
+        } catch (Exception e) {
+            // NPE or NumberFormatException
+        }
 
         return jeReq;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String decodeFormStyleParams(HttpServletRequest req) {
+
+        // convert all the parameters into Map
+        final Enumeration<String> paramNames =
+            (Enumeration<String>) req.getParameterNames();
+        final Map<String, Object> jsonMap = new HashMap<String, Object>();
+        while (paramNames.hasMoreElements()) {
+            final String paramName = paramNames.nextElement();
+            final Object paramValue = decodeOneParam(req, paramName);
+            jsonMap.put(paramName, paramValue);
+        }
+
+        // convert the Map into JSON
+        return JSON.encode(jsonMap);
+    }
+
+    private Object decodeOneParam(HttpServletRequest req, String paramName) {
+        final String[] paramValues = req.getParameterValues(paramName);
+        final Object paramValue;
+        if (paramValues.length == 1) {
+            // if there's only one param value, use it
+            paramValue = decodeOneParamValue(paramValues[0]);
+        } else {
+            // if there're multiple param values, put them into a List
+            final List<Object> ls = new LinkedList<Object>();
+            for (String s : paramValues) {
+                ls.add(decodeOneParamValue(s));
+            }
+            paramValue = ls;
+        }
+        return paramValue;
+    }
+
+    private Object decodeOneParamValue(String valueStr) {
+
+        // try to decode it as a Long
+        try {
+            return Long.parseLong(valueStr);
+        } catch (NumberFormatException e) {
+            // if failed, try next
+        }
+
+        // try to decode it as a Double
+        try {
+            return Double.parseDouble(valueStr);
+        } catch (NumberFormatException e) {
+            // if failed, try next
+        }
+
+        // try to decode it as a Boolean
+        if ("true".equals(valueStr)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(valueStr)) {
+            return Boolean.FALSE;
+        }
+
+        // use the value as is
+        return valueStr;
     }
 
 }
