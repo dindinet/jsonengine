@@ -45,7 +45,7 @@ You can save a JSON doc with one of the following parameter styles:
     * *`_`docId* (optional): docId of the JSON doc to be created/updated (see the following docId notes).
     * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
     * Restrictions: please use JSON doc style to avoid the following restrictions.
-      * jsonengine will try to parse each parameter value as 1) a number, 2) a boolean and then 3) a string. If you want to specify exact types of properties, please use JSON doc style.
+      * jsonengine will try to parse each parameter value as 1) a long number, 2) a double number and then 3) a string. If you want to specify exact types of properties, please use JSON doc style.
       * You can not use property names starting with `_`.
 
   * HTTP Request parameters (JSON doc style)
