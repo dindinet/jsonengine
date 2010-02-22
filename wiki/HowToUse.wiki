@@ -43,7 +43,7 @@ You can save a JSON doc with one of the following parameter styles:
     * *<any property names>*: You can put any pairs of property names and values. They will be saved as properties of a JSON doc.
       * If you provide multiple property values with a same name, the values will be stored in an array in a JSON doc.
     * *`_`docId* (optional): docId of the JSON doc to be created/updated (see the following docId notes).
-    * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
     * Restrictions: please use JSON doc style to avoid the following restrictions.
       * jsonengine will try to parse each parameter value as 1) a long number, 2) a double number and then 3) a string. If you want to specify exact types of properties, please use JSON doc style.
       * You can not use property names starting with `_`.
@@ -52,7 +52,7 @@ You can save a JSON doc with one of the following parameter styles:
     * *`_`doc* (required): JSON doc to be created/updated.
       * You may include `_`docId property in the JSON doc to create/update it with the specified docId (see the following docId notes).
       * The JSON doc should be URL encoded.
-    * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Response
     * Status code 200: Created or updated the JSON doc successfully.
@@ -128,7 +128,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
   * HTTP Request parameters
     * *`_`delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
-    * *`_`noUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Response
     * Status code 200: Deleted the JSON doc successfully.
@@ -139,7 +139,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
 == Update conflict detection ==
 
-jsonengine provides an "update conflict detection" as an optional feature. A client may set "`_`noUpdatesAfter" parameter to the `_`updatedAt value of the client-side copy of the JSON doc on POST/PUT/DELETE methods. Then jsonengine will compare it with the `_`updatedAt property value of the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
+jsonengine provides an "update conflict detection" as an optional feature. A client may set "`_`checkUpdatesAfter" parameter to the `_`updatedAt value of the client-side copy of the JSON doc on POST/PUT/DELETE methods. Then jsonengine will compare it with the `_`updatedAt property value of the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
 
 == JSON Document Format ==
 
