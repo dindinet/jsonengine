@@ -1,11 +1,15 @@
 #summary Release notes
 
+=== release 0.1.20100222 (Feb 22, 2010) ===
+
+ * Changed the POST API to support FORM parameter style request.
+
 === release 0.1.20100213 (Feb 13, 2010) ===
 
  * The first alpha release
  * Implemented CRUD operations and tests
 
-=== Roadmap of the alpha version ===
+=== TODOs of the alpha version ===
 
  * Query
  * Security
