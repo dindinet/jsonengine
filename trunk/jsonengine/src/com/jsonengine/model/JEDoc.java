@@ -4,25 +4,96 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.Key;
+import com.jsonengine.common.JERequest;
+import com.jsonengine.common.JEUtils;
+import com.jsonengine.crud.CRUDRequest;
+
 import net.arnx.jsonic.JSON;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
-import com.google.appengine.api.datastore.Key;
-import com.jsonengine.common.JERequest;
-import com.jsonengine.common.JEUtils;
-import com.jsonengine.crud.CRUDRequest;
-
-/**
- * Represents an entity that stores a JSON document along with metadata like
- * index.
- * 
- * @author @kazunori_279
- */
-@Model
+@Model(schemaVersion = 1)
 public class JEDoc implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Attribute(primaryKey = true)
+    private Key key;
+
+    @Attribute(version = true)
+    private Long version;
+
+    /**
+     * Returns the key.
+     *
+     * @return the key
+     */
+    public Key getKey() {
+        return key;
+    }
+
+    /**
+     * Sets the key.
+     *
+     * @param key
+     *            the key
+     */
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    /**
+     * Returns the version.
+     *
+     * @return the version
+     */
+    public Long getVersion() {
+        return version;
+    }
+
+    /**
+     * Sets the version.
+     *
+     * @param version
+     *            the version
+     */
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        JEDoc other = (JEDoc) obj;
+        if (key == null) {
+            if (other.key != null) {
+                return false;
+            }
+        } else if (!key.equals(other.key)) {
+            return false;
+        }
+        return true;
+    }
+    
 
     /**
      * A registered property name for docId of each JSON document.
@@ -34,13 +105,11 @@ public class JEDoc implements Serializable {
      */
     public static final String PROP_NAME_UPDATED_AT = "_updatedAt";
 
-    private static final long serialVersionUID = 1L;
-
     /**
-     * Creates an instance of JEDoc from specified {@link CRUDRequest}.
+     * Creates an instance of JEDoc2 from specified {@link CRUDRequest}.
      * 
      * @condParam jeReq
-     * @return {@link JEDoc} instance
+     * @return {@link JEDoc2} instance
      */
     public static JEDoc createJEDoc(JERequest jeReq) {
         final JEDoc jeDoc = new JEDoc();
@@ -51,10 +120,6 @@ public class JEDoc implements Serializable {
         jeDoc.setDocType(jeReq.getDocType());
         return jeDoc;
     }
-
-    // key name = docId
-    @Attribute(primaryKey = true)
-    private Key key;
 
     // JSON document type
     private String docType;
@@ -86,14 +151,6 @@ public class JEDoc implements Serializable {
      */
     public String encodeJSON() {
         return JSON.encode(getDocValues());
-    }
-
-    public Key getKey() {
-        return key;
-    }
-
-    public void setKey(Key key) {
-        this.key = key;
     }
 
     public String getDocId() {
@@ -155,5 +212,6 @@ public class JEDoc implements Serializable {
     public String getDocType() {
         return docType;
     }
-
+    
+    
 }

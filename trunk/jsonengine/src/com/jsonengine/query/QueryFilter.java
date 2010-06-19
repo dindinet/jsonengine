@@ -35,16 +35,18 @@ public abstract class QueryFilter {
 
         public final String condParam;
 
+        public final String condMin;
+
+        public final String condMax;
+
         public CondFilter(String docType, String propName,
-                Comparator comparator, Object propValue) {            
+                Comparator comparator, Object propValue) {
             super(docType);
             this.comparator = comparator;
-            this.condParam =
-                docType
-                    + ":"
-                    + propName
-                    + ":"
-                    + JEUtils.i.encodePropValue(propValue);
+            final String condPrefix = docType + ":" + propName + ":";
+            this.condParam = condPrefix + JEUtils.i.encodePropValue(propValue);
+            this.condMin = condPrefix;
+            this.condMax = condPrefix + "\uffff";
         }
 
         @Override
@@ -53,13 +55,17 @@ public abstract class QueryFilter {
                 jeDocMeta.indexEntries;
             switch (comparator) {
             case LT:
-                return mq.filter(ie.lessThan(condParam));
+                return mq.filter(ie.lessThan(condParam)).filter(
+                    ie.greaterThan(condMin));
             case LE:
-                return mq.filter(ie.lessThanOrEqual(condParam));
+                return mq.filter(ie.lessThanOrEqual(condParam)).filter(
+                    ie.greaterThan(condMin));
             case GT:
-                return mq.filter(ie.greaterThan(condParam));
+                return mq.filter(ie.greaterThan(condParam)).filter(
+                    ie.lessThan(condMax));
             case GE:
-                return mq.filter(ie.greaterThanOrEqual(condParam));
+                return mq.filter(ie.greaterThanOrEqual(condParam)).filter(
+                    ie.lessThan(condMax));
             case EQ:
                 return mq.filter(ie.equal(condParam));
             }
