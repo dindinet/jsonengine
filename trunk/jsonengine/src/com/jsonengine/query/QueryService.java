@@ -22,8 +22,6 @@ public class QueryService {
      */
     public static final QueryService i = new QueryService();
 
-    private final JEDocMeta jeDocMeta = JEDocMeta.get();
-
     private QueryService() {
     }
 
@@ -37,8 +35,9 @@ public class QueryService {
     public String query(QueryRequest queryReq) {
 
         // execute query
+        final JEDocMeta jeDocMeta = JEDocMeta.get();
         final List<JEDoc> resultJeDocs =
-            queryReq.applyFilter(Datastore.query(jeDocMeta)).asList();
+            queryReq.applyFilter(Datastore.query(jeDocMeta), jeDocMeta).asList();
 
         // extract docValues from the result JEDocs
         final List<Object> resultValues = new LinkedList<Object>();

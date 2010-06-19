@@ -38,12 +38,12 @@ public class CRUDServlet extends HttpServlet {
 
     public static final String PARAM_NAME_DOCID = "_docId";
 
-    private static final long serialVersionUID = 1L;
+    public static final String CHARSET = "UTF-8";
 
-    private static final String CHARSET = "UTF-8";
-
-    private static final String RESP_CONTENT_TYPE =
+    public static final String RESP_CONTENT_TYPE =
         "application/json; charset=" + CHARSET;
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

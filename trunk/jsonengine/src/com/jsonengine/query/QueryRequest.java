@@ -6,6 +6,7 @@ import java.util.Set;
 import org.slim3.datastore.ModelQuery;
 
 import com.jsonengine.common.JERequest;
+import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
 
 /**
@@ -23,10 +24,10 @@ public class QueryRequest extends JERequest {
         queryFilters.add(qf);
     }
 
-    public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
+    public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq, JEDocMeta jeDocMeta) {
         ModelQuery<JEDoc> curMq = mq;
         for (QueryFilter qf : queryFilters) {
-            curMq = qf.applyFilter(curMq);
+            curMq = qf.applyFilter(curMq, jeDocMeta);
         }
         return curMq;
     }
