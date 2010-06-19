@@ -25,7 +25,7 @@ import com.jsonengine.model.JEDoc;
  */
 public class CRUDService {
 
-    /**
+    /*
      * Singleton instance.
      */
     public static final CRUDService i = new CRUDService();
