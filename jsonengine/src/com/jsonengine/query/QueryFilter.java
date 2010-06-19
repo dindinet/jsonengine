@@ -19,7 +19,25 @@ public abstract class QueryFilter {
         ASC, DESC
     };
 
-    private static final JEDocMeta jeDocMeta = JEDocMeta.get();
+    public static Comparator parseComparator(String token) {
+        if ("lt".equals(token)) {
+            return Comparator.LT;
+        } else if ("le".equals(token)) {
+            return Comparator.LE;
+        } else if ("gt".equals(token)) {
+            return Comparator.GT;
+        } else if ("ge".equals(token)) {
+            return Comparator.GE;
+        }
+        return Comparator.EQ;
+    }
+
+    public static SortOrder parseSortOrder(String token) {
+        if ("desc".equals(token)) {
+            return SortOrder.DESC;
+        }
+        return SortOrder.ASC;
+    }
 
     public final String docType;
 
@@ -27,7 +45,7 @@ public abstract class QueryFilter {
         this.docType = docType;
     }
 
-    public abstract ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> curMq);
+    public abstract ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> curMq, JEDocMeta jeDocMeta);
 
     public static class CondFilter extends QueryFilter {
 
@@ -50,7 +68,7 @@ public abstract class QueryFilter {
         }
 
         @Override
-        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq, JEDocMeta jeDocMeta) {
             final StringCollectionAttributeMeta<JEDoc, Set<String>> ie =
                 jeDocMeta.indexEntries;
             switch (comparator) {
@@ -83,7 +101,7 @@ public abstract class QueryFilter {
         }
 
         @Override
-        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq, JEDocMeta jeDocMeta) {
             return mq.limit(limitCount);
         }
     }
@@ -101,7 +119,7 @@ public abstract class QueryFilter {
         }
 
         @Override
-        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq) {
+        public ModelQuery<JEDoc> applyFilter(ModelQuery<JEDoc> mq, JEDocMeta jeDocMeta) {
             return mq; // TODO
         }
     }

@@ -3,7 +3,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
 	<context-param>
         <param-name>slim3.rootPackage</param-name>
-        <param-value>slim3</param-value>
+        <param-value>com.jsonengine</param-value>
     </context-param>
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
@@ -31,12 +31,14 @@
         <filter-name>HotReloadingFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>    
+    </filter-mapping>
     <filter-mapping>
         <filter-name>DatastoreFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
+    
+    <!--  
     <filter-mapping>
         <filter-name>FrontController</filter-name>
         <url-pattern>/*</url-pattern>
@@ -45,6 +47,7 @@
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
+	-->
     
     <servlet>
         <servlet-name>GlobalTransactionServlet</servlet-name>
@@ -65,6 +68,16 @@
         <servlet-class>bufferings.ktr.wjr.server.service.KtrWjrServiceServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>CRUDServlet</servlet-name>
+        <servlet-class>com.jsonengine.http.CRUDServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>QueryServlet</servlet-name>
+        <servlet-class>com.jsonengine.http.QueryServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>GlobalTransactionServlet</servlet-name>
         <url-pattern>/slim3/gtx</url-pattern>
@@ -81,7 +94,21 @@
         <servlet-name>KtrWjrServiceServlet</servlet-name>
         <url-pattern>/ktrwjr/ktrwjr/ktrwjr.s3gwt</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CRUDServlet</servlet-name>
+        <url-pattern>/_je/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>QueryServlet</servlet-name>
+        <url-pattern>/_q/*</url-pattern>
+    </servlet-mapping>
     
+    <servlet-mapping>
+        <servlet-name>KtrWjrServiceServlet</servlet-name>
+        <url-pattern>/ktrwjr/ktrwjr/ktrwjr.s3gwt</url-pattern>
+    </servlet-mapping>
     <security-constraint>
         <web-resource-collection>
             <url-pattern>*.jsp</url-pattern>
