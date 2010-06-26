@@ -9,7 +9,7 @@
 This query would return an array of JSON documents that satisfies:
 
   * docType is "myDoc".
-  * "age" property is greater than or equal to 20 and less than 60.
+  * "age" property is "greater than or equal to 20" *and* "less than 60".
   * Sorted by "name" property in ascending order.
   * Number of returned documents will be limited to 10.
 
@@ -35,10 +35,11 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 <limitFilter> = 'limit=' <integer>
 }}}
 
-== Restrictions ==
+== Notes ==
 
   * Multiple `<`condFilter`>`s will be combined with *logical AND* operation.
   * If you use only *"eq" comparator* in `<`condFilter`>`s, you can specify any number of `<`condFilter`>`s. e.g. "cond=age.eq.10&cond=name.eq.Foo&cond=id.eq.001&..."
   * If you use *inequality comparators* (lt, le, gt, ge) in `<`condFilter`>`s, you can specify *only one* kind of `<`propertyName`>` in one query URI. e.g. You can not do "cond=*age*.ge.20&cond=*name*.eq.Foo"
-  * You may put `<`sortFilter`>` and `<`limitFilter`>` only once.
+  * You may put `<`sortFilter`>` only once. You can choose any property name as the sort criteria.
+  * You may put `<`limitFilter`>` only once.
   * The whole URI should be URL encoded.
