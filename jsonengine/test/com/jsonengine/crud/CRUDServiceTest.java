@@ -48,7 +48,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         final Long updatedAt = JETestUtils.i.getUpdatedAtFromTestMap(resultMap);
         assertNotNull("_updatedAt must exists", updatedAt);
         assertEquals(docId, resultMap.remove(JEDoc.PROP_NAME_DOCID));
-        assertTrue(JETestUtils.i.compareMaps(testMap, resultMap));
+        assertTrue(JETestUtils.i.areMapsEqual(testMap, resultMap));
 
         // update the test data
         testMap.put("001", "foo2");
@@ -67,7 +67,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         assertNotNull("_updatedAt must exists", resultMap2
             .remove(JEDoc.PROP_NAME_UPDATED_AT));
         assertEquals(docId, resultMap2.remove(JEDoc.PROP_NAME_DOCID));
-        assertTrue(JETestUtils.i.compareMaps(testMap, resultMap2));
+        assertTrue(JETestUtils.i.areMapsEqual(testMap, resultMap2));
 
         // try saving the old data again and check if the conflict detection is
         // working

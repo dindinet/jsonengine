@@ -37,44 +37,22 @@ public class QueryServlet extends HttpServlet {
         final QueryRequest qReq = createQueryRequest(req);
         final String[] conds = req.getParameterValues(PARAM_COND);
         if (conds != null) {
-            for (String cond : conds) {
-                final String[] tokens = cond.split("\\.");
-                final String propName = tokens[0];
-                final QueryFilter.Comparator cp =
-                    QueryFilter.parseComparator(tokens[1]);
-                final String propValue = tokens[2];
-                final QueryFilter condFilter =
-                    new QueryFilter.CondFilter(
-                        qReq.getDocType(),
-                        propName,
-                        cp,
-                        propValue);
-                qReq.addQueryFilter(condFilter);
-            }
+            parseCondFilters(qReq, conds);
         }
 
         // add QueryFilters for "sort"
         final String sortParam = req.getParameter(PARAM_SORT);
         if (sortParam != null) {
-            final String[] sortTokens = sortParam.split("\\.");
-            final String propName = sortTokens[0];
-            final QueryFilter.SortOrder so =
-                QueryFilter.parseSortOrder(sortTokens[1]);
-            final QueryFilter sortFilter =
-                new QueryFilter.SortFilter(qReq.getDocType(), propName, so);
-            qReq.addQueryFilter(sortFilter);
+            parseSortFilter(qReq, sortParam);
         }
 
         // add QueryFilters for "limit"
         final String limitParam = req.getParameter(PARAM_LIMIT);
         if (limitParam != null) {
-            final int limit = Integer.parseInt(limitParam);
-            final QueryFilter limitFilter =
-                new QueryFilter.LimitFilter(qReq.getDocType(), limit);
-            qReq.addQueryFilter(limitFilter);
+            parseLimitFilter(qReq, limitParam);
         }
 
-        // execute query
+        // execute the query
         final String resultJson = QueryService.i.query(qReq);
 
         // return the result
@@ -82,6 +60,41 @@ public class QueryServlet extends HttpServlet {
         final PrintWriter pw = resp.getWriter();
         pw.append(resultJson);
         pw.close();
+    }
+
+    private void parseCondFilters(final QueryRequest qReq, final String[] conds) {
+        for (String cond : conds) {
+            final String[] tokens = cond.split("\\.");
+            final String propName = tokens[0];
+            final QueryFilter.Comparator cp =
+                QueryFilter.parseComparator(tokens[1]);
+            final String propValue = tokens[2];
+            final QueryFilter condFilter =
+                new QueryFilter.CondFilter(
+                    qReq.getDocType(),
+                    propName,
+                    cp,
+                    propValue);
+            qReq.addQueryFilter(condFilter);
+        }
+    }
+
+    private void parseSortFilter(final QueryRequest qReq, final String sortParam) {
+        final String[] sortTokens = sortParam.split("\\.");
+        final String propName = sortTokens[0];
+        final QueryFilter.SortOrder so =
+            QueryFilter.parseSortOrder(sortTokens[1]);
+        final QueryFilter sortFilter =
+            new QueryFilter.SortFilter(qReq.getDocType(), propName, so);
+        qReq.addQueryFilter(sortFilter);
+    }
+
+    private void parseLimitFilter(final QueryRequest qReq,
+            final String limitParam) {
+        final int limit = Integer.parseInt(limitParam);
+        final QueryFilter limitFilter =
+            new QueryFilter.LimitFilter(qReq.getDocType(), limit);
+        qReq.addQueryFilter(limitFilter);
     }
 
     private QueryRequest createQueryRequest(HttpServletRequest req)
