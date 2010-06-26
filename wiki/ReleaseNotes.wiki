@@ -1,5 +1,9 @@
 #summary Release notes
 
+=== release 0.1.20100626 (Jun 26, 2010) ===
+
+ * Supported query.
+
 === release 0.1.20100222 (Feb 22, 2010) ===
 
  * Changed the POST API to support FORM parameter style request.
@@ -11,6 +15,5 @@
 
 === TODOs of the alpha version ===
 
- * Query
- * Security
+ * Security (Google account authentication)
  * Sample JS/Flash client
