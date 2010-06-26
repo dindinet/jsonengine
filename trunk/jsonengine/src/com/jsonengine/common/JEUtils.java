@@ -121,6 +121,12 @@ public class JEUtils {
         } else if (val instanceof BigDecimal) {
             return JEUtils.i.convertBigDecimalToIndexKey((BigDecimal) val);
         } else {
+            // try to convert the value to BigDecimal
+            try {
+                return JEUtils.i.convertBigDecimalToIndexKey(new BigDecimal(val.toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }

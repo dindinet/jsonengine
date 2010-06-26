@@ -187,7 +187,7 @@ public class JETestUtils {
      *            the second Map to be compared
      * @return true if two Maps has the same entries.
      */
-    public boolean compareMaps(Map<String, Object> _map1,
+    public boolean areMapsEqual(Map<String, Object> _map1,
             Map<String, Object> _map2) {
 
         final Map<String, Object> map1 = removeUnderscoredProperties(_map1);

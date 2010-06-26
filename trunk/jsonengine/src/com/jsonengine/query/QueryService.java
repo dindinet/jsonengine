@@ -1,5 +1,6 @@
 package com.jsonengine.query;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,15 +38,20 @@ public class QueryService {
         // execute query
         final JEDocMeta jeDocMeta = JEDocMeta.get();
         final List<JEDoc> resultJeDocs =
-            queryReq.applyFilter(Datastore.query(jeDocMeta), jeDocMeta).asList();
+            queryReq
+                .applyFiltersToModelQuery(Datastore.query(jeDocMeta))
+                .asList();
 
         // extract docValues from the result JEDocs
-        final List<Object> resultValues = new LinkedList<Object>();
+        Collection<Object> results = new LinkedList<Object>();
         for (JEDoc jeDoc : resultJeDocs) {
-            resultValues.add(jeDoc.getDocValues());
+            results.add(jeDoc.getDocValues());
         }
 
+        // apply post query filters
+        results = queryReq.applyFiltersToResultList(results);
+
         // return the results by JSON
-        return JSON.encode(resultValues);
+        return JSON.encode(results);
     }
 }
