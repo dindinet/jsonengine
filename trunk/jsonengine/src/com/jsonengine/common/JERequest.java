@@ -1,5 +1,7 @@
 package com.jsonengine.common;
 
+import com.jsonengine.service.doctype.DocTypeService;
+
 /**
  * Holds various request parameters required for processing jsonengine
  * operations.
@@ -8,38 +10,59 @@ package com.jsonengine.common;
  */
 public abstract class JERequest {
 
-    private String requestedBy;
-    
-    private long requestedAt;
-    
+    // docType of this request
     private String docType;
+
+    // a timestamp of the request time
+    private long requestedAt;
+
+    // an User ID of the requestor
+    private String requestedBy;
 
     public JERequest() {
         super();
-    }
-
-    public String getRequestedBy() {
-        return requestedBy;
-    }
-
-    public void setRequestedBy(String requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public long getRequestedAt() {
-        return requestedAt;
-    }
-
-    public void setRequestedAt(long requestedAt) {
-        this.requestedAt = requestedAt;
     }
 
     public String getDocType() {
         return docType;
     }
 
+    public long getRequestedAt() {
+        return requestedAt;
+    }
+
+    public String getRequestedBy() {
+        return requestedBy;
+    }
+
     public void setDocType(String docName) {
         this.docType = docName;
+    }
+
+    public void setRequestedAt(long requestedAt) {
+        this.requestedAt = requestedAt;
+    }
+
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
+    }
+
+    /**
+     * Checks if the docType is accessible for this request.
+     * 
+     * @param createdBy
+     *            an user ID of the creator of the doc.
+     * @param isRead
+     *            true if it's a read operation (false for write operation)
+     * @return true if the access is allowed.
+     */
+    public boolean isAccessible(String createdBy, boolean isRead) {
+        return (new DocTypeService()).isAccessible(
+            docType,
+            requestedBy,
+            createdBy,
+            isRead,
+            false);
     }
 
 }

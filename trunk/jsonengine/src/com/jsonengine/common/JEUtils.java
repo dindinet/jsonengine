@@ -12,43 +12,20 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
  */
 public class JEUtils {
 
+    public static final MemcacheService mcService =
+        MemcacheServiceFactory.getMemcacheService();
+
     public static final String ALNUMS =
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static final int UUID_DIGITS = 32;
-
     public static final JEUtils i = new JEUtils();
-
-    private JEUtils() {
-    }
 
     private static final String MC_KEY_TIMESTAMP =
         "com.jsonengine.common.LogCounterService#timestamp";
 
-    private static final MemcacheService mcService =
-        MemcacheServiceFactory.getMemcacheService();
+    public static final int UUID_DIGITS = 32;
 
-    /**
-     * Returns a global time stamp. The time stamp value is based on
-     * {@link System#currentTimeMillis()}, but is assured to be the largest and
-     * unique value in the application which may be served by several App
-     * Servers. But please note it uses the Memcache service to assure the
-     * uniqueness, and it would just return the
-     * {@link System#currentTimeMillis()} as is when the Memcache value is
-     * expired or lost.
-     * 
-     * TODO make this atomic
-     * 
-     * @return a global time stamp value
-     */
-    public long getGlobalTimestamp() {
-        long timestamp = System.currentTimeMillis();
-        Long lastTimestamp = (Long) mcService.get(MC_KEY_TIMESTAMP);
-        if (lastTimestamp != null && lastTimestamp >= timestamp) {
-            timestamp = lastTimestamp + 1;
-        }
-        mcService.put(MC_KEY_TIMESTAMP, timestamp);
-        return timestamp;
+    private JEUtils() {
     }
 
     /**
@@ -81,29 +58,6 @@ public class JEUtils {
     }
 
     /**
-     * Generates an UUID.
-     * 
-     * @return an UUID
-     */
-    public String generateUUID() {
-        return generateRandomAlnums(UUID_DIGITS);
-    }
-
-    /**
-     * Generates a String with random characteres made of alpha numerics.
-     * 
-     * @condParam digits
-     * @return random alnum String
-     */
-    public String generateRandomAlnums(int digits) {
-        final StringBuilder sb = new StringBuilder();
-        while (sb.length() < digits) {
-            sb.append(ALNUMS.charAt((int) (Math.random() * ALNUMS.length())));
-        }
-        return sb.toString();
-    }
-
-    /**
      * Encodes a property value of JSON doc into a String for filtering or
      * sorting. The value can be a String, Boolean or BigDecimal.
      * 
@@ -123,12 +77,59 @@ public class JEUtils {
         } else {
             // try to convert the value to BigDecimal
             try {
-                return JEUtils.i.convertBigDecimalToIndexKey(new BigDecimal(val.toString()));
+                return JEUtils.i.convertBigDecimalToIndexKey(new BigDecimal(val
+                    .toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
-    
+
+    /**
+     * Generates a String with random characteres made of alpha numerics.
+     * 
+     * @condParam digits
+     * @return random alnum String
+     */
+    public String generateRandomAlnums(int digits) {
+        final StringBuilder sb = new StringBuilder();
+        while (sb.length() < digits) {
+            sb.append(ALNUMS.charAt((int) (Math.random() * ALNUMS.length())));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Generates an UUID.
+     * 
+     * @return an UUID
+     */
+    public String generateUUID() {
+        return generateRandomAlnums(UUID_DIGITS);
+    }
+
+    /**
+     * Returns a global time stamp. The time stamp value is based on
+     * {@link System#currentTimeMillis()}, but is assured to be the largest and
+     * unique value in the application which may be served by several App
+     * Servers. But please note it uses the Memcache service to assure the
+     * uniqueness, and it would just return the
+     * {@link System#currentTimeMillis()} as is when the Memcache value is
+     * expired or lost.
+     * 
+     * TODO make this atomic
+     * 
+     * @return a global time stamp value
+     */
+    public long getGlobalTimestamp() {
+        long timestamp = System.currentTimeMillis();
+        Long lastTimestamp = (Long) mcService.get(MC_KEY_TIMESTAMP);
+        if (lastTimestamp != null && lastTimestamp >= timestamp) {
+            timestamp = lastTimestamp + 1;
+        }
+        mcService.put(MC_KEY_TIMESTAMP, timestamp);
+        return timestamp;
+    }
+
 }
