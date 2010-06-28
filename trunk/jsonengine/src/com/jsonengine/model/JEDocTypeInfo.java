@@ -15,12 +15,24 @@ import com.google.appengine.api.datastore.Key;
 @Model(schemaVersion = 1)
 public class JEDocTypeInfo implements Serializable {
 
+    /**
+     * An access level where only administrator is allowed to access.
+     */
     public static final String ACCESS_LEVEL_ADMIN = "admin";
 
+    /**
+     * An access level where only the creator of the doc is allowed to access.
+     */
     public static final String ACCESS_LEVEL_PRIVATE = "private";
 
+    /**
+     * An access level where only an authenticated user is allowed to access.
+     */
     public static final String ACCESS_LEVEL_PROTECTED = "protected";
 
+    /**
+     * An access level where anyone is allowed to access.
+     */
     public static final String ACCESS_LEVEL_PUBLIC = "public";
 
     private static final long serialVersionUID = 1L;
