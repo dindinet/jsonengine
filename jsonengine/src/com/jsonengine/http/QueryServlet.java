@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jsonengine.common.JEUtils;
-import com.jsonengine.query.QueryFilter;
-import com.jsonengine.query.QueryRequest;
-import com.jsonengine.query.QueryService;
+import com.jsonengine.service.query.QueryFilter;
+import com.jsonengine.service.query.QueryRequest;
+import com.jsonengine.service.query.QueryService;
 
 /**
  * Provides REST API for jsonengine query operations.
@@ -21,13 +21,37 @@ import com.jsonengine.query.QueryService;
  */
 public class QueryServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-
     public static final String PARAM_COND = "cond";
+
+    public static final String PARAM_LIMIT = "limit";
 
     public static final String PARAM_SORT = "sort";
 
-    public static final String PARAM_LIMIT = "limit";
+    private static final long serialVersionUID = 1L;
+
+    private QueryRequest createQueryRequest(HttpServletRequest req)
+            throws UnsupportedEncodingException {
+
+        // set charset for reading parameters
+        req.setCharacterEncoding(CRUDServlet.CHARSET);
+
+        // parse URI and put docType and docId into jeReq
+        final QueryRequest qReq = new QueryRequest();
+        final String[] tokens = req.getRequestURI().split("/");
+        if (tokens.length < 3) {
+            throw new IllegalArgumentException("No docType found");
+        }
+        if (tokens.length >= 3) {
+            qReq.setDocType(tokens[2]);
+        }
+
+        // set Google account info, timestamp, and checkConflict flag
+        if (req.getUserPrincipal() != null) {
+            qReq.setRequestedBy(req.getUserPrincipal().getName());
+        }
+        qReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        return qReq;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -79,16 +103,6 @@ public class QueryServlet extends HttpServlet {
         }
     }
 
-    private void parseSortFilter(final QueryRequest qReq, final String sortParam) {
-        final String[] sortTokens = sortParam.split("\\.");
-        final String propName = sortTokens[0];
-        final QueryFilter.SortOrder so =
-            QueryFilter.parseSortOrder(sortTokens[1]);
-        final QueryFilter sortFilter =
-            new QueryFilter.SortFilter(qReq.getDocType(), propName, so);
-        qReq.addQueryFilter(sortFilter);
-    }
-
     private void parseLimitFilter(final QueryRequest qReq,
             final String limitParam) {
         final int limit = Integer.parseInt(limitParam);
@@ -97,27 +111,13 @@ public class QueryServlet extends HttpServlet {
         qReq.addQueryFilter(limitFilter);
     }
 
-    private QueryRequest createQueryRequest(HttpServletRequest req)
-            throws UnsupportedEncodingException {
-
-        // set charset for reading parameters
-        req.setCharacterEncoding(CRUDServlet.CHARSET);
-
-        // parse URI and put docType and docId into jeReq
-        final QueryRequest qReq = new QueryRequest();
-        final String[] tokens = req.getRequestURI().split("/");
-        if (tokens.length < 3) {
-            throw new IllegalArgumentException("No docType found");
-        }
-        if (tokens.length >= 3) {
-            qReq.setDocType(tokens[2]);
-        }
-
-        // set Google account info, timestamp, and checkConflict flag
-        if (req.getUserPrincipal() != null) {
-            qReq.setRequestedBy(req.getUserPrincipal().getName());
-        }
-        qReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
-        return qReq;
+    private void parseSortFilter(final QueryRequest qReq, final String sortParam) {
+        final String[] sortTokens = sortParam.split("\\.");
+        final String propName = sortTokens[0];
+        final QueryFilter.SortOrder so =
+            QueryFilter.parseSortOrder(sortTokens[1]);
+        final QueryFilter sortFilter =
+            new QueryFilter.SortFilter(qReq.getDocType(), propName, so);
+        qReq.addQueryFilter(sortFilter);
     }
 }

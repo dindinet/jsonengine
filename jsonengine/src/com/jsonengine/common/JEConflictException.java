@@ -9,12 +9,12 @@ public class JEConflictException extends Exception {
 
     private static final long serialVersionUID = 1L;
     
-    public JEConflictException(Throwable th) {
-        super(th);
-    }
-    
     public JEConflictException(String msg) {
         super(msg);
+    }
+    
+    public JEConflictException(Throwable th) {
+        super(th);
     }
     
 
