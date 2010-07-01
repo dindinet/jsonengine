@@ -57,7 +57,7 @@ jsonengine will be running as an App Engine application that is registered by yo
 Once you signed up with App Engine, create an application for jsonengine with the follwing steps:
 
   * Click the "Create an Application" button on "Applications Overview" page
-  * Type your favorite Application Identifier (app id) and Application Title for the application. For example, if you name it as "my-appid", your jsonengine will be run on "http://my-appid.appspot.com". In the following, the app id will be refered as _`<`my-appid`>`_.
+  * Type your favorite Application Identifier (app id) and Application Title for the application. For example, if you name it as "my-appid", your jsonengine will be run on "http://my-appid.appspot.com". In the following, the app id will be refered as _my-appid_.
   * Click the "Check Availability" button to check if the app id is unique
   * Click the "Save" button and now your app id is registered
 
@@ -68,7 +68,7 @@ Now you upload the jsonengine to App Engine. You may also upload your HTML conte
   * Open _jsonengine-dir_/war/WEB-INF/appengine-web.xml file with an editor and insert your app id into the application element:
 
 {{{
-<application>my-jsonengine-appid</application>
+<application>_my-appid_</application>
 }}}
 
   * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory to deploy them to App Engine. If you do not have anything to upload (in case that you just want to test jsonengine or your client is iPhone/iPad/Android app), you may skip this step.
@@ -93,7 +93,7 @@ On Mac/Linux shell:
 
 Now your jsonengine is ready. You can check if it is working properly by accessing the following URL with your browser:
 
-  * http://my-jsonengine-appid.appspot.com/ktrwjr/ (Internal Unit Test: click "Check All" button and "Run" to execute all the unit tests)
-  * http://my-jsonengine-appid.appspot.com/_admin/jsonengine_test.html (External Unit Test from Admin Flash client)
+  * http://_my-appid_.appspot.com/ktrwjr/ (Internal Unit Test: click "Check All" button and "Run" to execute all the unit tests)
+  * http://_my-appid_.appspot.com/_admin/jsonengine_test.html (External Unit Test from Admin Flash client)
 
 Theses URLs will show a web page to run unit tests against the jsonengine. Please wait a while until it finishes all the tests, and if you see the green sign the service is working properly. If you see the red sign it indicates any failure on testing the features of jsonengine.
