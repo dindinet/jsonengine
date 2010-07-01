@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import net.arnx.jsonic.JSON;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slim3.tester.AppEngineTestCase;
 
@@ -15,9 +16,6 @@ import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JETestUtils;
-import com.jsonengine.service.query.QueryFilter;
-import com.jsonengine.service.query.QueryRequest;
-import com.jsonengine.service.query.QueryService;
 
 /**
  * Tests query operations of {@link QueryService}.
@@ -28,16 +26,23 @@ public class QueryServiceTest extends AppEngineTestCase {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
+    @Before
+    public void before() throws JEConflictException, JENotFoundException,
+            JEAccessDeniedException {
+
+        // setup test docTypeInfo and test users
+        JETestUtils.i.storeTestDocTypeInfo();
+        JETestUtils.i.storeTestUsers(JETestUtils.TEST_DOCTYPE);
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void queryAllUsers() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // find all users
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final String resultJson = QueryService.i.query(qr);
 
         // validate the result
@@ -51,11 +56,9 @@ public class QueryServiceTest extends AppEngineTestCase {
     public void queryFirstTwoUsers() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // find all users with a limit
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter qf = new QueryFilter.LimitFilter(qr.getDocType(), 2);
         qr.addQueryFilter(qf);
         final String resultJson = QueryService.i.query(qr);
@@ -158,11 +161,9 @@ public class QueryServiceTest extends AppEngineTestCase {
     public void queryWithGEAndLE() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // build query filters
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter condFilter =
             new QueryFilter.CondFilter(
                 qr.getDocType(),
@@ -199,11 +200,9 @@ public class QueryServiceTest extends AppEngineTestCase {
     public void queryWith3EQs() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // build query filters
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter condFilter =
             new QueryFilter.CondFilter(
                 qr.getDocType(),
@@ -244,11 +243,9 @@ public class QueryServiceTest extends AppEngineTestCase {
     public void queryWithSortAsc() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // find all users
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter sortFilter =
             new QueryFilter.SortFilter(
                 qr.getDocType(),
@@ -274,11 +271,9 @@ public class QueryServiceTest extends AppEngineTestCase {
     public void queryWithSortDesc() throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // find all users
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter sortFilter =
             new QueryFilter.SortFilter(
                 qr.getDocType(),
@@ -305,11 +300,9 @@ public class QueryServiceTest extends AppEngineTestCase {
             throws JEConflictException, JENotFoundException,
             JEAccessDeniedException {
 
-        // setup test users
-        JETestUtils.i.storeTestUsers();
-
         // build query filters
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         final QueryFilter condFilter =
             new QueryFilter.CondFilter(qr.getDocType(), propName, cp, propValue);
         qr.addQueryFilter(condFilter);
@@ -324,4 +317,22 @@ public class QueryServiceTest extends AppEngineTestCase {
         log.info("Result: " + resultJson);
         return (List<Map<String, Object>>) JSON.decode(resultJson);
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void queryOnEmptyDocType() throws JEConflictException,
+            JENotFoundException, JEAccessDeniedException {
+
+        // find all users
+        final QueryRequest qr =
+            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE2);
+        qr.setAdmin(true);
+        final String resultJson = QueryService.i.query(qr);
+
+        // validate the result
+        final List<Map<String, Object>> resultMaps =
+            (List<Map<String, Object>>) JSON.decode(resultJson);
+        assertEquals(0, resultMaps.size());
+    }
+
 }

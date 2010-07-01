@@ -44,12 +44,20 @@ public class DocTypeService {
 
         // get docTypeInfo
         final JEDocTypeInfo jdti = getDocTypeInfo(docType);
+        
+        // it it's admin access, allow it
+        if (isAdmin) {
+            return true;
+        }
 
-        // if there's no docTypeInfo specified, or it's "public", allow all
-        // accesses
-        if (jdti == null
-            || JEDocTypeInfo.ACCESS_LEVEL_PUBLIC.equals(jdti
-                .getAccessLevel(isRead))) {
+        // if there's no docTypeInfo specified, deny all access
+        if (jdti == null) {
+            return false;
+        }
+
+        // if it's "public", allow all accesses
+        if (JEDocTypeInfo.ACCESS_LEVEL_PUBLIC.equals(jdti
+            .getAccessLevel(isRead))) {
             return true;
         }
 
@@ -59,20 +67,66 @@ public class DocTypeService {
             return requestedBy != null;
         }
 
-        // if it's "private", check if this is a create request, or requestor =
-        // creator
+        // if it's "private", check if this is a create request, requestor =
+        // creator, or an admin access
         if (JEDocTypeInfo.ACCESS_LEVEL_PRIVATE.equals(jdti
             .getAccessLevel(isRead))) {
-            final boolean isCreateRequest = !isRead && createdBy == null;
+            final boolean isCreateRequest =
+                !isRead && createdBy == null && requestedBy != null;
             final boolean isCreatorAccess =
                 requestedBy != null && requestedBy.equals(createdBy);
-            return isCreateRequest || isCreatorAccess;
+            return isCreateRequest || isCreatorAccess || isAdmin;
         }
 
-        // if it's "admin", check if it's admin
-        if (JEDocTypeInfo.ACCESS_LEVEL_ADMIN
-            .equals(jdti.getAccessLevel(isRead))) {
-            return isAdmin;
+        // otherwise, disallow the access
+        return false;
+    }
+
+    /**
+     * Checks if the docType is able to be queried.
+     * 
+     * @param docType
+     *            docType to be checked.
+     * @param requestedBy
+     *            An user ID of the requestor (null means the user has not
+     *            authenticated).
+     * @param isAdmin
+     *            true if the requestor is an administrator.
+     * @return true if the access is allowed.
+     */
+    public boolean isAccessibleByQuery(String docType, String requestedBy,
+            boolean isAdmin) {
+
+        // get docTypeInfo
+        final JEDocTypeInfo jdti = getDocTypeInfo(docType);
+
+        // it it's admin access, allow it
+        if (isAdmin) {
+            return true;
+        }
+
+        // if there's no docTypeInfo specified deny it
+        if (jdti == null) {
+            return false;
+        }
+        
+        // if there's no docTypeInfo specified, or it's "public", allow all
+        // accesses
+        if (JEDocTypeInfo.ACCESS_LEVEL_PUBLIC.equals(jdti
+                .getAccessLevel(true))) {
+            return true;
+        }
+
+        // if it's "protected", check requestor has an ID
+        if (JEDocTypeInfo.ACCESS_LEVEL_PROTECTED.equals(jdti
+            .getAccessLevel(true))) {
+            return requestedBy != null;
+        }
+
+        // if it's "private", check requestor has an ID
+        if (JEDocTypeInfo.ACCESS_LEVEL_PRIVATE
+            .equals(jdti.getAccessLevel(true))) {
+            return requestedBy != null;
         }
 
         // otherwise, disallow the access
@@ -123,14 +177,18 @@ public class DocTypeService {
      *            access level specified for this docType on write operations.
      * @return a {@link JEDocTypeInfo} created.
      */
-    public JEDocTypeInfo createDocType(String docType,
+    public JEDocTypeInfo createDocTypeInfo(String docType,
             String accessLevelForRead, String accessLevelForWrite) {
+
+        // create JEDocTypeInfo
         final JEDocTypeInfo jdti = new JEDocTypeInfo();
         jdti.setKey(KeyFactory.createKey(
             jdti.getClass().getSimpleName(),
             docType));
         jdti.setAccessLevelForRead(accessLevelForRead);
         jdti.setAccessLevelForWrite(accessLevelForWrite);
+
+        // save it
         final Transaction tx = Datastore.beginTransaction();
         Datastore.put(jdti);
         tx.commit();

@@ -33,6 +33,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
     public void testCRUD() throws JEConflictException, JENotFoundException, JEAccessDeniedException {
 
         // save a test data
+        JETestUtils.i.storeTestDocTypeInfo();
         final Map<String, Object> testMap = JETestUtils.i.createTestMap();
         final CRUDRequest jeReq = JETestUtils.i.createTestCRUDRequest(testMap);
         final String savedJson = CRUDService.i.put(jeReq);
@@ -105,5 +106,5 @@ public class CRUDServiceTest extends AppEngineTestCase {
             // OK
         }
     }
-
+    
 }

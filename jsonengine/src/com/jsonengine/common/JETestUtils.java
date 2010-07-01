@@ -8,8 +8,10 @@ import java.util.Map;
 import net.arnx.jsonic.JSON;
 
 import com.jsonengine.model.JEDoc;
+import com.jsonengine.model.JEDocTypeInfo;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
+import com.jsonengine.service.doctype.DocTypeService;
 import com.jsonengine.service.query.QueryRequest;
 import com.jsonengine.service.query.QueryService;
 
@@ -26,6 +28,8 @@ public class JETestUtils {
     public static final JETestUtils i = new JETestUtils();
 
     public static final String TEST_DOCTYPE = "test";
+
+    public static final String TEST_DOCTYPE2 = "test2";
 
     public static final String TEST_USERNAME = "tester";
 
@@ -119,9 +123,9 @@ public class JETestUtils {
      * @param json
      * @return {@link QueryRequest} for testing.
      */
-    public QueryRequest createTestQueryRequest() {
+    public QueryRequest createTestQueryRequest(String docType) {
         final QueryRequest jeReq = new QueryRequest();
-        jeReq.setDocType(TEST_DOCTYPE);
+        jeReq.setDocType(docType);
         jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
         jeReq.setRequestedBy(TEST_USERNAME);
         return jeReq;
@@ -181,11 +185,11 @@ public class JETestUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public void removeAllUsers() throws JENotFoundException,
+    public void removeAllUsers(String docType) throws JENotFoundException,
             JEConflictException, JEAccessDeniedException {
 
         // get all users
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest();
+        final QueryRequest qr = JETestUtils.i.createTestQueryRequest(docType);
         final String resultJson = QueryService.i.query(qr);
 
         // remove them
@@ -221,10 +225,10 @@ public class JETestUtils {
         return docId;
     }
 
-    public void storeTestUsers() throws JEConflictException,
+    public void storeTestUsers(String docType) throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
-        removeAllUsers();
+        removeAllUsers(docType);
 
         final Map<String, Object> user1 = getBetty();
         saveJsonMap(user1);
@@ -237,6 +241,13 @@ public class JETestUtils {
 
         final Map<String, Object> user4 = getAmanda();
         saveJsonMap(user4);
+    }
+
+    public void storeTestDocTypeInfo() {
+        (new DocTypeService()).createDocTypeInfo(
+            TEST_DOCTYPE,
+            JEDocTypeInfo.ACCESS_LEVEL_PUBLIC,
+            JEDocTypeInfo.ACCESS_LEVEL_PUBLIC);
     }
 
 }

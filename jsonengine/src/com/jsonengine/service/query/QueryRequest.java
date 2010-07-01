@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slim3.datastore.ModelQuery;
 
 import com.jsonengine.common.JERequest;
+import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
 import com.jsonengine.service.query.QueryFilter.Comparator;
 
@@ -47,9 +48,18 @@ public class QueryRequest extends JERequest {
      */
     public ModelQuery<JEDoc> applyFiltersToModelQuery(ModelQuery<JEDoc> mq) {
         ModelQuery<JEDoc> curMq = mq;
+        
+        // add apply filters
         final boolean isSingleCond = hasGtOrGe != hasLtOrLe;
         for (QueryFilter qf : queryFilters) {
             curMq = qf.applyFilterToModelQuery(curMq, isSingleCond);
+        }
+        
+        // if there's no condFilters specified, add a filter for docType
+        final boolean hasNoCondFilters = !hasGtOrGe && !hasLtOrLe;
+        final JEDocMeta jeDocMeta = JEDocMeta.get();
+        if (hasNoCondFilters) {
+            curMq = curMq.filter(jeDocMeta.docType.equal(getDocType()));
         }
         return curMq;
     }

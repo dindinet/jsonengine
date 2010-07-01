@@ -19,6 +19,17 @@ public abstract class JERequest {
     // an User ID of the requestor
     private String requestedBy;
 
+    // true if this is a request from admin
+    private boolean isAdmin = false;
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public JERequest() {
         super();
     }
@@ -62,7 +73,19 @@ public abstract class JERequest {
             requestedBy,
             createdBy,
             isRead,
-            false);
+            isAdmin);
+    }
+
+    /**
+     * Checks if the docType is accessible by a query.
+     * 
+     * @return true if the access is allowed.
+     */
+    public boolean isAccessibleByQuery() {
+        return (new DocTypeService()).isAccessibleByQuery(
+            docType,
+            requestedBy,
+            isAdmin);
     }
 
 }
