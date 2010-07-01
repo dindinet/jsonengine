@@ -3,6 +3,16 @@
 == Example query ==
 
 {{{
+/GET /_q/myDoc?cond=name.eq."Foo"
+}}}
+
+This query would return an array of JSON documents that satisfies:
+
+  * docType is "myDoc".
+  * "name" property equals to Foo (String value should be double-quoted).
+
+
+{{{
 /GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=name.asc&limit=10
 }}}
 
@@ -28,6 +38,7 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 
 <condFilter> = 'cond=' <propertyName> '.' <comparator> '.' <propertyValue>
 <comparator> = 'eq' | 'lt' | 'le' | 'gt' | 'ge' 
+<propertyValue> = "<stringValue>" | <numericValue> | 'true' | 'false'
 
 <sortFilter> = 'sort=' <propertyName> '.' <sortOrder>
 <sortOrder> = 'asc' | 'desc'
@@ -38,7 +49,8 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 == Notes ==
 
   * Multiple `<`condFilter`>`s will be combined with *logical AND* operation.
-  * If you use only *"eq" comparator* in `<`condFilter`>`s, you can specify any number of `<`condFilter`>`s. e.g. "cond=age.eq.10&cond=name.eq.Foo&cond=id.eq.001&..."
+  * If you want to specify a String as a `<`propertyValue`>`, you need to wrap it with double quotations. e.g. cond=name.eq."Foo"
+  * If you use only *"eq" comparator* in `<`condFilter`>`s, you can specify any number of `<`condFilter`>`s. e.g. cond=age.eq.10&cond=name.eq.Foo&cond=id.eq."001"&...
   * If you use *inequality comparators* (lt, le, gt, ge) in `<`condFilter`>`s, you can specify *only one* kind of `<`propertyName`>` in one query URI. e.g. You can not do "cond=*age*.ge.20&cond=*name*.eq.Foo"
   * You may put `<`sortFilter`>` only once. You can choose any property name as the sort criteria.
   * You may put `<`limitFilter`>` only once.
