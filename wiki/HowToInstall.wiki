@@ -57,7 +57,7 @@ jsonengine will be running as an App Engine application that is registered by yo
 Once you signed up with App Engine, create an application for jsonengine with the follwing steps:
 
   * Click the "Create an Application" button on "Applications Overview" page
-  * Type your favorite Application Identifier (app id) and Application Title for the application. For example, if you name it as "my-appid", your jsonengine will be run on "http://my-appid.appspot.com". In the following, the app id will be refered as _<my-appid>_.
+  * Type your favorite Application Identifier (app id) and Application Title for the application. For example, if you name it as "my-appid", your jsonengine will be run on "http://my-appid.appspot.com". In the following, the app id will be refered as _`<`my-appid`>`_.
   * Click the "Check Availability" button to check if the app id is unique
   * Click the "Save" button and now your app id is registered
 
