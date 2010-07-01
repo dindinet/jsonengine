@@ -1,9 +1,12 @@
 #summary Release notes
 
+=== release 0.1.20100730 (July 1, 2010) ===
+
+ * Added access control feature.
+
 === release 0.1.20100628 (Jun 28, 2010) ===
 
  * Added internal classes for the access control feature.
- * Please be noted that this release does not provide the access control features yet, means anybody can issue the get/put/query requests to your jsonengine from outside of your client. If your app requires a protection for your data, please wait until we support the access control.
 
 === release 0.1.20100626 (Jun 26, 2010) ===
 
