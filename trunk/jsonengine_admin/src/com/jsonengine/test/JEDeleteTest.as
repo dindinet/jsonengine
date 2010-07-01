@@ -19,9 +19,10 @@ package com.jsonengine.test
 	{		
 		test function testDelete():void {
 			var params:URLVariables = new URLVariables();
-			params["delete"] = "true";
-			var uri:String = "/_je/test/" + AllTests.testObj._docId;
+			params["_delete"] = "true";
+			var uri:String = "/_je/test/" + AllTests.resultUser1._docId;
 			NetManager.i.sendReq(uri, params, "POST", async(function(result:Object):void {
+				trace("DELETE success");
 			}));
 		}
 	}

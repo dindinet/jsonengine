@@ -15,15 +15,14 @@ package com.jsonengine.test
 	 * Tests GET method.
 	 */
 	public class JEDeleteConfirmTest
-	{		
+	{
 		test function testDeleteConfirm():void {
 			var params:URLVariables = new URLVariables();
-//			var uri:String = "/_je/test/foo";
-			var uri:String = "/_je/test/" + AllTests.testObj._docId;
+			var uri:String = "/_je/test/" + AllTests.resultUser1._docId;
 			NetManager.i.sendReq(uri, params, "GET", function(result:Object):void {
 					fail("This GET should be failed");
 				}, async(function(event:Event):void {
-					trace("Not found");
+					trace("DELETE confirmation success.");
 				}));
 		}
 	}

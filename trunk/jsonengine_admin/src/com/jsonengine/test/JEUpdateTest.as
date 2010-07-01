@@ -5,46 +5,47 @@ package com.jsonengine.test
 	
 	import flash.net.URLVariables;
 	
-	import org.libspark.as3unit.assert.assertNotNull;
-	import org.libspark.as3unit.assert.assertTrue;
+	import org.libspark.as3unit.assert.assertEquals;
 	import org.libspark.as3unit.assert.async;
 	import org.libspark.as3unit.test;
 	
 	use namespace org.libspark.as3unit.test;
 
 	/**
-	 * Tests POST method.
+	 * Tests updating the stored users via POST method.
 	 */
-	public class JEPostTest
+	public class JEUpdateTest
 	{		
+		
+		private static const NEWAGE:int = 26;
+		
 		test function testJsonStylePost():void {
+			
+			// update the age
+			AllTests.resultUser1.age = NEWAGE;
 			
 			// encode it into JSON
 			var params:URLVariables = new URLVariables();
-			params._doc = JSON.encode(AllTests.betty);
+			params._doc = JSON.encode(AllTests.resultUser1);
 			
 			// put it to server
 			NetManager.i.sendReq("/_je/test", params, "POST", async(function(result:Object):void {
 				var resultObj:Object = JSON.decode(String(result));
-				assertTrue(AllTests.compareUsers(AllTests.betty, resultObj), "all props should have the same values");
-				assertNotNull(resultObj._docId, "_docId should be included");
-				assertNotNull(resultObj._updatedAt, "_updatedAt should be included");
-				AllTests.resultUser1 = resultObj;
+				assertEquals(AllTests.resultUser1.age, resultObj.age, "age should be updated");
 			}));
 		}
 		
 		test function testFormStylePost():void {
 			
-			// get the test user Betty as query parameters
+			// update the age
 			var params:URLVariables = AllTests.getBettyAsParams();
+			params.age = NEWAGE;
+			params._docId = AllTests.resultUser2._docId;
 			
 			// put it to server
 			NetManager.i.sendReq("/_je/test", params, "POST", async(function(result:Object):void {
 				var resultObj:Object = JSON.decode(String(result));
-				assertTrue(AllTests.compareUsers(AllTests.betty, resultObj), "all props should have the same values");
-				assertNotNull(resultObj._docId, "_docId should be included");
-				assertNotNull(resultObj._updatedAt, "_updatedAt should be included");
-				AllTests.resultUser2 = resultObj;
+				assertEquals(NEWAGE, resultObj.age, "age should be updated");
 			}));
 		}
 	}

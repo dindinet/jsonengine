@@ -19,13 +19,22 @@ package com.jsonengine.test
 	{		
 		test function testGet():void {
 			var params:URLVariables = new URLVariables();
-			var uri:String = "/_je/test/" + AllTests.testObj._docId;
+			var uri:String = "/_je/test/" + AllTests.resultUser1._docId;
 			NetManager.i.sendReq(uri, params, "GET", async(function(result:Object):void {
 				var resultObj:Object = JSON.decode(String(result));
-				assertEquals(AllTests.testObj.foo, resultObj.foo);
-				assertEquals(AllTests.testObj.bar, resultObj.bar);
-				assertEquals(AllTests.testObj._docId, resultObj._docId);
-				assertEquals(AllTests.testObj._updatedAt, resultObj._updatedAt);
+				assertTrue(AllTests.compareUsers(AllTests.betty, resultObj), "all props should have the same values");				
+				trace("GET success");
+			}));
+		}
+		
+		test function testGet2():void {
+			var params:URLVariables = new URLVariables();
+			var uri:String = "/_je/test/" + AllTests.resultUser2._docId;
+			NetManager.i.sendReq(uri, params, "GET", async(function(result:Object):void {
+				var resultObj:Object = JSON.decode(String(result));
+				assertTrue(AllTests.compareUsers(AllTests.betty, resultObj), "all props should have the same values");
+				assertEquals(3, resultObj.friends.length, "should handle the multiple prop values as an Array");
+				trace("GET success");
 			}));
 		}
 	}
