@@ -7,6 +7,7 @@ package com.jsonengine.test
 	
 	import mx.controls.Alert;
 	
+	import org.libspark.as3unit.assert.assertEquals;
 	import org.libspark.as3unit.assert.async;
 	import org.libspark.as3unit.test;
 	
@@ -43,12 +44,16 @@ package com.jsonengine.test
 		
 		private function testQuery(result:Object):void {
 			var params:URLVariables = new URLVariables();
-			NetManager.i.sendReq("/_q/testQuery", params, "GET", async(veryfyQuery));
+			NetManager.i.sendReq("/_q/testQuery?cond=weight.gt.1.2345&cond=weight.lt.1234.5&sort=weight.asc", 
+				params, "GET", async(veryfyQuery));
 		}
 		
 		private function veryfyQuery(result:Object):void {
 			Alert.show(String(result));
-			var resultObjs:Array = JSON.decode(String(result));			
+			var resultObjs:Array = JSON.decode(String(result));
+			assertEquals(2, resultObjs.length);
+			assertEquals("#003", resultObjs[0].id);
+			assertEquals("#002", resultObjs[1].id);
 		}
 	}
 }
