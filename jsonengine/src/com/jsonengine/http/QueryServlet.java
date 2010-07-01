@@ -3,6 +3,9 @@ package com.jsonengine.http;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +37,11 @@ public class QueryServlet extends HttpServlet {
 
     private static final UserService userService =
         UserServiceFactory.getUserService();
+
+    private static final Pattern condPattern =
+        Pattern.compile("^([^\\.]*)\\.(eq|gt|ge|lt|le)\\.(.*)$");
+
+    private static final Pattern quotePattern = Pattern.compile("^\"(.*)\"$");
 
     private QueryRequest createQueryRequest(HttpServletRequest req)
             throws UnsupportedEncodingException {
@@ -101,19 +109,57 @@ public class QueryServlet extends HttpServlet {
 
     private void parseCondFilters(final QueryRequest qReq, final String[] conds) {
         for (String cond : conds) {
-            final String[] tokens = cond.split("\\.");
-            final String propName = tokens[0];
+
+            // try to parse the cond params
+            final Matcher m = condPattern.matcher(cond);
+            if (!m.find()) {
+                throw new IllegalArgumentException("Illegal condFilter: "
+                    + cond);
+            }
+            final String propName = m.group(1);
             final QueryFilter.Comparator cp =
-                QueryFilter.parseComparator(tokens[1]);
-            final String propValue = tokens[2];
+                QueryFilter.parseComparator(m.group(2));
+            final String propValue = m.group(3);
+
+            // try to convert propValue
+            final Object propValueObj = convertPropValue(propValue);
+
+            // create confFilter
             final QueryFilter condFilter =
                 new QueryFilter.CondFilter(
                     qReq.getDocType(),
                     propName,
                     cp,
-                    propValue);
+                    propValueObj);
             qReq.addQueryFilter(condFilter);
+            System.out.println("condFilter: " + condFilter);
         }
+    }
+
+    private Object convertPropValue(final String propValue) {
+
+        // if it's quoted, treat it as a String
+        final Matcher m = quotePattern.matcher(propValue);
+        if (m.find()) {
+            return m.group(1);
+        }
+
+        // if it's not quoted, try to parse it as a BigDecimal
+        try {
+            return new BigDecimal(propValue);
+        } catch (NumberFormatException e) {
+            // failed
+        }
+
+        // try to parse as a Boolean
+        if ("true".equals(propValue)) {
+            return true;
+        } else if ("false".equals(propValue)) {
+            return false;
+        }
+
+        // otherwise, treat it as a String
+        return propValue;
     }
 
     private void parseLimitFilter(final QueryRequest qReq,
