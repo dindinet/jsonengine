@@ -76,7 +76,9 @@ public class QueryServlet extends HttpServlet {
         final QueryRequest qReq = createQueryRequest(req);
         final String[] conds = req.getParameterValues(PARAM_COND);
         if (conds != null) {
-            parseCondFilters(qReq, conds);
+            for (String cond : conds) {
+                parseCondFilter(qReq, cond);
+            }
         }
 
         // add QueryFilters for "sort"
@@ -107,33 +109,29 @@ public class QueryServlet extends HttpServlet {
         pw.close();
     }
 
-    private void parseCondFilters(final QueryRequest qReq, final String[] conds) {
-        for (String cond : conds) {
+    private void parseCondFilter(final QueryRequest qReq, final String cond) {
 
-            // try to parse the cond params
-            final Matcher m = condPattern.matcher(cond);
-            if (!m.find()) {
-                throw new IllegalArgumentException("Illegal condFilter: "
-                    + cond);
-            }
-            final String propName = m.group(1);
-            final QueryFilter.Comparator cp =
-                QueryFilter.parseComparator(m.group(2));
-            final String propValue = m.group(3);
-
-            // try to convert propValue
-            final Object propValueObj = convertPropValue(propValue);
-
-            // create confFilter
-            final QueryFilter condFilter =
-                new QueryFilter.CondFilter(
-                    qReq.getDocType(),
-                    propName,
-                    cp,
-                    propValueObj);
-            qReq.addQueryFilter(condFilter);
-            System.out.println("condFilter: " + condFilter);
+        // try to parse the cond params
+        final Matcher m = condPattern.matcher(cond);
+        if (!m.find()) {
+            throw new IllegalArgumentException("Illegal condFilter: " + cond);
         }
+        final String propName = m.group(1);
+        final QueryFilter.Comparator cp =
+            QueryFilter.parseComparator(m.group(2));
+        final String propValue = m.group(3);
+
+        // try to convert propValue
+        final Object propValueObj = convertPropValue(propValue);
+
+        // create confFilter
+        final QueryFilter condFilter =
+            new QueryFilter.CondFilter(
+                qReq.getDocType(),
+                propName,
+                cp,
+                propValueObj);
+        qReq.addQueryFilter(condFilter);
     }
 
     private Object convertPropValue(final String propValue) {
