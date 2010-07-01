@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.arnx.jsonic.JSON;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
@@ -45,6 +47,8 @@ public class CRUDServlet extends HttpServlet {
         "application/json; charset=" + CHARSET;
 
     private static final long serialVersionUID = 1L;
+
+    private static final UserService userService = UserServiceFactory.getUserService();
 
     private CRUDRequest createJERequest(HttpServletRequest req)
             throws UnsupportedEncodingException {
@@ -76,11 +80,16 @@ public class CRUDServlet extends HttpServlet {
             jeReq.setDocId(tokens[3]);
         }
 
-        // set Google account info, timestamp, and checkConflict flag
+        // set Google account info
         if (req.getUserPrincipal() != null) {
             jeReq.setRequestedBy(req.getUserPrincipal().getName());
+            jeReq.setAdmin(userService.isUserAdmin());
         }
+        
+        // set timestamp
         jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        
+        // set checkConflict flag
         try {
             jeReq.setCheckUpdatesAfter(Long.parseLong(req
                 .getParameter(PARAM_NAME_CHECK_UPDATES_AFTER)));

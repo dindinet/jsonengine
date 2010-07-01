@@ -89,7 +89,7 @@ public class CRUDService {
         final Transaction tx = Datastore.beginTransaction();
         final JEDoc jeDoc = getJEDoc(tx, jeReq);
 
-        // check accessibility
+        // check if accessible 
         if (!jeReq.isAccessible(jeDoc.getCreatedBy(), false)) {
             throw new JEAccessDeniedException();
         }
@@ -134,7 +134,7 @@ public class CRUDService {
             throw new JEConflictException(e);
         }
 
-        // check accessibility
+        // check if accessible 
         if (!jeReq.isAccessible(jeDoc.getCreatedBy(), true)) {
             throw new JEAccessDeniedException();
         }
@@ -203,7 +203,7 @@ public class CRUDService {
             }
         }
 
-        // check accessibility
+        // check if accessible 
         final String createdBy = jeDoc != null ? jeDoc.getCreatedBy() : null;
         if (!jeReq.isAccessible(createdBy, false)) {
             throw new JEAccessDeniedException();

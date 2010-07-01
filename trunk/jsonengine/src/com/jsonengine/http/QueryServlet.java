@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEUtils;
 import com.jsonengine.service.query.QueryFilter;
 import com.jsonengine.service.query.QueryRequest;
@@ -29,6 +32,9 @@ public class QueryServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private static final UserService userService =
+        UserServiceFactory.getUserService();
+
     private QueryRequest createQueryRequest(HttpServletRequest req)
             throws UnsupportedEncodingException {
 
@@ -48,6 +54,7 @@ public class QueryServlet extends HttpServlet {
         // set Google account info, timestamp, and checkConflict flag
         if (req.getUserPrincipal() != null) {
             qReq.setRequestedBy(req.getUserPrincipal().getName());
+            qReq.setAdmin(userService.isUserAdmin());
         }
         qReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
         return qReq;
@@ -77,7 +84,13 @@ public class QueryServlet extends HttpServlet {
         }
 
         // execute the query
-        final String resultJson = QueryService.i.query(qReq);
+        final String resultJson;
+        try {
+            resultJson = QueryService.i.query(qReq);
+        } catch (JEAccessDeniedException e) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         // return the result
         resp.setContentType(CRUDServlet.RESP_CONTENT_TYPE);

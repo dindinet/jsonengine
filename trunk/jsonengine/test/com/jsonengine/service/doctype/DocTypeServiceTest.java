@@ -19,13 +19,13 @@ public class DocTypeServiceTest extends AppEngineTestCase {
 
     @Test
     public void testAccessWithNoDocTypeInfo() throws Exception {
-        assertTrue(isAccessibleByPublic(true));
-        assertTrue(isAccessibleByPublic(false));
+        assertFalse(isAccessibleByPublic(true));
+        assertFalse(isAccessibleByPublic(false));
     }
 
     @Test
     public void testAccessForPublic() throws Exception {
-        service.createDocType(
+        service.createDocTypeInfo(
             TEST_DOCTYPE,
             JEDocTypeInfo.ACCESS_LEVEL_PUBLIC,
             JEDocTypeInfo.ACCESS_LEVEL_PUBLIC);
@@ -35,7 +35,7 @@ public class DocTypeServiceTest extends AppEngineTestCase {
 
     @Test
     public void testAccessForProtected() throws Exception {
-        service.createDocType(
+        service.createDocTypeInfo(
             TEST_DOCTYPE,
             JEDocTypeInfo.ACCESS_LEVEL_PROTECTED,
             JEDocTypeInfo.ACCESS_LEVEL_PROTECTED);
@@ -47,7 +47,7 @@ public class DocTypeServiceTest extends AppEngineTestCase {
 
     @Test
     public void testAccessForPrivate() throws Exception {
-        service.createDocType(
+        service.createDocTypeInfo(
             TEST_DOCTYPE,
             JEDocTypeInfo.ACCESS_LEVEL_PRIVATE,
             JEDocTypeInfo.ACCESS_LEVEL_PRIVATE);
@@ -61,7 +61,7 @@ public class DocTypeServiceTest extends AppEngineTestCase {
     
     @Test
     public void testAccessForAdmin() throws Exception {
-        service.createDocType(
+        service.createDocTypeInfo(
             TEST_DOCTYPE,
             JEDocTypeInfo.ACCESS_LEVEL_ADMIN,
             JEDocTypeInfo.ACCESS_LEVEL_ADMIN);
