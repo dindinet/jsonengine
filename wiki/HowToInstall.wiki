@@ -93,7 +93,7 @@ On Mac/Linux shell:
 
 Now your jsonengine is ready. You can check if it is working properly by accessing the following URL with your browser:
 
-  * http://my-jsonengine-appid.appspot.com/ktrwjr/ (Internal Unit Test)
-  * http://my-jsonengine-appid.appspot.com/_admin/jsonengine_test.html (External Unit Test from Admin client)
+  * http://my-jsonengine-appid.appspot.com/ktrwjr/ (Internal Unit Test: click "Check All" button and "Run" to execute all the unit tests)
+  * http://my-jsonengine-appid.appspot.com/_admin/jsonengine_test.html (External Unit Test from Admin Flash client)
 
-This URL would show a Flash page that runs unit tests against the jsonengine. Please wait a while until it finishes all the tests, and if you see the green sign the service is working properly. If you see the red sign, something is wrong.
+Theses URLs will show a web page to run unit tests against the jsonengine. Please wait a while until it finishes all the tests, and if you see the green sign the service is working properly. If you see the red sign it indicates any failure on testing the features of jsonengine.
