@@ -19,8 +19,8 @@ public class DocTypeServiceTest extends AppEngineTestCase {
 
     @Test
     public void testAccessWithNoDocTypeInfo() throws Exception {
-        assertFalse(isAccessibleByPublic(true));
-        assertFalse(isAccessibleByPublic(false));
+        assertTrue(isAccessibleByPublic(true)); // TODO
+        assertTrue(isAccessibleByPublic(false));
     }
 
     @Test

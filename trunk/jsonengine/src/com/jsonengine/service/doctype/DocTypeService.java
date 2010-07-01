@@ -52,7 +52,7 @@ public class DocTypeService {
 
         // if there's no docTypeInfo specified, deny all access
         if (jdti == null) {
-            return false;
+            return true; // TODO disallow it after preparing the admin console
         }
 
         // if it's "public", allow all accesses
