@@ -22,7 +22,7 @@
  * The first alpha release
  * Implemented CRUD operations and tests
 
-=== TODOs of the alpha version ===
+=== TODOs ===
 
- * Security (Google account authentication)
+ * Security (Admin console, Open ID and OAuth support)
  * Sample JS/Flash client
