@@ -2,7 +2,7 @@
 
 === release 0.1.20100730 (July 1, 2010) ===
 
- * Added internal access control features (not still not available until we add an admin console to set the access control settings).
+ * Added internal access control features (still not available until we add an admin console to set the access control settings).
  * Fixed a bug on query.
 
 === release 0.1.20100628 (Jun 28, 2010) ===
