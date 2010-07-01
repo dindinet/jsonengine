@@ -54,4 +54,4 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
   * If you use *inequality comparators* (lt, le, gt, ge) in `<`condFilter`>`s, you can specify *only one* kind of `<`propertyName`>` in one query URI. e.g. You can not do "cond=*age*.ge.20&cond=*name*.eq.Foo"
   * You may put `<`sortFilter`>` only once. You can choose any property name as the sort criteria.
   * You may put `<`limitFilter`>` only once.
-  * The whole URI should be URL encoded.
+  * The parameter values should be URL encoded.
