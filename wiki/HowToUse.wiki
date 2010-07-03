@@ -109,7 +109,7 @@ These following POST requests are same: both removes the JSON doc from the Datas
 
 === DELETE syntax ===
 
-To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "delete=true" parameter.
+To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "delete=true" parameter. You can delete all JSON docs under a docType by omitting <docId>.
 
 {{{
 /DELETE /_je/<docType>/<docId>
@@ -121,7 +121,7 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
   * HTTP Request URI values
     * *docType* (required): docType (document type) of the JSON doc. 
-    * *docId* (required): docID (document id) of the JSON doc to be deleted.
+    * *docId* (optional): docID (document id) of the JSON doc to be deleted. By omitting this, you can delete all the JSON docs under the docType. Please note that this will be processed in background and may take a while if there are many JSON docs to delete.
 
   * HTTP Request parameters
     * *`_`delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
