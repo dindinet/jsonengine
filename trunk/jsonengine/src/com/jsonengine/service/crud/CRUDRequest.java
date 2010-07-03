@@ -33,9 +33,9 @@ public class CRUDRequest extends JERequest {
      */
     public CRUDRequest() {
         jsonDoc = null;
-        jsonMap = null;        
+        jsonMap = null;
     }
-    
+
     /**
      * Creates a CRUDRequest instance from specified JSON document.
      * 
@@ -51,6 +51,16 @@ public class CRUDRequest extends JERequest {
         } else {
             jsonMap = null;
         }
+    }
+
+    /**
+     * Creates a CRUDRequest instance from specified {@link Map}.
+     * 
+     * @param jsonMap
+     */
+    public CRUDRequest(Map<String, Object> jsonMap) {
+        this.jsonMap = jsonMap;
+        this.jsonDoc = null;
     }
 
     public Long getCheckUpdatesAfter() {

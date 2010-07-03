@@ -1,9 +1,6 @@
 package com.jsonengine.service.crud;
 
 import java.util.ConcurrentModificationException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import net.arnx.jsonic.JSON;
 
@@ -15,8 +12,6 @@ import com.google.appengine.api.datastore.Transaction;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
-import com.jsonengine.common.JERequest;
-import com.jsonengine.common.JEUtils;
 import com.jsonengine.http.TQServlet;
 import com.jsonengine.model.JEDoc;
 
@@ -35,31 +30,6 @@ public class CRUDService {
     public static final CRUDService i = new CRUDService();
 
     private CRUDService() {
-    }
-
-    // build index entries from the top-level properties
-    private Set<String> buildIndexEntries(JERequest jeReq,
-            Map<String, Object> docValues) {
-        final Set<String> indexEntries = new HashSet<String>();
-        for (String propName : docValues.keySet()) {
-
-            // skip any props start with "_" (e.g. _foo, _bar)
-            if (propName.startsWith("_")) {
-                continue;
-            }
-
-            // an index entry will be like: <docType>:<propName>:<propValue>
-            final String propValue =
-                JEUtils.i.encodePropValue(docValues.get(propName));
-            if (propValue != null) {
-                indexEntries.add(jeReq.getDocType()
-                    + ":"
-                    + propName
-                    + ":"
-                    + propValue);
-            }
-        }
-        return indexEntries;
     }
 
     /**
@@ -158,7 +128,7 @@ public class CRUDService {
         return jeDoc.encodeJSON();
     }
 
-    private JEDoc getJEDoc(Transaction tx, CRUDRequest jeReq)
+    public JEDoc getJEDoc(Transaction tx, CRUDRequest jeReq)
             throws JEConflictException, JENotFoundException {
 
         // try to get specified JEDoc
@@ -231,17 +201,8 @@ public class CRUDService {
             jeDoc = JEDoc.createJEDoc(jeReq);
         }
 
-        // update JEDoc content
-        jeDoc.setUpdatedAt(jeReq.getRequestedAt());
-        jeDoc.setUpdatedBy(jeReq.getRequestedBy());
-        jeDoc.setDocValues(jeReq.getJsonMap());
-        jeDoc.getDocValues().put(JEDoc.PROP_NAME_DOCID, jeDoc.getDocId());
-        jeDoc.getDocValues().put(
-            JEDoc.PROP_NAME_UPDATED_AT,
-            jeDoc.getUpdatedAt());
-
-        // build index entries of the JEDoc
-        jeDoc.setIndexEntries(buildIndexEntries(jeReq, jeDoc.getDocValues()));
+        // update properties (build index)
+        jeDoc.update(jeReq);
 
         // save JEDoc
         try {

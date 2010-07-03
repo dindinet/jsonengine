@@ -8,7 +8,6 @@ import java.util.Map;
 import net.arnx.jsonic.JSON;
 
 import com.jsonengine.model.JEDoc;
-import com.jsonengine.model.JEDocTypeInfo;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
 import com.jsonengine.service.doctype.DocTypeService;
@@ -243,11 +242,11 @@ public class JETestUtils {
         saveJsonMap(user4);
     }
 
-    public void storeTestDocTypeInfo() {
-        (new DocTypeService()).createDocTypeInfo(
+    public void storeTestDocTypeInfo() throws JEConflictException, JEAccessDeniedException {
+        (new DocTypeService()).saveDocTypeInfo(
             TEST_DOCTYPE,
-            JEDocTypeInfo.ACCESS_LEVEL_PUBLIC,
-            JEDocTypeInfo.ACCESS_LEVEL_PUBLIC);
+            DocTypeService.ACCESS_LEVEL_PUBLIC,
+            DocTypeService.ACCESS_LEVEL_PUBLIC);
     }
 
 }

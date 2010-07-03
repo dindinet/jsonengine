@@ -1,6 +1,7 @@
 package com.jsonengine.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 /**
- * Represents a JSON document posted by a client. 
+ * Represents a JSON document posted by a client.
  * 
  * @author @kazunori_279
  */
@@ -41,13 +42,15 @@ public class JEDoc implements Serializable {
      * @condParam jeReq
      * @return {@link JEDoc2} instance
      */
-    public static JEDoc createJEDoc(JERequest jeReq) {
+    public static JEDoc createJEDoc(CRUDRequest cReq) {
         final JEDoc jeDoc = new JEDoc();
-        jeDoc
-            .setKey(Datastore.createKey(JEDoc.class, JEUtils.i.generateUUID()));
-        jeDoc.setCreatedAt(jeReq.getRequestedAt());
-        jeDoc.setCreatedBy(jeReq.getRequestedBy());
-        jeDoc.setDocType(jeReq.getDocType());
+        final String keyName =
+            cReq.getDocId() == null ? JEUtils.i.generateUUID() : cReq
+                .getDocId();
+        jeDoc.setKey(Datastore.createKey(JEDoc.class, keyName));
+        jeDoc.setCreatedAt(cReq.getRequestedAt());
+        jeDoc.setCreatedBy(cReq.getRequestedBy());
+        jeDoc.setDocType(cReq.getDocType());
         return jeDoc;
     }
 
@@ -87,6 +90,47 @@ public class JEDoc implements Serializable {
      */
     public String encodeJSON() {
         return JSON.encode(getDocValues());
+    }
+
+    /**
+     * Update properties with specifined {@link CRUDRequest}.
+     * 
+     * @param cReq
+     */
+    public void update(CRUDRequest cReq) {
+        setUpdatedAt(cReq.getRequestedAt());
+        setUpdatedBy(cReq.getRequestedBy());
+        setDocValues(cReq.getJsonMap());
+        getDocValues().put(JEDoc.PROP_NAME_DOCID, getDocId());
+        getDocValues().put(PROP_NAME_UPDATED_AT, getUpdatedAt());
+
+        // build index entries of the JEDoc
+        setIndexEntries(buildIndexEntries(cReq, getDocValues()));
+    }
+
+    // build index entries from the top-level properties
+    private Set<String> buildIndexEntries(JERequest jeReq,
+            Map<String, Object> docValues) {
+        final Set<String> indexEntries = new HashSet<String>();
+        for (String propName : docValues.keySet()) {
+
+            // skip any props start with "_" (e.g. _foo, _bar)
+            if (propName.startsWith("_")) {
+                continue;
+            }
+
+            // an index entry will be like: <docType>:<propName>:<propValue>
+            final String propValue =
+                JEUtils.i.encodePropValue(docValues.get(propName));
+            if (propValue != null) {
+                indexEntries.add(jeReq.getDocType()
+                    + ":"
+                    + propName
+                    + ":"
+                    + propValue);
+            }
+        }
+        return indexEntries;
     }
 
     @Override
@@ -137,7 +181,7 @@ public class JEDoc implements Serializable {
 
     /**
      * Returns the key.
-     *
+     * 
      * @return the key
      */
     public Key getKey() {
@@ -154,7 +198,7 @@ public class JEDoc implements Serializable {
 
     /**
      * Returns the version.
-     *
+     * 
      * @return the version
      */
     public Long getVersion() {
@@ -191,7 +235,7 @@ public class JEDoc implements Serializable {
 
     /**
      * Sets the key.
-     *
+     * 
      * @param key
      *            the key
      */
@@ -209,13 +253,12 @@ public class JEDoc implements Serializable {
 
     /**
      * Sets the version.
-     *
+     * 
      * @param version
      *            the version
      */
     public void setVersion(Long version) {
         this.version = version;
     }
-    
-    
+
 }
