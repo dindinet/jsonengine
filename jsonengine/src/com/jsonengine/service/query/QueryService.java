@@ -12,7 +12,7 @@ import org.slim3.datastore.ModelQuery;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
-import com.jsonengine.model.JEDocTypeInfo;
+import com.jsonengine.service.doctype.DocTypeInfo;
 import com.jsonengine.service.doctype.DocTypeService;
 
 /**
@@ -47,20 +47,21 @@ public class QueryService {
         }
 
         // check if this is a "private" query
-        final DocTypeService docTypeService = new DocTypeService();
-        final JEDocTypeInfo jdti =
-            docTypeService.getDocTypeInfo(queryReq.getDocType());
+        final DocTypeInfo jdti =
+            (new DocTypeService()).getDocTypeInfo(queryReq.getDocType());
         final boolean isPrivate =
             jdti != null
-                && JEDocTypeInfo.ACCESS_LEVEL_PRIVATE.equals(jdti
+                && DocTypeService.ACCESS_LEVEL_PRIVATE.equals(jdti
                     .getAccessLevelForRead());
 
-        // build query (add in-memory filtering with createdBy if it's a private query)
+        // build query (add in-memory filtering with createdBy if it's a private
+        // query)
         final JEDocMeta jeDocMeta = JEDocMeta.get();
         ModelQuery<JEDoc> mq =
             queryReq.applyFiltersToModelQuery(Datastore.query(jeDocMeta));
         if (isPrivate) {
-            mq.filterInMemory(jeDocMeta.createdBy.equal(queryReq.getRequestedBy()));
+            mq.filterInMemory(jeDocMeta.createdBy.equal(queryReq
+                .getRequestedBy()));
         }
 
         // execute query
