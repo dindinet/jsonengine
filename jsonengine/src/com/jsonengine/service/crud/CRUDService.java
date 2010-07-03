@@ -12,11 +12,12 @@ import org.slim3.datastore.EntityNotFoundRuntimeException;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
-import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JEAccessDeniedException;
+import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JERequest;
 import com.jsonengine.common.JEUtils;
+import com.jsonengine.http.TQServlet;
 import com.jsonengine.model.JEDoc;
 
 /**
@@ -66,6 +67,10 @@ public class CRUDService {
      * docId (via {@link CRUDRequest} parameter) to remove an existing document
      * with the same docId.
      * 
+     * Or you can omit docId to delete all the documents under a docType. This
+     * deletion will be processed background so it may take a while if there are
+     * many docs to delete.
+     * 
      * If checkConflict property of specified {@link CRUDRequest} is set true,
      * and you provide the original JSON document with _updatedAt property in
      * {@link CRUDRequest}, it checks if anyone has already updated the same
@@ -84,12 +89,24 @@ public class CRUDService {
     public void delete(CRUDRequest jeReq) throws JENotFoundException,
             JEConflictException, JEAccessDeniedException {
 
+        // if there's docId specified, delete single doc. otherwise, delete all
+        // the docs.
+        if (jeReq.getDocId() != null) {
+            deleteSingleDoc(jeReq);
+        } else {
+            TQServlet.addDeleteAllTask(jeReq.getDocType());
+        }
+
+    }
+
+    private void deleteSingleDoc(CRUDRequest jeReq) throws JEConflictException,
+            JENotFoundException, JEAccessDeniedException {
+
         // try to find an existing JEDoc for the docId
-        assert jeReq.getDocId() != null;
         final Transaction tx = Datastore.beginTransaction();
         final JEDoc jeDoc = getJEDoc(tx, jeReq);
 
-        // check if accessible 
+        // check if accessible
         if (!jeReq.isAccessible(jeDoc.getCreatedBy(), false)) {
             throw new JEAccessDeniedException();
         }
@@ -134,7 +151,7 @@ public class CRUDService {
             throw new JEConflictException(e);
         }
 
-        // check if accessible 
+        // check if accessible
         if (!jeReq.isAccessible(jeDoc.getCreatedBy(), true)) {
             throw new JEAccessDeniedException();
         }
@@ -203,7 +220,7 @@ public class CRUDService {
             }
         }
 
-        // check if accessible 
+        // check if accessible
         final String createdBy = jeDoc != null ? jeDoc.getCreatedBy() : null;
         if (!jeReq.isAccessible(createdBy, false)) {
             throw new JEAccessDeniedException();

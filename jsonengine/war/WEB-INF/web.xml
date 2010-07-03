@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
 	<context-param>
         <param-name>slim3.rootPackage</param-name>
         <param-value>com.jsonengine</param-value>
@@ -78,6 +79,11 @@
         <servlet-class>com.jsonengine.http.QueryServlet</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>TQServlet</servlet-name>
+        <servlet-class>com.jsonengine.http.TQServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>GlobalTransactionServlet</servlet-name>
         <url-pattern>/slim3/gtx</url-pattern>
@@ -106,6 +112,11 @@
     </servlet-mapping>
     
     <servlet-mapping>
+        <servlet-name>TQServlet</servlet-name>
+        <url-pattern>/_tq/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>KtrWjrServiceServlet</servlet-name>
         <url-pattern>/ktrwjr/ktrwjr/ktrwjr.s3gwt</url-pattern>
     </servlet-mapping>
@@ -121,24 +132,9 @@
     <security-constraint>
         <web-resource-collection>
             <url-pattern>/slim3/gtx</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-    <security-constraint>
-        <web-resource-collection>
             <url-pattern>/ktrwjr/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-    <security-constraint>
-        <web-resource-collection>
             <url-pattern>/_admin/*</url-pattern>
+            <url-pattern>/_tq/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>

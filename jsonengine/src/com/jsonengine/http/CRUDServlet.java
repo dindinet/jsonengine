@@ -45,7 +45,7 @@ public class CRUDServlet extends HttpServlet {
 
     public static final String RESP_CONTENT_TYPE =
         "application/json; charset=" + CHARSET;
-
+    
     private static final long serialVersionUID = 1L;
 
     private static final UserService userService = UserServiceFactory.getUserService();
@@ -184,7 +184,7 @@ public class CRUDServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        
         // do get
         final CRUDRequest jeReq = createJERequest(req);
         final String resultJson;
