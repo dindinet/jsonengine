@@ -1,9 +1,6 @@
 package com.jsonengine.service.crud;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 
@@ -17,8 +14,6 @@ import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JETestUtils;
 import com.jsonengine.model.JEDoc;
-import com.jsonengine.service.crud.CRUDRequest;
-import com.jsonengine.service.crud.CRUDService;
 
 /**
  * Tests CRUD operations of {@link CRUDService}.
@@ -105,6 +100,35 @@ public class CRUDServiceTest extends AppEngineTestCase {
         } catch (JENotFoundException e) {
             // OK
         }
+    }
+    
+//    @SuppressWarnings("unchecked")
+    @Test
+    public void testDeleteDocType() throws JEConflictException, JENotFoundException, JEAccessDeniedException {
+        
+        // save test data
+        JETestUtils.i.storeTestDocTypeInfo();
+        JETestUtils.i.storeTestUsers(JETestUtils.TEST_DOCTYPE);
+        
+        // delete all
+        final CRUDRequest cr = JETestUtils.i.createTestCRUDRequest();
+        CRUDService.i.delete(cr);
+        
+//        // wait a while
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        
+//        // check there's no docs under the docType
+//        final QueryRequest qr = JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+//        final String resultJson = QueryService.i.query(qr);
+//
+//        // validate the result
+//        final List<Map<String, Object>> resultMaps =
+//            (List<Map<String, Object>>) JSON.decode(resultJson);
+//        assertEquals(0, resultMaps.size());
     }
     
 }
