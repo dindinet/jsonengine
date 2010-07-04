@@ -63,10 +63,6 @@ public class DocTypeService {
 
     private static final long serialVersionUID = 1L;
 
-    private String getDocIdOfDocTypeInfo(String docType) {
-        return DOCID_DOCTYPEINFO_PREFIX + docType;
-    }
-
     private CRUDRequest createCRUDRequestForDocTypeInfo(String docType,
             Map<String, Object> map) {
         final CRUDRequest cr = new CRUDRequest(map);
@@ -75,6 +71,10 @@ public class DocTypeService {
         cr.setRequestedAt(JEUtils.i.getGlobalTimestamp());
         cr.setAdmin(true);
         return cr;
+    }
+
+    private String getDocIdOfDocTypeInfo(String docType) {
+        return DOCID_DOCTYPEINFO_PREFIX + docType;
     }
 
     /**

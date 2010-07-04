@@ -83,31 +83,6 @@ public class JEDoc implements Serializable {
     @Attribute(version = true)
     private Long version;
 
-    /**
-     * Encodes this document into a JSON document.
-     * 
-     * @return JSON document
-     */
-    public String encodeJSON() {
-        return JSON.encode(getDocValues());
-    }
-
-    /**
-     * Update properties with specifined {@link CRUDRequest}.
-     * 
-     * @param cReq
-     */
-    public void update(CRUDRequest cReq) {
-        setUpdatedAt(cReq.getRequestedAt());
-        setUpdatedBy(cReq.getRequestedBy());
-        setDocValues(cReq.getJsonMap());
-        getDocValues().put(JEDoc.PROP_NAME_DOCID, getDocId());
-        getDocValues().put(PROP_NAME_UPDATED_AT, getUpdatedAt());
-
-        // build index entries of the JEDoc
-        setIndexEntries(buildIndexEntries(cReq, getDocValues()));
-    }
-
     // build index entries from the top-level properties
     private Set<String> buildIndexEntries(JERequest jeReq,
             Map<String, Object> docValues) {
@@ -131,6 +106,15 @@ public class JEDoc implements Serializable {
             }
         }
         return indexEntries;
+    }
+
+    /**
+     * Encodes this document into a JSON document.
+     * 
+     * @return JSON document
+     */
+    public String encodeJSON() {
+        return JSON.encode(getDocValues());
     }
 
     @Override
@@ -259,6 +243,22 @@ public class JEDoc implements Serializable {
      */
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    /**
+     * Update properties with specifined {@link CRUDRequest}.
+     * 
+     * @param cReq
+     */
+    public void update(CRUDRequest cReq) {
+        setUpdatedAt(cReq.getRequestedAt());
+        setUpdatedBy(cReq.getRequestedBy());
+        setDocValues(cReq.getJsonMap());
+        getDocValues().put(JEDoc.PROP_NAME_DOCID, getDocId());
+        getDocValues().put(PROP_NAME_UPDATED_AT, getUpdatedAt());
+
+        // build index entries of the JEDoc
+        setIndexEntries(buildIndexEntries(cReq, getDocValues()));
     }
 
 }

@@ -59,8 +59,7 @@ public class QueryServiceTest extends AppEngineTestCase {
         // find all users with a limit
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter qf = new QueryFilter.LimitFilter(qr.getDocType(), 2);
-        qr.addQueryFilter(qf);
+        QueryFilter.addLimitFilter(qr, 2);
         final String resultJson = QueryService.i.query(qr);
 
         // validate the result size
@@ -75,7 +74,7 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // who's weight is equal to 123.45?
         final List<Map<String, Object>> resultMaps =
-            queryOnAProp("weight", QueryFilter.Comparator.EQ, 123.45);
+            queryOnAProp("weight", "eq", 123.45);
 
         // compare the result with Betty
         assertEquals(1, resultMaps.size());
@@ -90,7 +89,7 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // who's weight is less than 123.45?
         final List<Map<String, Object>> resultMaps =
-            queryOnAProp("weight", QueryFilter.Comparator.LT, 123.45);
+            queryOnAProp("weight", "lt", 123.45);
 
         // validate the result
         assertEquals(2, resultMaps.size());
@@ -108,7 +107,7 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // who's weight is less than or equal to 123.45?
         final List<Map<String, Object>> resultMaps =
-            queryOnAProp("weight", QueryFilter.Comparator.LE, 123.45);
+            queryOnAProp("weight", "le", 123.45);
 
         // validate the result
         assertEquals(3, resultMaps.size());
@@ -129,7 +128,7 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // who's weight is greater than 123.45?
         final List<Map<String, Object>> resultMaps =
-            queryOnAProp("weight", QueryFilter.Comparator.GT, 123.45);
+            queryOnAProp("weight", "gt", 123.45);
 
         // validate the result
         assertEquals(1, resultMaps.size());
@@ -144,7 +143,7 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // who's weight is greater than or equal to 123.45?
         final List<Map<String, Object>> resultMaps =
-            queryOnAProp("weight", QueryFilter.Comparator.GE, 123.45);
+            queryOnAProp("weight", "ge", 123.45);
 
         // validate the result
         assertEquals(2, resultMaps.size());
@@ -164,20 +163,8 @@ public class QueryServiceTest extends AppEngineTestCase {
         // build query filters
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter condFilter =
-            new QueryFilter.CondFilter(
-                qr.getDocType(),
-                "weight",
-                QueryFilter.Comparator.GE,
-                12.345);
-        qr.addQueryFilter(condFilter);
-        final QueryFilter condFilter2 =
-            new QueryFilter.CondFilter(
-                qr.getDocType(),
-                "weight",
-                QueryFilter.Comparator.LE,
-                123.45);
-        qr.addQueryFilter(condFilter2);
+        QueryFilter.addCondFilter(qr, "weight", "ge", 12.345);
+        QueryFilter.addCondFilter(qr, "weight", "le", 123.45);
 
         // execute query
         final String resultJson = QueryService.i.query(qr);
@@ -203,27 +190,9 @@ public class QueryServiceTest extends AppEngineTestCase {
         // build query filters
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter condFilter =
-            new QueryFilter.CondFilter(
-                qr.getDocType(),
-                "weight",
-                QueryFilter.Comparator.EQ,
-                123.45);
-        qr.addQueryFilter(condFilter);
-        final QueryFilter condFilter2 =
-            new QueryFilter.CondFilter(
-                qr.getDocType(),
-                "isMale",
-                QueryFilter.Comparator.EQ,
-                true);
-        qr.addQueryFilter(condFilter2);
-        final QueryFilter condFilter3 =
-            new QueryFilter.CondFilter(
-                qr.getDocType(),
-                "id",
-                QueryFilter.Comparator.EQ,
-                "002");
-        qr.addQueryFilter(condFilter3);
+        QueryFilter.addCondFilter(qr, "weight", "eq", 123.45);
+        QueryFilter.addCondFilter(qr, "isMale", "eq", true);
+        QueryFilter.addCondFilter(qr, "id", "eq", "002");
 
         // execute query
         final String resultJson = QueryService.i.query(qr);
@@ -246,12 +215,7 @@ public class QueryServiceTest extends AppEngineTestCase {
         // find all users
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter sortFilter =
-            new QueryFilter.SortFilter(
-                qr.getDocType(),
-                "id",
-                QueryFilter.SortOrder.ASC);
-        qr.addQueryFilter(sortFilter);
+        QueryFilter.addSortFilter(qr, "id", "asc");
 
         // execute query
         final String resultJson = QueryService.i.query(qr);
@@ -274,12 +238,7 @@ public class QueryServiceTest extends AppEngineTestCase {
         // find all users
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter sortFilter =
-            new QueryFilter.SortFilter(
-                qr.getDocType(),
-                "weight",
-                QueryFilter.SortOrder.DESC);
-        qr.addQueryFilter(sortFilter);
+        QueryFilter.addSortFilter(qr, "weight", "desc");
 
         // execute query
         final String resultJson = QueryService.i.query(qr);
@@ -295,22 +254,15 @@ public class QueryServiceTest extends AppEngineTestCase {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> queryOnAProp(String propName,
-            QueryFilter.Comparator cp, Object propValue)
-            throws JEConflictException, JENotFoundException,
+    private List<Map<String, Object>> queryOnAProp(String propName, String cp,
+            Object propValue) throws JEConflictException, JENotFoundException,
             JEAccessDeniedException {
 
         // build query filters
         final QueryRequest qr =
             JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final QueryFilter condFilter =
-            new QueryFilter.CondFilter(qr.getDocType(), propName, cp, propValue);
-        qr.addQueryFilter(condFilter);
-        final QueryFilter.SortOrder sortOrder =
-            true ? QueryFilter.SortOrder.ASC : QueryFilter.SortOrder.DESC;
-        final QueryFilter sortFilter =
-            new QueryFilter.SortFilter(qr.getDocType(), propName, sortOrder);
-        qr.addQueryFilter(sortFilter);
+        QueryFilter.addCondFilter(qr, propName, cp, propValue);
+        log.info("Query: " + qr);
 
         // execute query
         final String resultJson = QueryService.i.query(qr);

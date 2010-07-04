@@ -12,9 +12,6 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
  */
 public class JEUtils {
 
-    public static final MemcacheService mcService =
-        MemcacheServiceFactory.getMemcacheService();
-
     public static final String ALNUMS =
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -22,6 +19,9 @@ public class JEUtils {
 
     private static final String MC_KEY_TIMESTAMP =
         "com.jsonengine.common.LogCounterService#timestamp";
+
+    public static final MemcacheService mcService =
+        MemcacheServiceFactory.getMemcacheService();
 
     public static final int UUID_DIGITS = 32;
 
@@ -67,7 +67,7 @@ public class JEUtils {
      */
     public String encodePropValue(Object val) {
         if (val == null) {
-            return null;
+            return "";
         } else if (val instanceof String) {
             return (String) val;
         } else if (val instanceof Boolean) {

@@ -2,10 +2,6 @@ package com.jsonengine.service.doctype;
 
 import java.io.Serializable;
 
-import org.slim3.datastore.Datastore;
-
-import com.google.appengine.api.datastore.Transaction;
-
 /**
  * Represents a DTO that holds meta info for a docType.
  * 
@@ -44,12 +40,6 @@ public class DocTypeInfo implements Serializable {
 
     public String getDocType() {
         return docType;
-    }
-
-    public void save() {
-        final Transaction tx = Datastore.beginTransaction();
-
-        tx.commit();
     }
 
     public void setAccessLevelForRead(String accessLevelForRead) {
