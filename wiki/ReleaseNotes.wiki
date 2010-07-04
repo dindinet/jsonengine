@@ -1,5 +1,9 @@
 #summary Release notes
 
+=== release 0.1.20100704 (July 4, 2010) ===
+
+ * Changed implementation of sorting, from in-memory sort to index-based sort.
+
 === release 0.1.20100701 (July 1, 2010) ===
 
  * Added internal access control features (still not available until we add an admin console to set the access control settings).
