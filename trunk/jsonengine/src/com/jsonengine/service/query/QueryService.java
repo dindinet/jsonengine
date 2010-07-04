@@ -58,10 +58,11 @@ public class QueryService {
         // query)
         final JEDocMeta jeDocMeta = JEDocMeta.get();
         ModelQuery<JEDoc> mq =
-            queryReq.applyFiltersToModelQuery(Datastore.query(jeDocMeta));
+            queryReq.applyFilters(Datastore.query(jeDocMeta));
         if (isPrivate) {
-            mq.filterInMemory(jeDocMeta.createdBy.equal(queryReq
-                .getRequestedBy()));
+            mq =
+                mq.filterInMemory(jeDocMeta.createdBy.equal(queryReq
+                    .getRequestedBy()));
         }
 
         // execute query
@@ -72,9 +73,6 @@ public class QueryService {
         for (JEDoc jeDoc : resultJeDocs) {
             results.add(jeDoc.getDocValues());
         }
-
-        // apply post query filters
-        results = queryReq.applyFiltersToResultList(results);
 
         // return the results in JSON
         return JSON.encode(results);

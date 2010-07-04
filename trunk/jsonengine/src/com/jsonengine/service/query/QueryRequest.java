@@ -1,15 +1,15 @@
 package com.jsonengine.service.query;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.slim3.datastore.FilterCriterion;
 import org.slim3.datastore.ModelQuery;
+import org.slim3.datastore.SortCriterion;
 
 import com.jsonengine.common.JERequest;
 import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
-import com.jsonengine.service.query.QueryFilter.Comparator;
 
 /**
  * Holds various request parameters required for processing jsonengine query
@@ -19,83 +19,102 @@ import com.jsonengine.service.query.QueryFilter.Comparator;
  */
 public class QueryRequest extends JERequest {
 
-    boolean hasGtOrGe = false;
+    private final List<FilterCriterion> eqCriteria =
+        new LinkedList<FilterCriterion>();
 
-    boolean hasLtOrLe = false;
+    private FilterCriterion gtOrGeCriterion = null;
 
-    private final Set<QueryFilter> queryFilters = new HashSet<QueryFilter>();
+    private Integer limitCount = null;
 
-    /**
-     * Adds a QueryFilter to this QueryRequest.
-     * 
-     * @param qf
-     *            {@link QueryFilter} to be added.
-     */
+    private FilterCriterion ltOrLeCriterion = null;
+
+    private final List<QueryFilter> queryFilters =
+        new LinkedList<QueryFilter>();
+
+    private SortCriterion sortCriterion = null;
+
     public void addQueryFilter(QueryFilter qf) {
-        if (qf instanceof QueryFilter.CondFilter) {
-            checkCondDuplication(qf);
-        }
         queryFilters.add(qf);
     }
 
     /**
-     * Applies all the filters of this QueryRequest to the specified
-     * {@link ModelQuery}.
+     * Applies all the filters in this request.
      * 
-     * @param mq
-     *            a {@link ModelQuery} for this query.
-     * @return a {@link ModelQuery} with all the filters applied.
+     * @param modelQuery
+     *            {@link ModelQuery} to apply the filters.
+     * @return {@link ModelQuery}
      */
-    public ModelQuery<JEDoc> applyFiltersToModelQuery(ModelQuery<JEDoc> mq) {
-        ModelQuery<JEDoc> curMq = mq;
-        
-        // add apply filters
-        final boolean isSingleCond = hasGtOrGe != hasLtOrLe;
-        for (QueryFilter qf : queryFilters) {
-            curMq = qf.applyFilterToModelQuery(curMq, isSingleCond);
+    public ModelQuery<JEDoc> applyFilters(ModelQuery<JEDoc> modelQuery) {
+
+        // convert QueryFilters to Slim3 filters
+        if (gtOrGeCriterion != null) {
+            modelQuery = modelQuery.filter(gtOrGeCriterion);
         }
-        
-        // if there's no condFilters specified, add a filter for docType
-        final boolean hasNoCondFilters = !hasGtOrGe && !hasLtOrLe;
-        final JEDocMeta jeDocMeta = JEDocMeta.get();
-        if (hasNoCondFilters) {
-            curMq = curMq.filter(jeDocMeta.docType.equal(getDocType()));
+        if (ltOrLeCriterion != null) {
+            modelQuery = modelQuery.filter(ltOrLeCriterion);
         }
-        return curMq;
+        for (FilterCriterion eqCriterion : eqCriteria) {
+            modelQuery = modelQuery.filter(eqCriterion);
+        }
+        if (sortCriterion != null) {
+            modelQuery = modelQuery.sort(sortCriterion);
+        }
+        if (limitCount != null) {
+            modelQuery = modelQuery.limit(limitCount);
+        }
+
+        // if there's no condFilters, add a filter for a docType
+        if (gtOrGeCriterion == null && ltOrLeCriterion == null) {
+            modelQuery =
+                modelQuery.filter(JEDocMeta.get().docType.equal(getDocType()));
+        }
+        return modelQuery;
     }
 
-    /**
-     * Applies all the filters of this QueryRequest to the specified results.
-     * 
-     * @param results
-     *            a {@link Collection} of results of this query.
-     * @return a {@link Collection} with all the filters applied.
-     */
-    public Collection<Object> applyFiltersToResultList(
-            Collection<Object> results) {
-        for (QueryFilter qf : queryFilters) {
-            results = qf.applyFilterToResultList(results);
-        }
-        return results;
+    public List<FilterCriterion> getEqCriteria() {
+        return eqCriteria;
     }
 
-    private void checkCondDuplication(QueryFilter qf) {
-        final QueryFilter.CondFilter cf = (QueryFilter.CondFilter) qf;
-        if ((cf.comparator == Comparator.GT || cf.comparator == Comparator.GE)) {
-            if (hasGtOrGe) {
-                throw new IllegalStateException(
-                    "Can not add high pass cond more than one: " + qf);
-            } else {
-                hasGtOrGe = true;
-            }
+    public FilterCriterion getGtOrGeCriterion() {
+        return gtOrGeCriterion;
+    }
+
+    public Integer getLimitCount() {
+        return limitCount;
+    }
+
+    public FilterCriterion getLtOrLeCriterion() {
+        return ltOrLeCriterion;
+    }
+
+    public SortCriterion getSortCriterion() {
+        return sortCriterion;
+    }
+
+    public void setGtOrGeCriterion(FilterCriterion gtOrGeCriterion,
+            boolean isOverwrite) {
+        if (this.gtOrGeCriterion == null || isOverwrite) {
+            this.gtOrGeCriterion = gtOrGeCriterion;
         }
-        if ((cf.comparator == Comparator.LT || cf.comparator == Comparator.LE)) {
-            if (hasLtOrLe) {
-                throw new IllegalStateException(
-                    "Can not add low pass cond more than one: " + qf);
-            } else {
-                hasLtOrLe = true;
-            }
+    }
+
+    public void setLimitCount(Integer limitCount) {
+        this.limitCount = limitCount;
+    }
+
+    public void setLtOrLeCriterion(FilterCriterion ltOrLeCriterion,
+            boolean isOverwrite) {
+        if (this.ltOrLeCriterion == null || isOverwrite) {
+            this.ltOrLeCriterion = ltOrLeCriterion;
         }
+    }
+
+    public void setSortCriterion(SortCriterion sortCriterion) {
+        this.sortCriterion = sortCriterion;
+    }
+
+    @Override
+    public String toString() {
+        return "QueryRequest(" + queryFilters + ")";
     }
 }

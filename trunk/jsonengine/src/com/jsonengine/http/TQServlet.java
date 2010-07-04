@@ -23,22 +23,27 @@ import com.jsonengine.meta.JEDocMeta;
  */
 public class TQServlet extends HttpServlet {
 
-    private static final String QUENAME_JETASKS = "jetasks";
+    public static final String PARAM_DOCTYPE = "docType";
 
     public static final String PATH_DELETEALL = "/_tq/deleteAll";
 
-    public static final String PARAM_DOCTYPE = "docType";
+    private static final String QUENAME_JETASKS = "jetasks";
 
     private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // check URI and invoke a task
-        if (req.getRequestURI().startsWith(PATH_DELETEALL)) {
-            deleteAll(req);
-        }
+    /**
+     * Adds a task on the queue to delete all the entities for a docType.
+     * 
+     * @param docType
+     *            docType to delete
+     */
+    public static void addDeleteAllTask(String docType) {
+        final Queue que = QueueFactory.getQueue(QUENAME_JETASKS);
+        final TaskOptions to =
+            TaskOptions.Builder.url(PATH_DELETEALL).param(
+                PARAM_DOCTYPE,
+                docType);
+        que.add(to);
     }
 
     // Delete all the entities for a docType
@@ -66,18 +71,13 @@ public class TQServlet extends HttpServlet {
         addDeleteAllTask(docType);
     }
 
-    /**
-     * Adds a task on the queue to delete all the entities for a docType.
-     * 
-     * @param docType
-     *            docType to delete
-     */
-    public static void addDeleteAllTask(String docType) {
-        final Queue que = QueueFactory.getQueue(QUENAME_JETASKS);
-        final TaskOptions to =
-            TaskOptions.Builder.url(PATH_DELETEALL).param(
-                PARAM_DOCTYPE,
-                docType);
-        que.add(to);
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        // check URI and invoke a task
+        if (req.getRequestURI().startsWith(PATH_DELETEALL)) {
+            deleteAll(req);
+        }
     }
 }

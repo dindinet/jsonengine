@@ -224,6 +224,13 @@ public class JETestUtils {
         return docId;
     }
 
+    public void storeTestDocTypeInfo() throws JEConflictException, JEAccessDeniedException {
+        (new DocTypeService()).saveDocTypeInfo(
+            TEST_DOCTYPE,
+            DocTypeService.ACCESS_LEVEL_PUBLIC,
+            DocTypeService.ACCESS_LEVEL_PUBLIC);
+    }
+
     public void storeTestUsers(String docType) throws JEConflictException,
             JENotFoundException, JEAccessDeniedException {
 
@@ -240,13 +247,6 @@ public class JETestUtils {
 
         final Map<String, Object> user4 = getAmanda();
         saveJsonMap(user4);
-    }
-
-    public void storeTestDocTypeInfo() throws JEConflictException, JEAccessDeniedException {
-        (new DocTypeService()).saveDocTypeInfo(
-            TEST_DOCTYPE,
-            DocTypeService.ACCESS_LEVEL_PUBLIC,
-            DocTypeService.ACCESS_LEVEL_PUBLIC);
     }
 
 }

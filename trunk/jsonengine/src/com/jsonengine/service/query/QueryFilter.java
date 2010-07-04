@@ -1,12 +1,7 @@
 package com.jsonengine.service.query;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import org.slim3.datastore.ModelQuery;
 import org.slim3.datastore.StringCollectionAttributeMeta;
 
 import com.jsonengine.common.JEUtils;
@@ -14,230 +9,104 @@ import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
 
 /**
- * Represents a filter (condFilter, sortFilter and limitFilter) for a query.
+ * Represents a queryFilter.
  * 
  * @author @kazunori_279
  */
 public abstract class QueryFilter {
 
     /**
-     * Comparators that can be specified with a condFilter.
+     * Represents a EQ confFilter.
      */
-    public enum Comparator {
-        EQ, GE, GT, LE, LT
-    };
+    public static class EQ extends QueryFilter {
+        private EQ(QueryRequest qReq, String propName, Object propValue) {
+            super(qReq, propName, propValue);
+            queryRequest.getEqCriteria().add(index.equal(condParam));
+        }
+    }
 
     /**
-     * Represents a confFilter.
-     * 
-     * @author @kazunori_279
+     * Represents a GE confFilter.
      */
-    public static class CondFilter extends QueryFilter {
-
-        // the comparator
-        protected final Comparator comparator;
-
-        // the upper limit value for the property
-        private final String condMax;
-
-        // the lower limit value for the property
-        private final String condMin;
-
-        // user specified value for the filtering
-        protected final String condParam;
-
-        /**
-         * Creates a confFilter.
-         * 
-         * @param docType
-         *            docType of this filter
-         * @param propName
-         *            property name for the filtering
-         * @param comparator
-         *            comparator for the filtering
-         * @param propValue
-         *            property value for the filtering
-         */
-        public CondFilter(String docType, String propName,
-                Comparator comparator, Object propValue) {
-            super(docType);
-            this.comparator = comparator;
-            final String condPrefix = docType + ":" + propName + ":";
-            this.condParam = condPrefix + JEUtils.i.encodePropValue(propValue);
-            this.condMin = condPrefix;
-            this.condMax = condPrefix + "\uffff";
+    public static class GE extends QueryFilter {
+        private GE(QueryRequest queryRequest, String propName, Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(index.lessThan(condMax), false);
+            queryRequest.setGtOrGeCriterion(
+                index.greaterThanOrEqual(condParam),
+                true);
         }
+    }
 
-        @Override
-        public ModelQuery<JEDoc> applyFilterToModelQuery(ModelQuery<JEDoc> mq,
-                boolean isSingleCond) {
-            final JEDocMeta jeDocMeta = JEDocMeta.get();
-            final StringCollectionAttributeMeta<JEDoc, Set<String>> ie =
-                jeDocMeta.indexEntries;
-            switch (comparator) {
-            case LT:
-                mq = mq.filter(ie.lessThan(condParam));
-                if (isSingleCond) {
-                    mq = mq.filter(ie.greaterThan(condMin));
-                }
-                return mq;
-            case LE:
-                mq = mq.filter(ie.lessThanOrEqual(condParam));
-                if (isSingleCond) {
-                    mq = mq.filter(ie.greaterThan(condMin));
-                }
-                return mq;
-            case GT:
-                mq = mq.filter(ie.greaterThan(condParam));
-                if (isSingleCond) {
-                    mq = mq.filter(ie.lessThan(condMax));
-                }
-                return mq;
-            case GE:
-                mq = mq.filter(ie.greaterThanOrEqual(condParam));
-                if (isSingleCond) {
-                    mq = mq.filter(ie.lessThan(condMax));
-                }
-                return mq;
-            case EQ:
-                return mq.filter(ie.equal(condParam));
-            }
-            throw new IllegalArgumentException();
+    /**
+     * Represents a GT confFilter.
+     */
+    public static class GT extends QueryFilter {
+        private GT(QueryRequest queryRequest, String propName, Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(index.lessThan(condMax), false);
+            queryRequest.setGtOrGeCriterion(index.greaterThan(condParam), true);
         }
+    }
 
-        @Override
-        public String toString() {
-            return "CondFilter(docType="
-                + docType
-                + ", cp="
-                + comparator
-                + ", condParam="
-                + condParam
-                + ", condMin="
-                + condMin
-                + ", condMax="
-                + condMax
-                + ") ";
+    /**
+     * Represents a LE confFilter.
+     */
+    public static class LE extends QueryFilter {
+        private LE(QueryRequest queryRequest, String propName, Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(
+                index.lessThanOrEqual(condParam),
+                true);
+            queryRequest.setGtOrGeCriterion(index.greaterThan(condMin), false);
         }
-    };
+    }
 
     /**
      * Represents a limitFilter.
-     * 
-     * @author @kazunori_279
      */
-    public static class LimitFilter extends QueryFilter {
-
-        private final int limitCount;
-
-        /**
-         * Creates a limitFilter.
-         * 
-         * @param docType
-         *            docType of this filter.
-         * @param limitCount
-         *            maximum number of resuls for this limit filter.
-         */
-        public LimitFilter(String docType, int limitCount) {
-            super(docType);
-            this.limitCount = limitCount;
-        }
-
-        @Override
-        public ModelQuery<JEDoc> applyFilterToModelQuery(ModelQuery<JEDoc> mq,
-                boolean isSingleCond) {
-            return mq.limit(limitCount);
-        }
-
-        @Override
-        public String toString() {
-            return "LimitFilter(docType="
-                + docType
-                + ", limitCount="
-                + limitCount
-                + ")";
+    public static class LIMIT extends QueryFilter {
+        private LIMIT(QueryRequest queryRequest, int limitCount) {
+            super(queryRequest, null, null);
+            queryRequest.setLimitCount(limitCount);
         }
     }
 
     /**
-     * Represents a sortFilter.
-     * 
-     * @author @kazunori_279
+     * Represents a LT confFilter.
      */
-    public static class SortFilter extends QueryFilter {
-
-        // the property name to be sorted
-        private final String propName;
-
-        // sort order
-        private final SortOrder sortOrder;
-
-        /**
-         * Creates a sortFilter.
-         * 
-         * @param docType
-         *            docType of this filter.
-         * @param propName
-         *            property name for the sorting.
-         * @param sortOrder
-         *            sort order for the sorting.
-         */
-        public SortFilter(String docType, String propName, SortOrder sortOrder) {
-            super(docType);
-            this.propName = propName;
-            this.sortOrder = sortOrder;
-        }
-
-        @Override
-        public ModelQuery<JEDoc> applyFilterToModelQuery(ModelQuery<JEDoc> mq,
-                boolean isSingleCond) {
-            return mq; // do nothing
-        }
-
-        @Override
-        public Collection<Object> applyFilterToResultList(
-                Collection<Object> resultList) {
-
-            // build a Comparator for in-memory sorting
-            final java.util.Comparator<Object> cp =
-                new java.util.Comparator<Object>() {
-                    @SuppressWarnings("unchecked")
-                    public int compare(Object o1, Object o2) {
-                        final Object v1 =
-                            ((Map<String, Object>) o1).get(propName);
-                        final Object v2 =
-                            ((Map<String, Object>) o2).get(propName);
-                        if (sortOrder == SortOrder.ASC) {
-                            return ((Comparable<Object>) v1).compareTo(v2);
-                        } else {
-                            return ((Comparable<Object>) v2).compareTo(v1);
-                        }
-                    }
-                };
-
-            // sort the results
-            final SortedSet<Object> sortedResults = new TreeSet<Object>(cp);
-            sortedResults.addAll(resultList);
-            return sortedResults;
-        }
-
-        @Override
-        public String toString() {
-            return "SoftFilter(docType="
-                + docType
-                + ", protName="
-                + propName
-                + ", sortOrder="
-                + sortOrder
-                + ")";
+    public static class LT extends QueryFilter {
+        private LT(QueryRequest queryRequest, String propName, Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(index.lessThan(condParam), true);
+            queryRequest.setGtOrGeCriterion(index.greaterThan(condMin), false);
         }
     }
 
     /**
-     * Sort order that can be specified with a sortFilter.
+     * Represents a sortFilter for asc.
      */
-    public enum SortOrder {
-        ASC, DESC
+    public static class SortASC extends QueryFilter {
+        private SortASC(QueryRequest queryRequest, String propName,
+                Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(index.greaterThan(condMin), false);
+            queryRequest.setGtOrGeCriterion(index.lessThan(condMax), false);
+            queryRequest.setSortCriterion(index.asc);
+        }
+    }
+
+    /**
+     * Represents a sortFilter for desc.
+     */
+    public static class SortDESC extends QueryFilter {
+        private SortDESC(QueryRequest queryRequest, String propName,
+                Object propValue) {
+            super(queryRequest, propName, propValue);
+            queryRequest.setLtOrLeCriterion(index.greaterThan(condMin), false);
+            queryRequest.setGtOrGeCriterion(index.lessThan(condMax), false);
+            queryRequest.setSortCriterion(index.desc);
+        }
     }
 
     /**
@@ -246,17 +115,18 @@ public abstract class QueryFilter {
      * @param token
      * @return a Comparator
      */
-    public static Comparator parseComparator(String token) {
+    public static void addCondFilter(QueryRequest qReq, String propName,
+            String token, Object propValue) {
         if ("lt".equals(token)) {
-            return Comparator.LT;
+            new LT(qReq, propName, propValue);
         } else if ("le".equals(token)) {
-            return Comparator.LE;
+            new LE(qReq, propName, propValue);
         } else if ("gt".equals(token)) {
-            return Comparator.GT;
+            new GT(qReq, propName, propValue);
         } else if ("ge".equals(token)) {
-            return Comparator.GE;
+            new GE(qReq, propName, propValue);
         } else if ("eq".equals(token)) {
-            return Comparator.EQ;
+            new EQ(qReq, propName, propValue);
         } else {
             throw new IllegalArgumentException(
                 "Illegal comparator for a confFilter: " + token);
@@ -264,61 +134,83 @@ public abstract class QueryFilter {
     }
 
     /**
+     * Add limitFilter to the QueryRequest.
+     * 
+     * @param qReq
+     * @param limitCount
+     */
+    public static void addLimitFilter(QueryRequest qReq, int limitCount) {
+        new LIMIT(qReq, limitCount);
+    }
+
+    /**
      * Parses a token String and convert it to a SortOrder;
      * 
      * @param token
+     * 
      * @return a SortOrder
      */
-    public static SortOrder parseSortOrder(String token) {
+    public static void addSortFilter(QueryRequest qReq, String propName,
+            String token) {
         if ("desc".equals(token)) {
-            return SortOrder.DESC;
+            new SortDESC(qReq, propName, null);
         } else if ("asc".equals(token)) {
-            return SortOrder.ASC;
+            new SortASC(qReq, propName, null);
         } else {
             throw new IllegalArgumentException(
                 "Illegal sortOrder for a sortFilter: " + token);
         }
     }
 
-    /**
-     * docType for this filter.
-     */
-    public final String docType;
+    // the upper limit value for the property
+    protected final String condMax;
+
+    // the lower limit value for the property
+    protected final String condMin;
+
+    // user specified value for the filtering
+    protected final String condParam;
+
+    // indexEntries meta for the filterling
+    protected final StringCollectionAttributeMeta<JEDoc, Set<String>> index =
+        JEDocMeta.get().indexEntries;
+
+    // docType for the filter
+    protected final QueryRequest queryRequest;
 
     /**
-     * Creates an instance of QueryFilter for a docType;
+     * Creates a confFilter.
      * 
-     * @param docType
+     * @param queryRequest
+     *            queryRequest of this filter
+     * @param propName
+     *            property name for the filtering
+     * @param propValue
+     *            property value for the filtering
      */
-    public QueryFilter(String docType) {
-        this.docType = docType;
+    public QueryFilter(QueryRequest queryRequest, String propName,
+            Object propValue) {
+        this.queryRequest = queryRequest;
+        this.queryRequest.addQueryFilter(this);
+        final String condPrefix =
+            queryRequest.getDocType() + ":" + propName + ":";
+        this.condParam = condPrefix + JEUtils.i.encodePropValue(propValue);
+        this.condMin = condPrefix;
+        this.condMax = condPrefix + "\uffff";
     }
 
-    /**
-     * Applies this filter to the specified ModelQuery. Subclasses may
-     * implements this.
-     * 
-     * @param curMq
-     *            a ModelQuery to apply this filter
-     * @param isSingleCond
-     *            a flag to indicate if this query contains only single
-     *            condition (GT/GE, or LT/LE)
-     * @return a ModelQuery
-     */
-    public ModelQuery<JEDoc> applyFilterToModelQuery(ModelQuery<JEDoc> curMq,
-            boolean isSingleCond) {
-        return curMq; // do nothing by default
-    }
-
-    /**
-     * Applies this filter to the specified result list. Subclasses may override
-     * this.
-     * 
-     * @param resultList
-     * @return
-     */
-    public Collection<Object> applyFilterToResultList(
-            Collection<Object> resultList) {
-        return resultList; // do nothing by default
+    @Override
+    public String toString() {
+        return "QueryFilter(docType="
+            + queryRequest.getDocType()
+            + ", cp="
+            + this.getClass().getSimpleName()
+            + ", condParam="
+            + condParam
+            + ", condMin="
+            + condMin
+            + ", condMax="
+            + condMax
+            + ") ";
     }
 }

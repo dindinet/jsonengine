@@ -13,22 +13,14 @@ public abstract class JERequest {
     // docType of this request
     private String docType;
 
+    // true if this is a request from admin
+    private boolean isAdmin = false;
+
     // a timestamp of the request time
     private long requestedAt;
 
     // an User ID of the requestor
     private String requestedBy;
-
-    // true if this is a request from admin
-    private boolean isAdmin = false;
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
 
     public JERequest() {
         super();
@@ -44,18 +36,6 @@ public abstract class JERequest {
 
     public String getRequestedBy() {
         return requestedBy;
-    }
-
-    public void setDocType(String docName) {
-        this.docType = docName;
-    }
-
-    public void setRequestedAt(long requestedAt) {
-        this.requestedAt = requestedAt;
-    }
-
-    public void setRequestedBy(String requestedBy) {
-        this.requestedBy = requestedBy;
     }
 
     /**
@@ -86,6 +66,26 @@ public abstract class JERequest {
             docType,
             requestedBy,
             isAdmin);
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setDocType(String docName) {
+        this.docType = docName;
+    }
+
+    public void setRequestedAt(long requestedAt) {
+        this.requestedAt = requestedAt;
+    }
+
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
     }
 
 }
