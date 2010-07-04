@@ -13,14 +13,14 @@ This query would return an array of JSON documents that satisfies:
 
 
 {{{
-/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=name.asc&limit=10
+/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
 }}}
 
 This query would return an array of JSON documents that satisfies:
 
   * docType is "myDoc".
   * "age" property is "greater than or equal to 20" *and* "less than 60".
-  * Sorted by "name" property in ascending order.
+  * Sorted by "age" property in ascending order.
   * Number of returned documents will be limited to 10.
 
 == Query URI format ==
@@ -51,7 +51,7 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
   * Multiple `<`condFilter`>`s will be combined with *logical AND* operation.
   * If you want to specify a String as a `<`propertyValue`>`, you need to wrap it with double quotations. e.g. cond=name.eq."Foo"
   * If you use only *"eq" comparator* in `<`condFilter`>`s, you can specify any number of `<`condFilter`>`s. e.g. cond=age.eq.10&cond=name.eq.Foo&cond=id.eq."001"&...
-  * If you use *inequality comparators* (lt, le, gt, ge) in `<`condFilter`>`s, you can specify *only one* kind of `<`propertyName`>` in one query URI. e.g. You can not do "cond=*age*.ge.20&cond=*name*.eq.Foo"
-  * You may put `<`sortFilter`>` only once. You can choose any property name as the sort criteria.
-  * You may put `<`limitFilter`>` only once.
+  * If you use *inequality comparators* (lt, le, gt, ge) in `<`condFilter`>`s, you can not specify more than one kind of `<`propertyName`>` in a query URI.
+    * You can not mix multiple `<`propertyName`>` in `<`condFilter`>` (e.g. cond=*age*.ge.20&cond=*name*.eq.Foo)
+    * You can not use another `<`propertyName`>` in `<`sortFilter`>`. (e.g. cond=*age*.ge.20&sort=*name*.asc)
   * The parameter values should be URL encoded.
