@@ -143,14 +143,14 @@ public class QueryServlet extends HttpServlet {
             throw new IllegalArgumentException("Illegal condFilter: " + cond);
         }
         final String propName = m.group(1);
-        final String token = m.group(2);
+        final String condToken = m.group(2);
         final String propValue = m.group(3);
 
         // try to convert propValue
         final Object propValueObj = convertPropValue(propValue);
 
         // create confFilter
-        QueryFilter.addCondFilter(qReq, propName, token, propValueObj);
+        QueryFilter.addCondFilter(qReq, propName, condToken, propValueObj);
     }
 
     private void parseLimitFilter(final QueryRequest qReq,

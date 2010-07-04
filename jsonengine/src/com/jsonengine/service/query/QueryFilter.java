@@ -90,8 +90,8 @@ public abstract class QueryFilter {
         private SortASC(QueryRequest queryRequest, String propName,
                 Object propValue) {
             super(queryRequest, propName, propValue);
-            queryRequest.setLtOrLeCriterion(index.greaterThan(condMin), false);
-            queryRequest.setGtOrGeCriterion(index.lessThan(condMax), false);
+            queryRequest.setLtOrLeCriterion(index.lessThan(condMax), false);
+            queryRequest.setGtOrGeCriterion(index.greaterThan(condMin), false);
             queryRequest.setSortCriterion(index.asc);
         }
     }
@@ -103,8 +103,8 @@ public abstract class QueryFilter {
         private SortDESC(QueryRequest queryRequest, String propName,
                 Object propValue) {
             super(queryRequest, propName, propValue);
-            queryRequest.setLtOrLeCriterion(index.greaterThan(condMin), false);
-            queryRequest.setGtOrGeCriterion(index.lessThan(condMax), false);
+            queryRequest.setLtOrLeCriterion(index.lessThan(condMax), false);
+            queryRequest.setGtOrGeCriterion(index.greaterThan(condMin), false);
             queryRequest.setSortCriterion(index.desc);
         }
     }
