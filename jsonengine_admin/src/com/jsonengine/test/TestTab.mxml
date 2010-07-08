@@ -6,6 +6,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import com.jsonengine.net.NetManager;
 			import com.jsonengine.test.AllTests;
 			
@@ -13,11 +14,19 @@
 				as3unit.run(AllTests)
 			}
 			
+			private function startKtrwjr():void {
+				var url:URLRequest = new URLRequest("/ktrwjr/");
+				navigateToURL(url);
+			}
+			
 		]]>
 	</mx:Script>
 
 	<as3unit:AS3Unit id="as3unit"/>
 
-	<mx:Button label="Start Testing" click="start()" id="btStart"/>
+	<mx:HBox width="100%">
+		<mx:Button label="Start External Testing" click="start()" id="btStart"/>		
+		<mx:Button label="Start Internal Testing" click="startKtrwjr()"/>		
+	</mx:HBox>
 			
 </mx:VBox>
