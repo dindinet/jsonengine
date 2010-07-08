@@ -49,7 +49,7 @@ package com.jsonengine.test
 		}
 		
 		private function veryfyQuery(result:Object):void {
-			Alert.show(String(result));
+//			Alert.show(String(result));
 			var resultObjs:Array = JSON.decode(String(result));
 			assertEquals(2, resultObjs.length);
 			assertEquals("#003", resultObjs[0].id);

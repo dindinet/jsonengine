@@ -2,6 +2,7 @@ package com.jsonengine.net
 {
 	import flash.net.URLVariables;
 	
+	import mx.controls.Alert;
 	import mx.core.Application;
 	import mx.managers.CursorManager;
 	import mx.rpc.AsyncToken;
@@ -12,7 +13,8 @@ package com.jsonengine.net
 	
 	public class NetManager
 	{
-		private static const URL_HOST_DEV:String = "http://localhost:8888";
+		private static const URL_HOST_DEV:String = "http://jsonengine.appspot.com";
+//		private static const URL_HOST_DEV:String = "http://localhost:8888";
 		
 		[Bindable]
 		public static var i:NetManager = new NetManager();

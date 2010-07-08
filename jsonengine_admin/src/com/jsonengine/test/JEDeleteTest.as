@@ -1,19 +1,16 @@
 package com.jsonengine.test
 {
-	import com.adobe.serialization.json.JSON;
 	import com.jsonengine.net.NetManager;
 	
 	import flash.net.URLVariables;
 	
-	import org.libspark.as3unit.assert.assertEquals;
-	import org.libspark.as3unit.assert.assertTrue;
 	import org.libspark.as3unit.assert.async;
 	import org.libspark.as3unit.test;
 	
 	use namespace org.libspark.as3unit.test;
 
 	/**
-	 * Tests GET method.
+	 * Tests Delete method.
 	 */
 	public class JEDeleteTest
 	{		
@@ -25,5 +22,4 @@ package com.jsonengine.test
 				trace("DELETE success");
 			}));
 		}
-	}
-}
+	}}
