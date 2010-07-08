@@ -33,5 +33,4 @@
 
 === TODOs ===
 
- * Security (Admin console, Open ID and OAuth support)
  * Sample JS/Flash client
