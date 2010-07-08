@@ -12,6 +12,8 @@ On the admin page, you can use the tabs described below.
 
 On the Security tab, you can add, edit or delete an access level setting for each docType. The setting includes both "Access Level for Read" and "Access Level for Write" for each docType. The "Read" means the get and the query access, where the "Write" means the put and the delete access.
 
+http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221407.png?1278594870
+
 For both read and write operations, you can choose one of the following access level:
 
  * "public": anyone can access to the operation without any authentication.
@@ -24,3 +26,5 @@ Please be noted that the "public" docType can be accessed by anyone on the inter
 == Test tab ==
 
 On the Test tab, you can start a series of unit tests by pressing the "Start testing" button at the bottom of the screen. By confirming that the test finishes with green indicator, it is assured that your jsonengine is working properly on the cloud environment.
+
+http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221611.png?1278594986
