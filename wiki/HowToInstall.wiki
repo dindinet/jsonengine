@@ -89,11 +89,8 @@ On Mac/Linux shell:
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
 
-=== Testing the jsonengine ===
+=== Admin page of jsonengine ===
 
-Now your jsonengine is ready. You can check if it is working properly by accessing the following URL with your browser:
+Now your jsonengine is ready. Check the following page to use the admin page for security configuration and unit testing of jsonengine.
 
-  * http://my-appid.appspot.com/ktrwjr/ (Internal Unit Test: click "Check All" button and "Run" to execute all the unit tests)
-  * http://my-appid.appspot.com/_admin/jsonengine_test.html (External Unit Test from Admin Flash client)
-
-Theses URLs will show a web page to run unit tests against the jsonengine. Please wait a while until it finishes all the tests, and if you see the green sign the service is working properly. If you see the red sign it indicates any failure on testing the features of jsonengine.
+ * [HowToAdmin How to admin jsonengine]
