@@ -25,6 +25,16 @@ Please be noted that the "public" docType can be accessed by anyone on the inter
 
 == Test tab ==
 
-On the Test tab, you can start a series of unit tests by pressing the "Start testing" button at the bottom of the screen. By confirming that the test finishes with green indicator, it is assured that your jsonengine is working properly on the cloud environment.
+On the Test tab, you can start a series of unit tests.
 
-http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221611.png?1278594986
+=== External Testing ===
+
+By pressing the "Start External Testing" button at the bottom of the screen, the script inside the testing page will issue a series of test requests to the server and check if the results are correct. By confirming that the test finishes with green bar, it is assured that your jsonengine is working properly on the cloud environment.
+
+http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223044.png?1278595863
+
+=== Internal Testing ===
+
+By pressing the "Start Internal Testing" button, browser will show a "Kotori Web JUnit Runner" page below. Click "Check All" button and then click "Run" button to start the testing. The script inside the jsonengine on the cloud will issue a series of test request to itself and check if the results are correct. The green bar indicates the jsonengine is working properly.
+
+http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223045.png?1278595938
