@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="init()"
+	paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.jsonengine.net.NetManager;
+			import com.adobe.serialization.json.JSON;
+			
+			[Bindable]
+			public var docTypeInfoList:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var curDocTypeInfo:Object;
+			
+			public static const accessLevelComments:ArrayCollection = new ArrayCollection();
+			
+			private function init():void {
+				readDocTypeInfo();
+				focusManager.setFocus(tiDocType);
+				accessLevelComments.addItem("(Accessible by anyone)");
+				accessLevelComments.addItem("(Accessible by an authenticated user)");
+				accessLevelComments.addItem("(Accessible only by an owner and an administrator)");
+				accessLevelComments.addItem("(Accessible only by an administrator)");
+			}
+			
+			private function readDocTypeInfo():void {
+				var params:URLVariables = new URLVariables();
+				params.sort = "docType.asc";
+				NetManager.i.sendReq("/_q/_docTypeInfo", params, "GET", showDocTypeInfo);
+			}
+			
+			private function showDocTypeInfo(result:Object):void {
+				
+				// fill the DataGrid with the returned docTypeInfo list
+				docTypeInfoList.source = JSON.decode(String(result));
+				
+				// try to select the current docTypeInfo on the DataGrid
+				for each (var o:Object in docTypeInfoList) {
+					if (o.docType == curDocTypeInfo.docType) {
+						dgDocTypeInfo.selectedItem = o;
+					}
+				}				
+			}
+			
+			private function onSaveClick():void {
+				
+				// build new docTypeInfo
+				var o:Object = new Object();
+				o._docId = getDocId();
+				o.docType = tiDocType.text;
+				o.accessLevelForRead = cbRead.selectedLabel;
+				o.accessLevelForWrite = cbWrite.selectedLabel;
+				curDocTypeInfo = o;
+				
+				// save it
+				var params:URLVariables = new URLVariables();
+				params._doc = JSON.encode(o);
+				NetManager.i.sendReq("/_je/_docTypeInfo", params, "POST", onSaved);
+			}
+			
+			private function onSaved(result:Object):void {
+				readDocTypeInfo();
+				Alert.show("Saved");
+			}
+			
+			private function onNewClick():void {
+				dgDocTypeInfo.selectedItem = null;
+				curDocTypeInfo = new Object();
+				focusManager.setFocus(tiDocType);
+			}
+			
+			private function onDeleteClick():void {
+				var params:URLVariables = new URLVariables();
+				params["_delete"] = "true";
+				NetManager.i.sendReq("/_je/_docTypeInfo/" + getDocId(), params, "POST", onDeleted);
+			}
+			
+			private function onDeleted(result:Object):void {
+				readDocTypeInfo();
+				dgDocTypeInfo.selectedItem = null;
+				curDocTypeInfo = new Object();
+				Alert.show("Deleted");
+			}
+			
+			private function getDocId():String {
+				return "_docTypeInfo:" + tiDocType.text;
+			}
+			
+			private function getSelectedIndex(docTypeInfo:Object, propName:String):int {
+				for (var i:int = 0; i < accessLevels.length; i++) {
+					if (accessLevels.getItemAt(i).label == docTypeInfo[propName]) {
+						return i;
+					}
+				}
+				return 0;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Binding source="dgDocTypeInfo.selectedItem != null ? dgDocTypeInfo.selectedItem : curDocTypeInfo" 
+		destination="curDocTypeInfo"/>
+
+	<mx:ArrayCollection id="accessLevels">
+		<mx:Object label="public"/>
+		<mx:Object label="protected"/>
+		<mx:Object label="private"/>
+		<mx:Object label="admin"/>
+	</mx:ArrayCollection>
+					
+	<mx:DataGrid width="100%" dataProvider="{docTypeInfoList}" id="dgDocTypeInfo">
+		<mx:columns>
+			<mx:DataGridColumn headerText="docType name" dataField="docType"/>
+			<mx:DataGridColumn headerText="Access Level for Read" dataField="accessLevelForRead"/>
+			<mx:DataGridColumn headerText="Access Level for Write" dataField="accessLevelForWrite"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:Form width="100%" backgroundColor="#ffffff" enabled="{!NetManager.i.isBusy}">
+		<mx:FormHeading label="Access Level settings for a docType"/>
+		<mx:FormItem label="docType name:" width="100%">
+			<mx:TextInput id="tiDocType" text="{curDocTypeInfo.docType}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Access Level for Read:" width="100%">
+			<mx:HBox width="100%" verticalAlign="middle">
+				<mx:ComboBox dataProvider="{accessLevels}" id="cbRead" 
+					selectedIndex="{getSelectedIndex(curDocTypeInfo, 'accessLevelForRead')}"/>
+				<mx:Label text="{accessLevelComments.getItemAt(cbRead.selectedIndex)}"/>				
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:FormItem label="Access Level for Write:" width="100%">
+			<mx:HBox width="100%" verticalAlign="middle">
+				<mx:ComboBox dataProvider="{accessLevels}" id="cbWrite"
+					selectedIndex="{getSelectedIndex(curDocTypeInfo, 'accessLevelForWrite')}"/>
+				<mx:Label text="{accessLevelComments.getItemAt(cbWrite.selectedIndex)}"/>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:Spacer height="10"/>
+		<mx:FormItem width="100%">
+			<mx:HBox width="100%">
+				<mx:Button label="New" click="onNewClick()"/>				
+				<mx:Button label="Save" click="onSaveClick()" enabled="{tiDocType.text.length > 0}"/>
+				<mx:Button label="Delete" click="onDeleteClick()"/>				
+				<mx:Button label="Cancel" click="onNewClick()"/>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+
+</mx:VBox>

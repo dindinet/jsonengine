@@ -19,7 +19,8 @@ package com.jsonengine.test
 			JEUpdateTest,
 			JEDeleteTest,
 //			JEDeleteConfirmTest
-			JEQueryTest
+			JEQueryTest,
+			JECleanUpTest
 		];
 		
 		public static var resultUser1:Object;
