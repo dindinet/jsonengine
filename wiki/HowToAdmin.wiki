@@ -22,12 +22,17 @@ For both read and write operations, you can choose one of the following access l
 || private || Owner || User can put a new Doc, Owner can update or delete a Doc ||
 || admin || Administrator || Administrator ||
 
+Roles:
+
  * Anyone: any user who access to jsonengine without authentication.
  * User: An user authenticated by either Google account or Open ID.
  * Owner: The owner of the Doc.
  * Administrator: The administrator of your appid.
 
-The "public" docType can be accessed by anyone on the internet. It is strongly recommend not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
+Notes:
+
+ * A query on "private" docType will return only the Docs owned by the requesting user.
+ * The "public" docType can be accessed by anyone on the internet. It is strongly recommend not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
 
 == Test tab ==
 
