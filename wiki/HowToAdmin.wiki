@@ -10,18 +10,24 @@ On the admin page, you can use the tabs described below.
 
 == Security tab ==
 
-On the Security tab, you can add, edit or delete an access level setting for each docType. The setting includes both "Access Level for Read" and "Access Level for Write" for each docType. The "Read" means the get and the query access and the "Write" means the put and the delete access.
+In order to use jsonengine, you have to add an access level setting for each docType you use. On the Security tab, you can add, edit or delete an access level setting for each docType. The setting includes both "Access Level for Read" and "Access Level for Write" for each docType. The "Read" means the get and the query access and the "Write" means the put and the delete access.
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221407.png?1278594870
 
 For both read and write operations, you can choose one of the following access level:
 
- * "public": anyone can access to the operation without any authentication.
- * "protected" : An user who have been authenticated (by Google account or OpenID) can access to the operation.
- * "private" : An user who have been authenticated (by Google account or OpenID) and is the owner of the Doc can access to the operation.
- * "admin" : Only the administrator can access to the operation.
+|| Access Level || Who can read? (get and query) || Who can write? (put and delete) ||
+|| public ||  Anyone || Anyone ||
+|| protected || User || User ||
+|| private || Owner || User can put a new Doc, Owner can update or delete a Doc ||
+|| admin || Administrator || Administrator ||
 
-Please be noted that the "public" docType can be accessed by anyone on the internet. It is strongly recommend not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
+ * Anyone: any user who access to jsonengine without authentication.
+ * User: An user authenticated by either Google account or Open ID.
+ * Owner: The owner of the Doc.
+ * Administrator: The administrator of your appid.
+
+The "public" docType can be accessed by anyone on the internet. It is strongly recommend not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
 
 == Test tab ==
 
