@@ -34,6 +34,21 @@ public class JEDoc implements Serializable {
      */
     public static final String PROP_NAME_UPDATED_AT = "_updatedAt";
 
+    /**
+     * A registered property name for createdAt of each JSON document.
+     */
+    public static final String PROP_NAME_CREATED_AT = "_createdAt";
+
+    /**
+     * A registered property name for updatedBy of each JSON document.
+     */
+    public static final String PROP_NAME_UPDATED_BY = "_updatedBy";
+
+    /**
+     * A registered property name for createdBy of each JSON document.
+     */
+    public static final String PROP_NAME_CREATED_BY = "_createdBy";
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -90,7 +105,7 @@ public class JEDoc implements Serializable {
         for (String propName : docValues.keySet()) {
 
             // skip any props start with "_" (e.g. _foo, _bar)
-            if (propName.startsWith("_")) {
+            if (isSkippedProp(propName)) {
                 continue;
             }
 
@@ -106,6 +121,14 @@ public class JEDoc implements Serializable {
             }
         }
         return indexEntries;
+    }
+
+    private boolean isSkippedProp(String propName) {
+        return propName.startsWith("_")
+            && !(propName.equals(PROP_NAME_CREATED_AT)
+                || propName.equals(PROP_NAME_CREATED_BY)
+                || propName.equals(PROP_NAME_UPDATED_AT) || propName
+                .equals(PROP_NAME_UPDATED_BY));
     }
 
     /**
@@ -251,11 +274,16 @@ public class JEDoc implements Serializable {
      * @param cReq
      */
     public void update(CRUDRequest cReq) {
+
+        // update properties
         setUpdatedAt(cReq.getRequestedAt());
         setUpdatedBy(cReq.getRequestedBy());
         setDocValues(cReq.getJsonMap());
         getDocValues().put(JEDoc.PROP_NAME_DOCID, getDocId());
         getDocValues().put(PROP_NAME_UPDATED_AT, getUpdatedAt());
+        getDocValues().put(PROP_NAME_CREATED_AT, getCreatedAt());
+        getDocValues().put(PROP_NAME_UPDATED_BY, getUpdatedBy());
+        getDocValues().put(PROP_NAME_CREATED_BY, getCreatedBy());
 
         // build index entries of the JEDoc
         setIndexEntries(buildIndexEntries(cReq, getDocValues()));
