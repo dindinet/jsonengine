@@ -18,8 +18,6 @@ import com.jsonengine.model.JEDoc;
 /**
  * Implements CRUD operations for jsonengine.
  * 
- * TODO Add accessibility check
- * 
  * @author @kazunori_279
  */
 public class CRUDService {
