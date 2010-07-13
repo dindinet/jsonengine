@@ -23,6 +23,12 @@ This query would return an array of JSON documents that satisfies:
   * Sorted by "age" property in ascending order.
   * Number of returned documents will be limited to 10.
 
+  * HTTP Response
+    * Status code 200: Exexuted the query successfully.
+      * Response body: Array of JSON docs as a result of the query.
+    * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
+    * Status code 500: Caught an unexpected system error.
+
 == Query URI format ==
 
 You can issue simple queries on jsonengine with the following request format:
