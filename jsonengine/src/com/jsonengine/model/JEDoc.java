@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.appengine.api.datastore.Key;
-import com.jsonengine.common.JERequest;
-import com.jsonengine.common.JEUtils;
-import com.jsonengine.service.crud.CRUDRequest;
-
 import net.arnx.jsonic.JSON;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
+
+import com.google.appengine.api.datastore.Key;
+import com.jsonengine.common.JERequest;
+import com.jsonengine.common.JEUtils;
+import com.jsonengine.service.crud.CRUDRequest;
 
 /**
  * Represents a JSON document posted by a client.
@@ -60,7 +60,7 @@ public class JEDoc implements Serializable {
     public static JEDoc createJEDoc(CRUDRequest cReq) {
         final JEDoc jeDoc = new JEDoc();
         final String keyName =
-            cReq.getDocId() == null ? JEUtils.i.generateUUID() : cReq
+            cReq.getDocId() == null ? (new JEUtils()).generateUUID() : cReq
                 .getDocId();
         jeDoc.setKey(Datastore.createKey(JEDoc.class, keyName));
         jeDoc.setCreatedAt(cReq.getRequestedAt());
@@ -111,7 +111,7 @@ public class JEDoc implements Serializable {
 
             // an index entry will be like: <docType>:<propName>:<propValue>
             final String propValue =
-                JEUtils.i.encodePropValue(docValues.get(propName));
+                (new JEUtils()).encodePropValue(docValues.get(propName));
             if (propValue != null) {
                 indexEntries.add(jeReq.getDocType()
                     + ":"

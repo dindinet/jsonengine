@@ -21,19 +21,11 @@ import com.jsonengine.service.query.QueryService;
  */
 public class JETestUtils {
 
-    /**
-     * Singleton instance.
-     */
-    public static final JETestUtils i = new JETestUtils();
-
     public static final String TEST_DOCTYPE = "test";
 
     public static final String TEST_DOCTYPE2 = "test2";
 
     public static final String TEST_USERNAME = "tester";
-
-    private JETestUtils() {
-    }
 
     /**
      * Compares entries of the specified two Maps.
@@ -78,7 +70,7 @@ public class JETestUtils {
     public CRUDRequest createTestCRUDRequest() {
         final CRUDRequest jeReq = new CRUDRequest();
         jeReq.setDocType(TEST_DOCTYPE);
-        jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         jeReq.setRequestedBy(TEST_USERNAME);
         return jeReq;
     }
@@ -95,7 +87,7 @@ public class JETestUtils {
         jeReq.setCheckUpdatesAfter((Long) testMap
             .get(JEDoc.PROP_NAME_UPDATED_AT));
         jeReq.setDocType(TEST_DOCTYPE);
-        jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         jeReq.setRequestedBy(TEST_USERNAME);
         return jeReq;
     }
@@ -110,9 +102,9 @@ public class JETestUtils {
         testData.put("name", "Foo");
         testData.put("age", 20);
         testData.put("email", "foo@example.com");
-        testData.put("bigPropValue1", JEUtils.i.generateRandomAlnums(400));
-        testData.put("bigPropValue2", JEUtils.i.generateRandomAlnums(400));
-        testData.put("bigPropValue3", JEUtils.i.generateRandomAlnums(400));
+        testData.put("bigPropValue1", (new JEUtils()).generateRandomAlnums(400));
+        testData.put("bigPropValue2", (new JEUtils()).generateRandomAlnums(400));
+        testData.put("bigPropValue3", (new JEUtils()).generateRandomAlnums(400));
         return testData;
     }
 
@@ -125,7 +117,7 @@ public class JETestUtils {
     public QueryRequest createTestQueryRequest(String docType) {
         final QueryRequest jeReq = new QueryRequest();
         jeReq.setDocType(docType);
-        jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         jeReq.setRequestedBy(TEST_USERNAME);
         return jeReq;
     }
@@ -188,8 +180,8 @@ public class JETestUtils {
             JEConflictException, JEAccessDeniedException {
 
         // get all users
-        final QueryRequest qr = JETestUtils.i.createTestQueryRequest(docType);
-        final String resultJson = QueryService.i.query(qr);
+        final QueryRequest qr = (new JETestUtils()).createTestQueryRequest(docType);
+        final String resultJson = (new QueryService()).query(qr);
 
         // remove them
         final CRUDRequest cr = createTestCRUDRequest();
@@ -197,7 +189,7 @@ public class JETestUtils {
             (List<Map<String, Object>>) JSON.decode(resultJson);
         for (Map<String, Object> user : results) {
             cr.setDocId((String) user.get(JEDoc.PROP_NAME_DOCID));
-            CRUDService.i.delete(cr);
+            (new CRUDService()).delete(cr);
         }
     }
 
@@ -216,8 +208,8 @@ public class JETestUtils {
     @SuppressWarnings("unchecked")
     public String saveJsonMap(final Map<String, Object> map)
             throws JEConflictException, JEAccessDeniedException {
-        final CRUDRequest jeReq = JETestUtils.i.createTestCRUDRequest(map);
-        final String savedJson = CRUDService.i.put(jeReq);
+        final CRUDRequest jeReq = (new JETestUtils()).createTestCRUDRequest(map);
+        final String savedJson = (new CRUDService()).put(jeReq);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
                 .get(JEDoc.PROP_NAME_DOCID);

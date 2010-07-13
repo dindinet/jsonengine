@@ -31,8 +31,8 @@ public class QueryServiceTest extends AppEngineTestCase {
             JEAccessDeniedException {
 
         // setup test docTypeInfo and test users
-        JETestUtils.i.storeTestDocTypeInfo();
-        JETestUtils.i.storeTestUsers(JETestUtils.TEST_DOCTYPE);
+        (new JETestUtils()).storeTestDocTypeInfo();
+        (new JETestUtils()).storeTestUsers(JETestUtils.TEST_DOCTYPE);
     }
 
     @SuppressWarnings("unchecked")
@@ -42,8 +42,8 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // find all users
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
-        final String resultJson = QueryService.i.query(qr);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+        final String resultJson = (new QueryService()).query(qr);
 
         // validate the result
         final List<Map<String, Object>> resultMaps =
@@ -58,9 +58,9 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // find all users with a limit
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addLimitFilter(qr, 2);
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
 
         // validate the result size
         final List<Map<String, Object>> resultMaps =
@@ -78,8 +78,8 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // compare the result with Betty
         assertEquals(1, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getDaniel(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getDaniel(),
             resultMaps.get(0)));
     }
 
@@ -93,11 +93,11 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // validate the result
         assertEquals(2, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getAmanda(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getAmanda(),
             resultMaps.get(0)));
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getMarc(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getMarc(),
             resultMaps.get(1)));
     }
 
@@ -111,14 +111,14 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // validate the result
         assertEquals(3, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getAmanda(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getAmanda(),
             resultMaps.get(0)));
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getMarc(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getMarc(),
             resultMaps.get(1)));
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getDaniel(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getDaniel(),
             resultMaps.get(2)));
     }
 
@@ -132,8 +132,8 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // validate the result
         assertEquals(1, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getBetty(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getBetty(),
             resultMaps.get(0)));
     }
 
@@ -147,11 +147,11 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // validate the result
         assertEquals(2, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getDaniel(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getDaniel(),
             resultMaps.get(0)));
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getBetty(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getBetty(),
             resultMaps.get(1)));
     }
 
@@ -162,23 +162,23 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // build query filters
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addCondFilter(qr, "weight", "ge", 12.345);
         QueryFilter.addCondFilter(qr, "weight", "le", 123.45);
 
         // execute query
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
         final List<Map<String, Object>> resultMaps =
             (List<Map<String, Object>>) JSON.decode(resultJson);
         log.info("Result: " + resultJson);
 
         // validate the result
         assertEquals(2, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getMarc(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getMarc(),
             resultMaps.get(0)));
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getDaniel(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getDaniel(),
             resultMaps.get(1)));
     }
 
@@ -189,21 +189,21 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // build query filters
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addCondFilter(qr, "weight", "eq", 123.45);
         QueryFilter.addCondFilter(qr, "isMale", "eq", true);
         QueryFilter.addCondFilter(qr, "id", "eq", "002");
 
         // execute query
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
         final List<Map<String, Object>> resultMaps =
             (List<Map<String, Object>>) JSON.decode(resultJson);
         log.info("Result: " + resultJson);
 
         // validate the result
         assertEquals(1, resultMaps.size());
-        assertTrue(JETestUtils.i.areMapsEqual(
-            JETestUtils.i.getDaniel(),
+        assertTrue((new JETestUtils()).areMapsEqual(
+            (new JETestUtils()).getDaniel(),
             resultMaps.get(0)));
     }
 
@@ -214,11 +214,11 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // find all users
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addSortFilter(qr, "id", "asc");
 
         // execute query
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
 
         // validate the result
         final List<Map<String, Object>> resultMaps =
@@ -237,11 +237,11 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // find all users
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addSortFilter(qr, "weight", "desc");
 
         // execute query
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
 
         // validate the result
         final List<Map<String, Object>> resultMaps =
@@ -260,12 +260,12 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // build query filters
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE);
         QueryFilter.addCondFilter(qr, propName, cp, propValue);
         log.info("Query: " + qr);
 
         // execute query
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
         log.info("Result: " + resultJson);
         return (List<Map<String, Object>>) JSON.decode(resultJson);
     }
@@ -277,9 +277,9 @@ public class QueryServiceTest extends AppEngineTestCase {
 
         // find all users
         final QueryRequest qr =
-            JETestUtils.i.createTestQueryRequest(JETestUtils.TEST_DOCTYPE2);
+            (new JETestUtils()).createTestQueryRequest(JETestUtils.TEST_DOCTYPE2);
         qr.setAdmin(true);
-        final String resultJson = QueryService.i.query(qr);
+        final String resultJson = (new QueryService()).query(qr);
 
         // validate the result
         final List<Map<String, Object>> resultMaps =

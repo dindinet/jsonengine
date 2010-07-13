@@ -90,7 +90,7 @@ public class QueryServlet extends HttpServlet {
             qReq.setRequestedBy(req.getUserPrincipal().getName());
             qReq.setAdmin(userService.isUserAdmin());
         }
-        qReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        qReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         return qReq;
     }
 
@@ -122,7 +122,7 @@ public class QueryServlet extends HttpServlet {
         // execute the query
         final String resultJson;
         try {
-            resultJson = QueryService.i.query(qReq);
+            resultJson = (new QueryService()).query(qReq);
         } catch (JEAccessDeniedException e) {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;

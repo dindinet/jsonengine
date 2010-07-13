@@ -23,14 +23,6 @@ import com.jsonengine.service.doctype.DocTypeService;
 public class QueryService {
 
     /**
-     * Singleton instance.
-     */
-    public static final QueryService i = new QueryService();
-
-    private QueryService() {
-    }
-
-    /**
      * Executes query for the specified {@link QueryRequest}.
      * 
      * @param queryReq

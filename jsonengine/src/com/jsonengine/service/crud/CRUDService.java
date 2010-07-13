@@ -22,14 +22,6 @@ import com.jsonengine.model.JEDoc;
  */
 public class CRUDService {
 
-    /*
-     * Singleton instance.
-     */
-    public static final CRUDService i = new CRUDService();
-
-    private CRUDService() {
-    }
-
     /**
      * Deletes the specified JSON document from Datastore. You need to provide a
      * docId (via {@link CRUDRequest} parameter) to remove an existing document
