@@ -2,8 +2,7 @@ package com.jsonengine.common;
 
 import java.math.BigDecimal;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import org.slim3.memcache.Memcache;
 
 /**
  * Provides utility methods for jsonengine.
@@ -19,9 +18,6 @@ public class JEUtils {
 
     private static final String MC_KEY_TIMESTAMP =
         "com.jsonengine.common.LogCounterService#timestamp";
-
-    public static final MemcacheService mcService =
-        MemcacheServiceFactory.getMemcacheService();
 
     public static final int UUID_DIGITS = 32;
 
@@ -124,11 +120,11 @@ public class JEUtils {
      */
     public long getGlobalTimestamp() {
         long timestamp = System.currentTimeMillis();
-        Long lastTimestamp = (Long) mcService.get(MC_KEY_TIMESTAMP);
+        Long lastTimestamp = (Long) Memcache.get(MC_KEY_TIMESTAMP);
         if (lastTimestamp != null && lastTimestamp >= timestamp) {
             timestamp = lastTimestamp + 1;
         }
-        mcService.put(MC_KEY_TIMESTAMP, timestamp);
+        Memcache.put(MC_KEY_TIMESTAMP, timestamp);
         return timestamp;
     }
 

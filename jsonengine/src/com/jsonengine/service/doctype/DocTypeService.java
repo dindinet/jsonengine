@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.slim3.datastore.Datastore;
+import org.slim3.memcache.Memcache;
 
 import com.google.appengine.api.datastore.Transaction;
 import com.jsonengine.common.JEAccessDeniedException;
@@ -91,7 +92,7 @@ public class DocTypeService {
 
         // try to get it from Memcache
         DocTypeInfo jdti =
-            (DocTypeInfo) JEUtils.mcService.get(getDocIdOfDocTypeInfo(docType));
+            (DocTypeInfo) Memcache.get(getDocIdOfDocTypeInfo(docType));
         if (jdti != null) {
             return jdti;
         }
@@ -111,7 +112,7 @@ public class DocTypeService {
                 .get(PROP_ACCESS_LEVEL_FOR_READ));
             jdti.setAccessLevelForWrite((String) map
                 .get(PROP_ACCESS_LEVEL_FOR_WRITE));
-            JEUtils.mcService.put(getDocIdOfDocTypeInfo(docType), jdti);
+            Memcache.put(getDocIdOfDocTypeInfo(docType), jdti);
             tx.commit();
         } catch (JEConflictException e) {
             throw new IllegalStateException(e);
@@ -270,7 +271,7 @@ public class DocTypeService {
         }
 
         // clear cache
-        JEUtils.mcService.delete(getDocIdOfDocTypeInfo(docType));
+        Memcache.delete(getDocIdOfDocTypeInfo(docType));
     }
 
 }

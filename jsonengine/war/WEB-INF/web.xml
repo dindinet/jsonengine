@@ -32,6 +32,7 @@
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>    
+
     <filter-mapping>
         <filter-name>DatastoreFilter</filter-name>
         <url-pattern>/*</url-pattern>

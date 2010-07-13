@@ -1,9 +1,0 @@
-java.util.regex.Pattern condPattern =
-        java.util.regex.Pattern.compile("^([^\\.]*)\\.(eq|gt|ge|lt|le)\\.(.*)$");
-
-java.util.regex.Matcher m = condPattern.matcher("weight.gt.1.2345");
-m.find();
-System.out.println(m.group(1));
-System.out.println(m.group(2));
-System.out.println(m.group(3));
-
