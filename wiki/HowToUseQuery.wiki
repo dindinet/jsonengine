@@ -55,7 +55,7 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 == Notes ==
 
   * Multiple `<`condFilter`>`s will be combined with *logical AND* operation.
-  * jsonengine tries to convert every `<`propertyValue`>` to numerical value at first. So if you want to specify numerical value as a String, you need to wrap it with double quotations. e.g. cond=name.eq."123"
+  * jsonengine checks if `<`propertyValue`>` can be converted to a numeric value at first. So if you want to pass a numeric value (such as "123") as a String, you need to wrap it with double quotations. e.g. cond=name.eq."123"
   * If you use only *"eq" comparator* in `<`condFilter`>`s, you can specify any number of `<`condFilter`>`s. e.g. cond=age.eq.10&cond=name.eq.Foo&cond=id.eq."001"&...
   * If you use either *`<`sortFilter`>`* or *inequality comparators* (lt, le, gt, ge), you can not specify more than one kind of `<`propertyName`>` in a query URI.
    * OK: cond=*age*.ge.20&cond=*age*.lt.30
