@@ -87,7 +87,7 @@ public class CRUDServlet extends HttpServlet {
         }
         
         // set timestamp
-        jeReq.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         
         // set checkConflict flag
         try {
@@ -168,7 +168,7 @@ public class CRUDServlet extends HttpServlet {
         // do delete
         final CRUDRequest jeReq = createJERequest(req);
         try {
-            CRUDService.i.delete(jeReq);
+            (new CRUDService()).delete(jeReq);
         } catch (JENotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -189,7 +189,7 @@ public class CRUDServlet extends HttpServlet {
         final CRUDRequest jeReq = createJERequest(req);
         final String resultJson;
         try {
-            resultJson = CRUDService.i.get(jeReq);
+            resultJson = (new CRUDService()).get(jeReq);
         } catch (JENotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -234,7 +234,7 @@ public class CRUDServlet extends HttpServlet {
         final CRUDRequest jeReq = createJERequest(req);
         final String resultJson;
         try {
-            resultJson = CRUDService.i.put(jeReq);
+            resultJson = (new CRUDService()).put(jeReq);
         } catch (JEConflictException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             return;

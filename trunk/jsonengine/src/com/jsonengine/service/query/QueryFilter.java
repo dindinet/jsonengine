@@ -194,7 +194,7 @@ public abstract class QueryFilter {
         this.queryRequest.addQueryFilter(this);
         final String condPrefix =
             queryRequest.getDocType() + ":" + propName + ":";
-        this.condParam = condPrefix + JEUtils.i.encodePropValue(propValue);
+        this.condParam = condPrefix + (new JEUtils()).encodePropValue(propValue);
         this.condMin = condPrefix;
         this.condMax = condPrefix + "\uffff";
     }

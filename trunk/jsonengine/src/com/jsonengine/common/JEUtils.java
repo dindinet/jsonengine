@@ -14,15 +14,10 @@ public class JEUtils {
     public static final String ALNUMS =
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static final JEUtils i = new JEUtils();
-
     private static final String MC_KEY_TIMESTAMP =
         "com.jsonengine.common.LogCounterService#timestamp";
 
     public static final int UUID_DIGITS = 32;
-
-    private JEUtils() {
-    }
 
     /**
      * Converts specified {@link BigDecimal} value to a String which can be
@@ -69,11 +64,11 @@ public class JEUtils {
         } else if (val instanceof Boolean) {
             return val.toString();
         } else if (val instanceof BigDecimal) {
-            return JEUtils.i.convertBigDecimalToIndexKey((BigDecimal) val);
+            return (new JEUtils()).convertBigDecimalToIndexKey((BigDecimal) val);
         } else {
             // try to convert the value to BigDecimal
             try {
-                return JEUtils.i.convertBigDecimalToIndexKey(new BigDecimal(val
+                return (new JEUtils()).convertBigDecimalToIndexKey(new BigDecimal(val
                     .toString()));
             } catch (Exception e) {
                 e.printStackTrace();

@@ -69,7 +69,7 @@ public class DocTypeService {
         final CRUDRequest cr = new CRUDRequest(map);
         cr.setDocType(DOCTYPE_DOCTYPEINFO);
         cr.setDocId(DOCID_DOCTYPEINFO_PREFIX + docType);
-        cr.setRequestedAt(JEUtils.i.getGlobalTimestamp());
+        cr.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         cr.setAdmin(true);
         return cr;
     }
@@ -104,7 +104,7 @@ public class DocTypeService {
                 new HashMap<String, Object>());
         final Transaction tx = Datastore.beginTransaction();
         try {
-            final JEDoc jeDoc = CRUDService.i.getJEDoc(tx, cr);
+            final JEDoc jeDoc = (new CRUDService()).getJEDoc(tx, cr);
             final Map<String, Object> map = jeDoc.getDocValues();
             jdti = new DocTypeInfo();
             jdti.setDocType((String) map.get(PROP_DOC_TYPE));
