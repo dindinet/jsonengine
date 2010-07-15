@@ -38,7 +38,7 @@ Download the App Engine SDK for Java. jsonengine supports SDK version 1.3.0 or l
 
   * [http://code.google.com/intl/en/appengine/downloads.html#Google_App_Engine_SDK_for_Java App Engine SDK for Java]
 
-Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "appengine-java-sdk-x.x.x". In the following, the directory will be refered as _appengine-java-sdk-dir_.
+After download the file, unpack the archive in a convenient location on your disk. It will create a directory named "appengine-java-sdk-x.x.x". In the following, the directory will be refered as _appengine-java-sdk-dir_.
 
 == Downloading jsonengine package ==
 
@@ -74,7 +74,7 @@ Now your jsonengine is running on the dev server. You can open the following URL
 
 == Running jsonengine on App Engine cloud ==
 
-Once you finish development and test of your HTML content with the local jsonengine, you may upload it to App Engine cloud with the following procedure.
+After you test the jsonengine is working properly on local, you may upload it to App Engine cloud with the following procedure.
 
 === Registering your App Engine application ID ===
 
