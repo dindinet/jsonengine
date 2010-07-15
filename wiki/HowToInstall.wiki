@@ -65,7 +65,7 @@ On Windows command prompt:
 On Mac/Linux shell:
 {{{
 > cd appengine-java-sdk-dir/bin
-> dev_appserver.cmd jsonengine-dir/war
+> dev_appserver.sh jsonengine-dir/war
 }}}
 
 Now your jsonengine is running on the dev server. You can open the following URL to check if your jsonengine is working properly.
