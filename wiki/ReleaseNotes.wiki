@@ -1,5 +1,9 @@
 #summary Release notes
 
+=== release 0.1.20100715 (July 15, 2010) ===
+
+ * Added support for local dev server.
+
 === release 0.1.20100714 (July 14, 2010) ===
 
  * Updated to App Engine SDK 1.3.5 + Slim3 1.0.5
