@@ -48,9 +48,9 @@ Download the latest jsonengine package from the download page.
 
 Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "jsonengine". In the following, the directory will be refered as _jsonengine-dir_.
 
-== Running jsonengine with local dev server ==
+== Running jsonengine onlocal dev server ==
 
-Now you can run jsonengine with local dev server. In the development phase, you can use the dev server for debugging your HTML content without deploying it to the App Engine cloud.
+Now you can run jsonengine on local dev server. In the development phase, you can use the dev server for debugging your HTML content without deploying it to the App Engine cloud.
 
   * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory. If you just want to test jsonengine sample pages or your client is hosted outside (e.g. iPhone/iPad/Android app), you may skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
