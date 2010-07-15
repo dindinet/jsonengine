@@ -65,7 +65,7 @@ Once you signed up with App Engine, create an application for jsonengine with th
 
 Now you upload the jsonengine to App Engine. You may also upload your HTML content and client code (JS or Flash) to App Engine too.
 
-  * Open _jsonengine-dir_/war/WEB-INF/appengine-web.xml file with an editor and insert your app id into the application element:
+  * Open _jsonengine-dir_/war/WEB-INF/appengine-web.xml file with an editor, and replace the existing app id "jsonengine" with your app id "my-appid" in the application element:
 
 {{{
 <application>my-appid</application>
