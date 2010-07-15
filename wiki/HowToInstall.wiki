@@ -89,14 +89,12 @@ On Mac/Linux shell:
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
 
-=== Try the sample page ===
+=== Try the sample page and admin page ===
 
-You can open the following URL to check if your jsonengine is working on App Engine properly.
+Now your jsonengine is ready. You can open the following URL to check if your jsonengine is working on App Engine properly.
 
   * http://my-appid.appspot.com/samples/bbs.html
 
-=== Admin page of jsonengine ===
-
-Now your jsonengine is ready. Check the following page to use the admin page for security configuration and unit testing of jsonengine.
+And also check the following page to use the admin page for security configuration and unit testing of jsonengine.
 
  * [HowToAdmin How to admin jsonengine]
