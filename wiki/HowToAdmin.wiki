@@ -10,7 +10,7 @@ On the admin page, you can use the tabs described below.
 
 == Security tab ==
 
-In order to use jsonengine, you have to add an access level setting for each docType you use. On the Security tab, you can add, edit or delete an access level setting for each docType. The setting includes both "Access Level for Read" and "Access Level for Write" for each docType. The "Read" means the get and the query access and the "Write" means the put and the delete access.
+On the Security tab, you can add, edit or delete an access level setting for each docType. The setting includes both "Access Level for Read" and "Access Level for Write" for each docType. The "Read" means the get and the query access and the "Write" means the put and the delete access.
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221407.png?1278594870
 
