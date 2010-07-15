@@ -23,9 +23,9 @@ import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JEUtils;
+import com.jsonengine.common.JEUserUtils;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
-import com.jsonengine.util.UserUtil;
 
 public class CRUDController extends Controller {
 
@@ -90,9 +90,9 @@ public class CRUDController extends Controller {
         }
 
         // set Google account info
-        if (UserUtil.isLogined()) {
-            jeReq.setRequestedBy(UserUtil.userEmail());
-            jeReq.setAdmin(UserUtil.isAdmin());
+        if (JEUserUtils.isLoggedIn()) {
+            jeReq.setRequestedBy(JEUserUtils.userEmail());
+            jeReq.setAdmin(JEUserUtils.isAdmin());
         }
 
         // set timestamp

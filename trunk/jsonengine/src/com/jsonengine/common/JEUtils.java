@@ -71,9 +71,9 @@ public class JEUtils {
                 return (new JEUtils()).convertBigDecimalToIndexKey(new BigDecimal(val
                     .toString()));
             } catch (Exception e) {
-                e.printStackTrace();
+                // failed
             }
-            return null;
+            return val.toString();
         }
     }
 
