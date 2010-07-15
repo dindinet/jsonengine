@@ -1,18 +1,20 @@
-package com.jsonengine.http;
+package com.jsonengine.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.users.UserService;
+import org.slim3.controller.Controller;
+import org.slim3.controller.Navigation;
+import org.slim3.util.StringUtil;
+
 import com.google.appengine.api.users.UserServiceFactory;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEUtils;
@@ -20,12 +22,19 @@ import com.jsonengine.service.query.QueryFilter;
 import com.jsonengine.service.query.QueryRequest;
 import com.jsonengine.service.query.QueryService;
 
-/**
- * Provides REST API for jsonengine query operations.
- * 
- * @author @kazunori_279
- */
-public class QueryServlet extends HttpServlet {
+public class QueryController extends Controller {
+
+    private static final Logger logger =
+        Logger.getLogger(QueryController.class.getName());
+
+    @Override
+    public Navigation run() throws Exception {
+        logger.info("Call QueryController#run");
+        if (isGet()) {
+            doGet(request, response);
+        }
+        return null;
+    }
 
     private static final Pattern condPattern =
         Pattern.compile("^([^\\.]*)\\.(eq|gt|ge|lt|le)\\.(.*)$");
@@ -37,11 +46,6 @@ public class QueryServlet extends HttpServlet {
     public static final String PARAM_SORT = "sort";
 
     private static final Pattern quotePattern = Pattern.compile("^\"(.*)\"$");
-
-    private static final long serialVersionUID = 1L;
-
-    private static final UserService userService =
-        UserServiceFactory.getUserService();
 
     private Object convertPropValue(final String propValue) {
 
@@ -72,31 +76,23 @@ public class QueryServlet extends HttpServlet {
     private QueryRequest createQueryRequest(HttpServletRequest req)
             throws UnsupportedEncodingException {
 
-        // set charset for reading parameters
-        req.setCharacterEncoding(CRUDServlet.CHARSET);
-
         // parse URI and put docType and docId into jeReq
         final QueryRequest qReq = new QueryRequest();
-        final String[] tokens = req.getRequestURI().split("/");
-        if (tokens.length < 3) {
+        String docType = asString("docType");
+        if (StringUtil.isEmpty(docType)) {
             throw new IllegalArgumentException("No docType found");
         }
-        if (tokens.length >= 3) {
-            qReq.setDocType(tokens[2]);
-        }
-
+        qReq.setDocType(docType);
         // set Google account info, timestamp, and checkConflict flag
         if (req.getUserPrincipal() != null) {
             qReq.setRequestedBy(req.getUserPrincipal().getName());
-            qReq.setAdmin(userService.isUserAdmin());
+            qReq.setAdmin(UserServiceFactory.getUserService().isUserAdmin());
         }
         qReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         return qReq;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         // add QueryFilters for "cond" parameters
         final QueryRequest qReq = createQueryRequest(req);
@@ -108,13 +104,13 @@ public class QueryServlet extends HttpServlet {
         }
 
         // add QueryFilters for "sort"
-        final String sortParam = req.getParameter(PARAM_SORT);
+        final String sortParam = asString(PARAM_SORT);
         if (sortParam != null) {
             parseSortFilter(qReq, sortParam);
         }
 
         // add QueryFilters for "limit"
-        final String limitParam = req.getParameter(PARAM_LIMIT);
+        final String limitParam = asString(PARAM_LIMIT);
         if (limitParam != null) {
             parseLimitFilter(qReq, limitParam);
         }
@@ -129,7 +125,7 @@ public class QueryServlet extends HttpServlet {
         }
 
         // return the result
-        resp.setContentType(CRUDServlet.RESP_CONTENT_TYPE);
+        resp.setContentType(CRUDController.RESP_CONTENT_TYPE);
         final PrintWriter pw = resp.getWriter();
         pw.append(resultJson);
         pw.close();
@@ -165,4 +161,5 @@ public class QueryServlet extends HttpServlet {
         final String sortOrder = sortTokens[1];
         QueryFilter.addSortFilter(qReq, propName, sortOrder);
     }
+
 }

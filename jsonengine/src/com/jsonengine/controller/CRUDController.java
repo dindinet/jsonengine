@@ -1,4 +1,4 @@
-package com.jsonengine.http;
+package com.jsonengine.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,31 +8,49 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.arnx.jsonic.JSON;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+import org.slim3.controller.Controller;
+import org.slim3.controller.Navigation;
+import org.slim3.util.StringUtil;
+
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JEUtils;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
+import com.jsonengine.util.UserUtil;
 
-/**
- * Provides REST API for jsonengine CRUD operations.
- * 
- * @author @kazunori_279
- */
-public class CRUDServlet extends HttpServlet {
+public class CRUDController extends Controller {
 
-    public static final String CHARSET = "UTF-8";
+    private static final Logger logger =
+        Logger.getLogger(CRUDController.class.getName());
+
+    @Override
+    public Navigation run() throws Exception {
+        logger.info("Call CRUDController#run");
+
+        if (isPost()) {
+            // if "delete" condParam is set true, doDelete. Otherwise, doPut
+            if ("true".equals(asString(PARAM_NAME_DELETE))) {
+                doDelete(request, response);
+            } else {
+                doPut(request, response);
+            }
+        } else if (isGet()) {
+            doGet(request, response);
+        } else if (isDelete()) {
+            doDelete(request, response);
+        }
+
+        return null;
+    }
 
     public static final String PARAM_NAME_CHECK_UPDATES_AFTER =
         "_checkUpdatesAfter";
@@ -44,20 +62,13 @@ public class CRUDServlet extends HttpServlet {
     public static final String PARAM_NAME_DOCID = "_docId";
 
     public static final String RESP_CONTENT_TYPE =
-        "application/json; charset=" + CHARSET;
-    
-    private static final long serialVersionUID = 1L;
-
-    private static final UserService userService = UserServiceFactory.getUserService();
+        "application/json; charset=UTF-8";
 
     private CRUDRequest createJERequest(HttpServletRequest req)
             throws UnsupportedEncodingException {
 
-        // set charset for reading parameters
-        req.setCharacterEncoding(CHARSET);
-
         // parse JSON doc
-        final String jsonDocParam = req.getParameter(PARAM_NAME_DOC);
+        final String jsonDocParam = asString(PARAM_NAME_DOC);
         final CRUDRequest jeReq;
         if (jsonDocParam != null) {
             // JSON style params
@@ -66,29 +77,27 @@ public class CRUDServlet extends HttpServlet {
             // FORM style params
             jeReq = new CRUDRequest(decodeFormStyleParams(req));
         }
-         
 
         // parse URI and put docType and docId into jeReq
-        final String[] tokens = req.getRequestURI().split("/");
-        if (tokens.length < 3) {
+        String docType = asString("docType");
+        if (StringUtil.isEmpty(docType)) {
             throw new IllegalArgumentException("No docType found");
         }
-        if (tokens.length >= 3) {
-            jeReq.setDocType(tokens[2]);
-        }
-        if (tokens.length >= 4) {
-            jeReq.setDocId(tokens[3]);
+        jeReq.setDocType(docType);
+        String docId = asString("docId");
+        if (!StringUtil.isEmpty(docId)) {
+            jeReq.setDocId(docId);
         }
 
         // set Google account info
-        if (req.getUserPrincipal() != null) {
-            jeReq.setRequestedBy(req.getUserPrincipal().getName());
-            jeReq.setAdmin(userService.isUserAdmin());
+        if (UserUtil.isLogined()) {
+            jeReq.setRequestedBy(UserUtil.userEmail());
+            jeReq.setAdmin(UserUtil.isAdmin());
         }
-        
+
         // set timestamp
         jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
-        
+
         // set checkConflict flag
         try {
             jeReq.setCheckUpdatesAfter(Long.parseLong(req
@@ -104,8 +113,7 @@ public class CRUDServlet extends HttpServlet {
     private String decodeFormStyleParams(HttpServletRequest req) {
 
         // convert all the parameters into Map
-        final Enumeration<String> paramNames =
-            (Enumeration<String>) req.getParameterNames();
+        final Enumeration<String> paramNames = req.getParameterNames();
         final Map<String, Object> jsonMap = new HashMap<String, Object>();
         while (paramNames.hasMoreElements()) {
             final String paramName = paramNames.nextElement();
@@ -161,9 +169,7 @@ public class CRUDServlet extends HttpServlet {
         return valueStr;
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException{
 
         // do delete
         final CRUDRequest jeReq = createJERequest(req);
@@ -181,10 +187,8 @@ public class CRUDServlet extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         // do get
         final CRUDRequest jeReq = createJERequest(req);
         final String resultJson;
@@ -208,27 +212,7 @@ public class CRUDServlet extends HttpServlet {
         pw.close();
     }
 
-    @Override
-    protected void doHead(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        throw new IllegalArgumentException("Operation not supported");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // if "delete" condParam is set true, doDelete. Otherwise, doPut
-        if ("true".equals(req.getParameter(PARAM_NAME_DELETE))) {
-            doDelete(req, resp);
-        } else {
-            doPut(req, resp);
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         // do put
         final CRUDRequest jeReq = createJERequest(req);
