@@ -1,6 +1,6 @@
 #summary How to install jsonengine
 
-== How to install jsonengine ==
+= How to install jsonengine =
 
 The requirements for installing jsonengine are:
 
@@ -9,13 +9,13 @@ The requirements for installing jsonengine are:
 
 jsonengine can be installed easily by the following steps and you can start using it instantly. No server-side programming or complex configuration required.
 
-  * Installing the Java JDK
-  * Installing the App Engine SDK for Java
-  * Downloading jsonengine package
-  * Registering your App Engine application ID
-  * Uploading jsonengine (and your HTML client) to App Engine
+  # Installing the Java JDK
+  # Installing the App Engine SDK for Java
+  # Downloading jsonengine package
+  # Running jsonengine with local dev server
+  # Running jsonengine on App Engine cloud
 
-=== Installing the Java JDK ===
+== Installing the Java JDK ==
 
 jsonengine runs on Java 6. If you do not have installed Java 6 on your PC yet, download and install the Java SDK 6 from here:
 
@@ -32,7 +32,7 @@ After installing the JDK, please check if the following commands can be run on c
 > javac -version
 }}}
 
-=== Installing the App Engine SDK for Java ===
+== Installing the App Engine SDK for Java ==
 
 Download the App Engine SDK for Java. jsonengine supports SDK version 1.3.0 or later.
 
@@ -40,13 +40,41 @@ Download the App Engine SDK for Java. jsonengine supports SDK version 1.3.0 or l
 
 Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "appengine-java-sdk-x.x.x". In the following, the directory will be refered as _appengine-java-sdk-dir_.
 
-=== Downloading jsonengine package ===
+== Downloading jsonengine package ==
 
 Download the latest jsonengine package from the download page.
 
   * [http://code.google.com/p/jsonengine/downloads/list jsonengine downloads]
 
 Once you download the file, unpack the archive in a convenient location on your disk. It will create a directory named "jsonengine". In the following, the directory will be refered as _jsonengine-dir_.
+
+== Running jsonengine with local dev server ==
+
+Now you can run jsonengine with local dev server. In the development phase, you can use the dev server for debugging your HTML content without deploying it to the App Engine cloud.
+
+  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory to deploy them to App Engine. If you just want to test jsonengine's samples or your client is hosted outside (e.g. iPhone/iPad/Android app), you may skip this step.
+  * change current directory to _appengine-java-sdk-dir_/bin
+  * run dev_appserver tool to run a dev server
+
+On Windows command prompt:
+{{{
+> cd appengine-java-sdk-dir\bin
+> dev_appserver.cmd jsonengine-dir\war
+}}}
+
+On Mac/Linux shell:
+{{{
+> cd appengine-java-sdk-dir/bin
+> dev_appserver.cmd jsonengine-dir/war
+}}}
+
+Now your jsonengine is running on the dev server. You can open the following URL to check if your jsonengine is working properly.
+
+  * http://localhost:8080/samples/bbs.html
+
+== Running jsonengine on App Engine cloud ==
+
+Once you finish development and test of your HTML content with the local jsonengine, you may upload it to App Engine cloud with the following procedure.
 
 === Registering your App Engine application ID ===
 
@@ -71,7 +99,6 @@ Now you upload the jsonengine to App Engine. You may also upload your HTML conte
 <application>my-appid</application>
 }}}
 
-  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory to deploy them to App Engine. If you do not have anything to upload (in case that you just want to test jsonengine or your client is iPhone/iPad/Android app), you may skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
   * run appcfg tool to upload jsonengine
 
@@ -89,9 +116,7 @@ On Mac/Linux shell:
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it shows a message "Update completed successfully."
 
-=== Try the sample page and admin page ===
-
-Now your jsonengine is ready. You can open the following URL to check if your jsonengine is working on App Engine properly.
+Open the following URL to check if your jsonengine is working on App Engine cloud properly.
 
   * http://my-appid.appspot.com/samples/bbs.html
 
