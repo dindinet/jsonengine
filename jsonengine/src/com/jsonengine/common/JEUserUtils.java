@@ -1,23 +1,23 @@
-package com.jsonengine.util;
+package com.jsonengine.common;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class UserUtil {
+public class JEUserUtils {
 
     /**
-     * ログインユーザのEmailを取得する
-     *
-     * @return
+     * Returns the current user's email address.
+     * 
+     * @return email address
      */
     public static String userEmail() {
         return getUser() != null ? getUser().getEmail() : "";
     }
 
     /**
-     * ログインユーザ情報を取得する
-     *
+     * Returns User object for the current user.
+     * 
      * @return
      */
     public static User getUser() {
@@ -26,23 +26,23 @@ public class UserUtil {
     }
 
     /**
-     * ログインユーザがadmin権限ありかを判定する
-     *
-     * @return
+     * Returns true if the user has Administrator role.
+     * 
+     * @return true if the user is admin
      */
     public static boolean isAdmin() {
-        if (!isLogined()) {
+        if (!isLoggedIn()) {
             return false;
         }
         return UserServiceFactory.getUserService().isUserAdmin();
     }
 
     /**
-     * ログイン状態かを判定する
-     *
-     * @return
+     * Returns true if the user has logged in.
+     * 
+     * @return true if logged in
      */
-    public static boolean isLogined() {
+    public static boolean isLoggedIn() {
         User user = getUser();
         if (user == null) {
             return false;
