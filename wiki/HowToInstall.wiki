@@ -52,7 +52,7 @@ Once you download the file, unpack the archive in a convenient location on your 
 
 Now you can run jsonengine with local dev server. In the development phase, you can use the dev server for debugging your HTML content without deploying it to the App Engine cloud.
 
-  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory to deploy them to App Engine. If you just want to test jsonengine's samples or your client is hosted outside (e.g. iPhone/iPad/Android app), you may skip this step.
+  * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory. If you just want to test jsonengine sample pages or your client is hosted outside (e.g. iPhone/iPad/Android app), you may skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
   * run dev_appserver tool to run a dev server
 
