@@ -32,7 +32,7 @@ Roles:
 Notes:
 
  * A query on "private" docType will return only the Docs owned by the requesting user.
- * The "public" docType can be accessed by anyone on the internet. It is strongly recommend not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
+ * The "public" docType can be accessed by anyone on the internet. It is strongly recommended not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
 
 == Test tab ==
 
