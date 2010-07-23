@@ -2,7 +2,7 @@
 
 = How to admin jsonengine =
 
-Once you have installed your jsonengine, you can access to the jsonengine admin page with the following URL:
+Once you have installed your jsonengine, you can access the jsonengine admin page with the following URL: 
 
  * http://my-appid.appspot.com/_admin/
 
@@ -14,7 +14,7 @@ On the Security tab, you can add, edit or delete an access level setting for eac
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708221407.png?1278594870
 
-For both read and write operations, you can choose one of the following access level:
+For both read and write operations, you can choose one of the following access levels: 
 
 || Access Level || Who can read? (get and query) || Who can write? (put and delete) ||
 || public ||  Anyone || Anyone ||
@@ -24,15 +24,15 @@ For both read and write operations, you can choose one of the following access l
 
 Roles:
 
- * Anyone: any user who access to jsonengine without authentication.
- * User: An user authenticated by either Google account or Open ID.
+ * Anyone: any user who accesses to jsonengine without authentication.
+ * User: A user authenticated by either Google account or Open ID.
  * Owner: The owner of the Doc.
  * Administrator: The administrator of your appid.
 
 Notes:
 
  * A query on "private" docType will return only the Docs owned by the requesting user.
- * The "public" docType can be accessed by anyone on the internet. It is strongly recommended not to use the "public" level on write operation as it would allow anyone to store their data on your jsonengine without any limit.
+ * The "public" docType can be accessed by anyone on the internet. It is strongly recommended to not use the "public" level on write operations as it would possibly allow anyone to store their data, without any limit, on your jsonengine. 
 
 == Test tab ==
 
@@ -40,12 +40,12 @@ On the Test tab, you can start a series of unit tests.
 
 === External Testing ===
 
-By pressing the "Start External Testing" button at the bottom of the screen, the script inside the testing page will issue a series of test requests to the server and check if the results are correct. By confirming that the test finishes with green bar, it is assured that your jsonengine is working properly on the cloud environment.
+By pressing the "Start External Testing" button at the bottom of the screen, the script inside the testing page will issue a series of test requests to the server and check if the results are correct. If the test finishes positively, a green bar will appear to confirm that your jsonengine is working properly on the cloud environment. 
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223044.png?1278595863
 
 === Internal Testing ===
 
-By pressing the "Start Internal Testing" button, browser will show a "Kotori Web JUnit Runner" page below. Click "Check All" button and then click "Run" button to start the testing. The script inside the jsonengine on the cloud will issue a series of test request to itself and check if the results are correct. The green bar indicates the jsonengine is working properly.
+By pressing the "Start Internal Testing" button, your browser will show a "Kotori Web JUnit Runner" page below. Click the "Check All" button and then click the "Run" button to start the testing. The script inside the jsonengine on the cloud will issue a series of test requests to itself and check if the results are correct. If a green bar appears, it indicates the jsonengine is working properly.
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223045.png?1278595938
