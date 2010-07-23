@@ -50,7 +50,7 @@ Once you download the file, unpack the archive in a convenient location on your 
 
 == Running jsonengine on local dev server ==
 
-Now you can run jsonengine on a local dev server. For development of JavaScript or Flash client, you can use the dev server for debugging it without deploying it to the App Engine cloud. For development of iPhone/iPad/Android client, please deploy jsonengine to the App Engine cloud (see below) because the dev server can only be accessed from the local host.
+Now you can run jsonengine on a local dev server. You can use the dev server for debugging it without deploying it to the App Engine cloud. 
 
   * _jsonengine-dir\war_ is the document root of your application. Copy your HTML contents into this directory. If you just want to test jsonengine sample pages or your client is hosted outside (e.g. iPhone/iPad/Android app), you may skip this step.
   * change current directory to _appengine-java-sdk-dir_/bin
