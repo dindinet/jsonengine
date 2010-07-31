@@ -28,7 +28,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     JEDocMeta meta = JEDocMeta.get();
 
     @Test
-    public void POST_登録出来る事() throws Exception {
+    public void POST_canInsertADoc() throws Exception {
         tester.request.setMethod("post");
         tester.param("name", "Foo");
         tester.param("age", "20");
@@ -49,7 +49,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void PUT_登録出来る事() throws Exception {
+    public void PUT_canInsertADoc() throws Exception {
         tester.request.setMethod("PUT");
         tester.param("name", "Foo");
         tester.param("age", "20");
@@ -72,7 +72,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void DELETE_削除出来る事() throws Exception {
+    public void DELETE_canDeleteADoc() throws Exception {
         String docId = createTestData();
 
         assertThat(Datastore
@@ -92,7 +92,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void GET_DocIdによる取得が出来る事() throws Exception {
+    public void GET_canGetADocByDocId() throws Exception {
         String docId = createTestData();
 
         tester.start("/_je/myDoc/" + docId);
@@ -106,7 +106,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void GET_DocIdによる取得で該当データが存在しない場合は404になる事() throws Exception {
+    public void GET_shouldReturn404IfDocNotFoundForADocId() throws Exception {
         tester.start("/_je/myDoc/notfoundDocId");
 
         CRUDController controller = tester.getController();
@@ -115,7 +115,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void 登録処理でログイン中の場合はログイン者のメールアドレスが登録される事() throws Exception {
+    public void emailShouldBeSavedIfUserHasLoggedIn() throws Exception {
         if (AppEngineUtil.isProduction()) {
             return; // kotoriではログインユーザを変更できないのでテストしない
         }
