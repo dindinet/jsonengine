@@ -22,8 +22,8 @@ import org.slim3.util.StringUtil;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
-import com.jsonengine.common.JEUtils;
 import com.jsonengine.common.JEUserUtils;
+import com.jsonengine.common.JEUtils;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
 
@@ -36,7 +36,7 @@ public class CRUDController extends Controller {
     public Navigation run() throws Exception {
         logger.info("Call CRUDController#run");
 
-        if (isPost()) {
+        if (isPost() || isPut()) {
             // if "delete" condParam is set true, doDelete. Otherwise, doPut
             if ("true".equals(asString(PARAM_NAME_DELETE))) {
                 doDelete(request, response);
