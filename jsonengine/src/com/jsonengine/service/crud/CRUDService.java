@@ -190,6 +190,13 @@ public class CRUDService {
             throw new JEAccessDeniedException();
         }
 
+        // if there's an existing doc, merge the old values with the updated
+        // values (partial update)
+        if (jeDoc != null) {
+            jeDoc.getDocValues().putAll(jeReq.getJsonMap());
+            jeReq.getJsonMap().putAll(jeDoc.getDocValues());
+        }
+
         // if there's no existing doc for the docId...
         if (jeDoc == null) {
             if (isUpdateOnly) {

@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.apphosting.api.ApiProxy;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
+import com.jsonengine.common.JETestUtils;
 import com.jsonengine.common.JEUtils;
 import com.jsonengine.meta.JEDocMeta;
 import com.jsonengine.model.JEDoc;
@@ -29,7 +30,8 @@ import com.jsonengine.service.crud.CRUDService;
 
 public class FrontControllerTest extends ControllerTestCase {
 
-    JEDocMeta meta = JEDocMeta.get();
+    final JEDocMeta meta = JEDocMeta.get();
+    final JETestUtils jtu = new JETestUtils();
 
     @Test
     public void POST_canInsertADoc() throws Exception {
@@ -179,28 +181,18 @@ public class FrontControllerTest extends ControllerTestCase {
         return docId;
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void partialUpdate() throws Exception {
 
-        // insert a doc
-        tester.request.setMethod("post");
-        tester.param("name", "Foo");
-        tester.param("age", "20");
-        tester.start("/_je/myDoc");
-
-        // validate the result
-        final String resultJson = tester.response.getOutputAsString();
-        final Map<String, Object> resultMap =
-            (Map<String, Object>) JSON.decode(resultJson);
-        assertThat(resultMap.get("age").toString(), is("20"));
-        assertThat(resultMap.get("name").toString(), is("Foo"));
+        // save test data
+        (new JETestUtils()).storeTestDocTypeInfo();
+        final Map<String, Object> betty = jtu.getBetty();
+        final String docId = jtu.saveJsonMap(betty);
+        
 
         // update the doc partially (age -> 40)
-        final String docId = (String) resultMap.get("_docId");
-        tester.request.setMethod("post");
+        tester.request.setMethod("put");
         tester.param("age", "40");
-        tester.param("name", "Foo");
         tester.param("_docId", docId);
         tester.start("/_je/myDoc");
 
@@ -212,8 +204,7 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(jeDoc, is(notNullValue()));
         final Map<String, Object> jeMap = jeDoc.getDocValues();
         assertThat(jeMap.get("age").toString(), is("40"));
-        assertThat(jeMap.get("name").toString(), is("Foo"));
-        assertThat(jeMap.get("_docId").toString(), is(docId));
+        assertThat(jeMap.get("name"), is(betty.get("name")));
         
     }
 
