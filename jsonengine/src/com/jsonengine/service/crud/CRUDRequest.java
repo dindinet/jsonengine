@@ -86,7 +86,7 @@ public class CRUDRequest extends JERequest {
      * @return {@link BigDecimal} _updatedAt value.
      */
     public Long getUpdatedAt() {
-        return (Long) jsonMap.get(JEDoc.PROP_NAME_UPDATED_AT);
+        return ((BigDecimal) jsonMap.get(JEDoc.PROP_NAME_UPDATED_AT)).longValue();
     }
 
     public void setCheckUpdatesAfter(Long checkUpdatesAfter) {
