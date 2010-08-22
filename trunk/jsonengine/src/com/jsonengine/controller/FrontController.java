@@ -177,8 +177,10 @@ public class FrontController extends Controller {
         final Map<String, Object> jsonMap = new HashMap<String, Object>();
         while (paramNames.hasMoreElements()) {
             final String paramName = paramNames.nextElement();
-            final Object paramValue = decodeOneParam(req, paramName);
-            jsonMap.put(paramName, paramValue);
+            if (!PARAM_DOC_TYPE.equals(paramName)) { // skip _docType param
+                final Object paramValue = decodeOneParam(req, paramName);
+                jsonMap.put(paramName, paramValue);
+            }
         }
 
         // convert the Map into JSON
