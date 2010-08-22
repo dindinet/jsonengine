@@ -3,9 +3,7 @@ package com.jsonengine.controller;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +16,8 @@ import org.slim3.tester.ControllerTestCase;
 import org.slim3.tester.TestEnvironment;
 import org.slim3.util.AppEngineUtil;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.apphosting.api.ApiProxy;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
@@ -196,19 +196,25 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(resultMap.get("age").toString(), is("20"));
         assertThat(resultMap.get("name").toString(), is("Foo"));
 
-//        // update the doc partially
-//        tester.request.setMethod("post");
-//        tester.param("age", "40");
-//        tester.param("name", "Foo");
-//        tester.param("_docId", resultMap.get("_docId"));
-//        tester.start("/_je/myDoc");
-//
-//        // validate the result
-//        final String resultJson2 = tester.response.getOutputAsString();
-//        final Map<String, Object> resultMap2 =
-//            (Map<String, Object>) JSON.decode(resultJson2);
-//        assertThat(resultMap2.get("age").toString(), is("40"));
-//        assertThat(resultMap2.get("name").toString(), is("Foo"));
+        // update the doc partially (age -> 40)
+        final String docId = (String) resultMap.get("_docId");
+        tester.request.setMethod("post");
+        tester.param("age", "40");
+        tester.param("name", "Foo");
+        tester.param("_docId", docId);
+        tester.start("/_je/myDoc");
+
+        // validate the result
+        final Key key =
+            KeyFactory.createKey(JEDoc.class.getSimpleName(), docId);
+        final JEDoc jeDoc =
+            Datastore.query(meta).filter(meta.key.equal(key)).asSingle();
+        assertThat(jeDoc, is(notNullValue()));
+        final Map<String, Object> jeMap = jeDoc.getDocValues();
+        assertThat(jeMap.get("age").toString(), is("40"));
+        assertThat(jeMap.get("name").toString(), is("Foo"));
+        assertThat(jeMap.get("_docId").toString(), is(docId));
+        
     }
 
 }
