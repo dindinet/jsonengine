@@ -1,5 +1,10 @@
 #summary Release notes
 
+=== release 0.2.20100822 (Aug 22, 2010) ===
+
+ * Changed the query API.
+ * Supported partial update.
+
 === release 0.1.20100715 (July 15, 2010) ===
 
  * Added support for local dev server.
