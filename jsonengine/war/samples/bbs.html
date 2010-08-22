@@ -22,7 +22,7 @@ function post(msg) {
 // get all posts and show it
 function query() {
   disableButton(true);
-  $.get("/_q/msg", { sort: "_createdAt.desc" }, function (result) {
+  $.get("/_je/msg", { sort: "_createdAt.desc" }, function (result) {
     $("#messages").empty();
     for (i = 0; i < result.length; i++) {
       $("#messages").append("<br>(" + getUserName(result[i]) + ") " + result[i].msg);        

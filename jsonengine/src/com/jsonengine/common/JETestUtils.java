@@ -207,7 +207,7 @@ public class JETestUtils {
 
     @SuppressWarnings("unchecked")
     public String saveJsonMap(final Map<String, Object> map)
-            throws JEConflictException, JEAccessDeniedException {
+            throws JEConflictException, JEAccessDeniedException, JENotFoundException {
         final CRUDRequest jeReq = (new JETestUtils()).createTestCRUDRequest(map);
         final String savedJson = (new CRUDService()).put(jeReq, false);
         final String docId =

@@ -169,9 +169,11 @@ public class CRUDService {
      *             if it detected a update confliction
      * @throws JEAccessDeniedException
      *             if the requestor is not allowed to put a doc.
+     * @throws JENotFoundException 
+     *             if there's no existing doc (if isUpdateOnly).
      */
     public String put(CRUDRequest jeReq, boolean isUpdateOnly)
-            throws JEConflictException, JEAccessDeniedException {
+            throws JEConflictException, JEAccessDeniedException, JENotFoundException {
 
         // try to find an existing JEDoc for the docId
         final Transaction tx = Datastore.beginTransaction();
@@ -201,7 +203,7 @@ public class CRUDService {
         if (jeDoc == null) {
             if (isUpdateOnly) {
                 // if isUpdateOnly, throw an exception
-                throw new JEConflictException("No such doc: "
+                throw new JENotFoundException("No such doc: "
                     + jeReq.getDocId());
             } else {
                 // otherwise, create it
