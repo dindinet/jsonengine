@@ -3,8 +3,12 @@ package com.jsonengine.controller;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import net.arnx.jsonic.JSON;
 
@@ -23,7 +27,7 @@ import com.jsonengine.model.JEDoc;
 import com.jsonengine.service.crud.CRUDRequest;
 import com.jsonengine.service.crud.CRUDService;
 
-public class CRUDControllerTest extends ControllerTestCase {
+public class FrontControllerTest extends ControllerTestCase {
 
     JEDocMeta meta = JEDocMeta.get();
 
@@ -33,7 +37,7 @@ public class CRUDControllerTest extends ControllerTestCase {
         tester.param("name", "Foo");
         tester.param("age", "20");
         tester.start("/_je/myDoc");
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
 
         JEDoc jeDoc =
@@ -49,13 +53,16 @@ public class CRUDControllerTest extends ControllerTestCase {
     }
 
     @Test
-    public void PUT_canInsertADoc() throws Exception {
+    public void PUT_canNotInsertADoc() throws Exception {
         tester.request.setMethod("PUT");
         tester.param("name", "Foo");
         tester.param("age", "20");
         tester.start("/_je/myDoc");
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
+        assertThat(
+            tester.response.getStatus(),
+            is(HttpServletResponse.SC_CONFLICT));
 
         JEDoc jeDoc =
             Datastore
@@ -63,12 +70,7 @@ public class CRUDControllerTest extends ControllerTestCase {
                 .filter(meta.docType.equal("myDoc"))
                 .asSingle();
 
-        assertThat(jeDoc, is(notNullValue()));
-        assertThat(jeDoc.getDocType(), is("myDoc"));
-
-        Map<String, Object> values = jeDoc.getDocValues();
-        assertThat(values.get("name").toString(), is("Foo"));
-        assertThat(values.get("age").toString(), is("20"));
+        assertThat(jeDoc, is(nullValue()));
     }
 
     @Test
@@ -83,7 +85,28 @@ public class CRUDControllerTest extends ControllerTestCase {
         tester.request.setMethod("delete");
         tester.start("/_je/myDoc/" + docId);
 
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
+        assertThat(controller, is(notNullValue()));
+        assertThat(tester.isRedirect(), is(false));
+        int count =
+            Datastore.query(meta).filter(meta.docType.equal("myDoc")).count();
+        assertThat(count, is(0));
+    }
+
+    @Test
+    public void POST_canDeleteADoc() throws Exception {
+        String docId = createTestData();
+
+        assertThat(Datastore
+            .query(meta)
+            .filter(meta.docType.equal("myDoc"))
+            .count(), is(1));
+
+        tester.request.setMethod("post");
+        tester.param("_method", "delete");
+        tester.start("/_je/myDoc/" + docId);
+
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
         int count =
@@ -97,7 +120,7 @@ public class CRUDControllerTest extends ControllerTestCase {
 
         tester.start("/_je/myDoc/" + docId);
 
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
 
         assertThat(tester.response.getStatus(), is(200));
@@ -109,7 +132,7 @@ public class CRUDControllerTest extends ControllerTestCase {
     public void GET_shouldReturn404IfDocNotFoundForADocId() throws Exception {
         tester.start("/_je/myDoc/notfoundDocId");
 
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.response.getStatus(), is(404));
     }
@@ -125,7 +148,7 @@ public class CRUDControllerTest extends ControllerTestCase {
         tester.request.setMethod("post");
         tester.start("/_je/myDoc");
 
-        CRUDController controller = tester.getController();
+        FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
 
         JEDoc jeDoc =
@@ -150,9 +173,42 @@ public class CRUDControllerTest extends ControllerTestCase {
         jeReq.setDocType("myDoc");
         jeReq.setRequestedAt((new JEUtils()).getGlobalTimestamp());
         jeReq.setRequestedBy("unitTest@gmail.com");
-        String json = new CRUDService().put(jeReq);
+        String json = new CRUDService().put(jeReq, false);
         Map jeDoc = (Map) JSON.decode(json);
         String docId = (String) jeDoc.get(JEDoc.PROP_NAME_DOCID);
         return docId;
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void partialUpdate() throws Exception {
+
+        // insert a doc
+        tester.request.setMethod("post");
+        tester.param("name", "Foo");
+        tester.param("age", "20");
+        tester.start("/_je/myDoc");
+
+        // validate the result
+        final String resultJson = tester.response.getOutputAsString();
+        final Map<String, Object> resultMap =
+            (Map<String, Object>) JSON.decode(resultJson);
+        assertThat(resultMap.get("age").toString(), is("20"));
+        assertThat(resultMap.get("name").toString(), is("Foo"));
+
+//        // update the doc partially
+//        tester.request.setMethod("post");
+//        tester.param("age", "40");
+//        tester.param("name", "Foo");
+//        tester.param("_docId", resultMap.get("_docId"));
+//        tester.start("/_je/myDoc");
+//
+//        // validate the result
+//        final String resultJson2 = tester.response.getOutputAsString();
+//        final Map<String, Object> resultMap2 =
+//            (Map<String, Object>) JSON.decode(resultJson2);
+//        assertThat(resultMap2.get("age").toString(), is("40"));
+//        assertThat(resultMap2.get("name").toString(), is("Foo"));
+    }
+
 }

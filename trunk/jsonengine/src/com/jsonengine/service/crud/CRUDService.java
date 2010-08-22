@@ -17,7 +17,7 @@ import com.jsonengine.model.JEDoc;
 
 /**
  * Implements CRUD operations for jsonengine.
- *
+ * 
  * @author @kazunori_279
  */
 public class CRUDService {
@@ -26,16 +26,16 @@ public class CRUDService {
      * Deletes the specified JSON document from Datastore. You need to provide a
      * docId (via {@link CRUDRequest} parameter) to remove an existing document
      * with the same docId.
-     *
+     * 
      * Or you can omit docId to delete all the documents under a docType. This
      * deletion will be processed background so it may take a while if there are
      * many docs to delete.
-     *
+     * 
      * If checkConflict property of specified {@link CRUDRequest} is set true,
      * and you provide the original JSON document with _updatedAt property in
      * {@link CRUDRequest}, it checks if anyone has already updated the same
      * document. If yes, it throws a {@link JEConflictException}.
-     *
+     * 
      * @condParam json JSON document string to be saved
      * @condParam jeReq {@link CRUDRequest}
      * @return docId of the saved JSON document.
@@ -85,7 +85,7 @@ public class CRUDService {
      * {@link JENotFoundException} if there's no such JSON document with the
      * docId. You can also pass a JSON document in the {@link CRUDRequest} to
      * check if it has been updated or not.
-     *
+     * 
      * @condParam jeReq a CRUDRequest with docName to be retrieved.
      * @return a JSON document retrieved.
      * @throws JENotFoundException
@@ -154,20 +154,24 @@ public class CRUDService {
      * a docId (via {@link CRUDRequest} parameter), it checks if there's
      * existing document with the same docId. If yes, it updates it. If no, it
      * creates new one.
-     *
+     * 
      * If checkConflict property of specified {@link CRUDRequest} is set true,
      * it checks if anyone has already updated the same document. If yes, it
      * throws a {@link JEConflictException}.
-     *
-     * @condParam jeReq {@link CRUDRequest}
+     * 
+     * @param jeReq
+     *            {@link CRUDRequest}
+     * @param isUpdateOnly
+     *            set true if you only want to update the doc and do not insert
+     *            it.
      * @return the saved JSON document with _docId and _updatedAt properties
      * @throws JEConflictException
      *             if it detected a update confliction
      * @throws JEAccessDeniedException
      *             if the requestor is not allowed to put a doc.
      */
-    public String put(CRUDRequest jeReq) throws JEConflictException,
-            JEAccessDeniedException {
+    public String put(CRUDRequest jeReq, boolean isUpdateOnly)
+            throws JEConflictException, JEAccessDeniedException {
 
         // try to find an existing JEDoc for the docId
         final Transaction tx = Datastore.beginTransaction();
@@ -186,9 +190,16 @@ public class CRUDService {
             throw new JEAccessDeniedException();
         }
 
-        // if existing JEDoc is not found, create new one
+        // if there's no existing doc for the docId...
         if (jeDoc == null) {
-            jeDoc = JEDoc.createJEDoc(jeReq);
+            if (isUpdateOnly) {
+                // if isUpdateOnly, throw an exception
+                throw new JEConflictException("No such doc: "
+                    + jeReq.getDocId());
+            } else {
+                // otherwise, create it
+                jeDoc = JEDoc.createJEDoc(jeReq);
+            }
         }
 
         // update properties (build index)

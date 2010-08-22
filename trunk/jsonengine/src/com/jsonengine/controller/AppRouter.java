@@ -8,11 +8,11 @@ public class AppRouter extends RouterImpl {
     public AppRouter() {
 
         // CRUDController
-        addRouting("/_je/{doctype}", "/cRUD?docType={doctype}");
-        addRouting("/_je/{doctype}/{docId}", "/cRUD?docType={doctype}&docId={docId}");
+        addRouting("/_je/{_docType}", "/front?_docType={_docType}");
+        addRouting("/_je/{_docType}/{_docId}", "/front?_docType={_docType}&_docId={_docId}");
 
         // QueryController
-        addRouting("/_q/{doctype}", "/query?docType={doctype}");
+//        addRouting("/_q/{doctype}", "/query?docType={doctype}");
     }
 
 }

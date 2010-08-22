@@ -209,7 +209,7 @@ public class JETestUtils {
     public String saveJsonMap(final Map<String, Object> map)
             throws JEConflictException, JEAccessDeniedException {
         final CRUDRequest jeReq = (new JETestUtils()).createTestCRUDRequest(map);
-        final String savedJson = (new CRUDService()).put(jeReq);
+        final String savedJson = (new CRUDService()).put(jeReq, false);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
                 .get(JEDoc.PROP_NAME_DOCID);

@@ -32,7 +32,7 @@ public class QueryRequest extends JERequest {
         new LinkedList<QueryFilter>();
 
     private SortCriterion sortCriterion = null;
-
+    
     public void addQueryFilter(QueryFilter qf) {
         queryFilters.add(qf);
     }
