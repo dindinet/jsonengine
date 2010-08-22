@@ -4,6 +4,7 @@
 
  * Changed the query API.
  * Supported partial update.
+ * Fixed a bug (in the update conflict check).
 
 === release 0.1.20100715 (July 15, 2010) ===
 
