@@ -31,7 +31,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         (new JETestUtils()).storeTestDocTypeInfo();
         final Map<String, Object> testMap = (new JETestUtils()).createTestMap();
         final CRUDRequest jeReq = (new JETestUtils()).createTestCRUDRequest(testMap);
-        final String savedJson = (new CRUDService()).put(jeReq);
+        final String savedJson = (new CRUDService()).put(jeReq, false);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
                 .get(JEDoc.PROP_NAME_DOCID);
@@ -56,7 +56,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         final CRUDRequest jeReq2 = (new JETestUtils()).createTestCRUDRequest(testMap);
         jeReq2.setCheckUpdatesAfter(updatedAt);
         jeReq2.setDocId(docId);
-        (new CRUDService()).put(jeReq2);
+        (new CRUDService()).put(jeReq2, false);
         final String resultJson2 = (new CRUDService()).get(jeReq2);
         System.out.println(resultJson2);
 
@@ -72,14 +72,14 @@ public class CRUDServiceTest extends AppEngineTestCase {
         // working
         jeReq.setCheckUpdatesAfter(updatedAt);
         try {
-            (new CRUDService()).put(jeReq);
+            (new CRUDService()).put(jeReq, false);
             fail("Should throw a JEConflictionException");
         } catch (JEConflictException e) {
             // OK
         }
 
         // try saving again without the conflict detection
-        (new CRUDService()).put(jeReq2);
+        (new CRUDService()).put(jeReq2, false);
 
         // try removing the data and check if the conflict detection is
         // working

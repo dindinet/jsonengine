@@ -16,10 +16,12 @@ import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
 import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JETestUtils;
+import com.jsonengine.controller.QueryControllerTestCase;
 
 /**
  * Tests query operations of {@link QueryService}.
  * 
+ * @deprecated This class have been moved to {@link QueryControllerTestCase}.
  * @author kazunori_279
  */
 public class QueryServiceTest extends AppEngineTestCase {
