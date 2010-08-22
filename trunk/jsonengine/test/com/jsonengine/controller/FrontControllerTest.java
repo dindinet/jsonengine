@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.apphosting.api.ApiProxy;
 import com.jsonengine.common.JEAccessDeniedException;
 import com.jsonengine.common.JEConflictException;
+import com.jsonengine.common.JENotFoundException;
 import com.jsonengine.common.JETestUtils;
 import com.jsonengine.common.JEUtils;
 import com.jsonengine.meta.JEDocMeta;
@@ -43,10 +44,7 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(controller, is(notNullValue()));
 
         JEDoc jeDoc =
-            Datastore
-                .query(meta)
-                .filter(meta.docType.equal("myDoc"))
-                .asSingle();
+            Datastore.query(meta).sort(meta.createdAt.desc).asList().get(0);
         assertThat(jeDoc, is(notNullValue()));
         assertThat(jeDoc.getDocType(), is("myDoc"));
         Map<String, Object> values = jeDoc.getDocValues();
@@ -64,46 +62,30 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(controller, is(notNullValue()));
         assertThat(
             tester.response.getStatus(),
-            is(HttpServletResponse.SC_CONFLICT));
-
-        JEDoc jeDoc =
-            Datastore
-                .query(meta)
-                .filter(meta.docType.equal("myDoc"))
-                .asSingle();
-
-        assertThat(jeDoc, is(nullValue()));
+            is(HttpServletResponse.SC_NOT_FOUND));
     }
 
     @Test
     public void DELETE_canDeleteADoc() throws Exception {
+
         String docId = createTestData();
-
-        assertThat(Datastore
-            .query(meta)
-            .filter(meta.docType.equal("myDoc"))
-            .count(), is(1));
-
         tester.request.setMethod("delete");
         tester.start("/_je/myDoc/" + docId);
 
         FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
-        int count =
-            Datastore.query(meta).filter(meta.docType.equal("myDoc")).count();
-        assertThat(count, is(0));
+
+        final Key key =
+            KeyFactory.createKey(JEDoc.class.getSimpleName(), docId);
+        assertThat(
+            Datastore.query(meta).filter(meta.key.equal(key)).count(),
+            is(0));
     }
 
     @Test
     public void POST_canDeleteADoc() throws Exception {
         String docId = createTestData();
-
-        assertThat(Datastore
-            .query(meta)
-            .filter(meta.docType.equal("myDoc"))
-            .count(), is(1));
-
         tester.request.setMethod("post");
         tester.param("_method", "delete");
         tester.start("/_je/myDoc/" + docId);
@@ -111,9 +93,11 @@ public class FrontControllerTest extends ControllerTestCase {
         FrontController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
-        int count =
-            Datastore.query(meta).filter(meta.docType.equal("myDoc")).count();
-        assertThat(count, is(0));
+        final Key key =
+            KeyFactory.createKey(JEDoc.class.getSimpleName(), docId);
+        assertThat(
+            Datastore.query(meta).filter(meta.key.equal(key)).count(),
+            is(0));
     }
 
     @Test
@@ -154,10 +138,7 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(controller, is(notNullValue()));
 
         JEDoc jeDoc =
-            Datastore
-                .query(meta)
-                .filter(meta.docType.equal("myDoc"))
-                .asSingle();
+            Datastore.query(meta).sort(meta.createdAt.desc).asList().get(0);
         assertThat(jeDoc, is(notNullValue()));
         assertThat(jeDoc.getDocType(), is("myDoc"));
 
@@ -168,7 +149,7 @@ public class FrontControllerTest extends ControllerTestCase {
 
     @SuppressWarnings("unchecked")
     private String createTestData() throws JEConflictException,
-            JEAccessDeniedException {
+            JEAccessDeniedException, JENotFoundException {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("age", "10");
         CRUDRequest jeReq = new CRUDRequest(jsonMap);
@@ -188,7 +169,6 @@ public class FrontControllerTest extends ControllerTestCase {
         (new JETestUtils()).storeTestDocTypeInfo();
         final Map<String, Object> betty = jtu.getBetty();
         final String docId = jtu.saveJsonMap(betty);
-        
 
         // update the doc partially (age -> 40)
         tester.request.setMethod("put");
@@ -205,7 +185,7 @@ public class FrontControllerTest extends ControllerTestCase {
         final Map<String, Object> jeMap = jeDoc.getDocValues();
         assertThat(jeMap.get("age").toString(), is("40"));
         assertThat(jeMap.get("name"), is(betty.get("name")));
-        
+
     }
 
 }

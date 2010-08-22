@@ -315,6 +315,9 @@ public class FrontController extends Controller {
         } catch (JEAccessDeniedException e) {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
+        } catch (JENotFoundException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
 
         // return the result
