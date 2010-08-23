@@ -1,6 +1,6 @@
 #summary Release notes
 
-=== release 0.2.20100822 (Aug 22, 2010) ===
+=== release 0.2.20100823 (Aug 23, 2010) ===
 
  * Changed the query API.
  * Supported partial update.
