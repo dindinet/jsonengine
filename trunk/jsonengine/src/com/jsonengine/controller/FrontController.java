@@ -59,7 +59,7 @@ public class FrontController extends Controller {
 
     public static final String PARAM_METHOD_DELETE = "delete";
 
-    public static final String PARAM_METHOD_UPDATE = "update";
+    public static final String PARAM_METHOD_PUT = "put";
 
     public static final String RESP_CONTENT_TYPE =
         "application/json; charset=UTF-8";
@@ -86,7 +86,7 @@ public class FrontController extends Controller {
 
         // update only (PUT or POST w/ _method=update)
         if (isPut()
-            || (isPost() && PARAM_METHOD_UPDATE.equals(asString(PARAM_METHOD)))) {
+            || (isPost() && PARAM_METHOD_PUT.equals(asString(PARAM_METHOD)))) {
             doUpdate(request, response, true);
             return null;
         }

@@ -23,14 +23,17 @@ import com.jsonengine.model.JEDoc;
 // public class CRUDServiceTest extends TestCase {
 public class CRUDServiceTest extends AppEngineTestCase {
 
+    final JETestUtils jtu = new JETestUtils();
+
     @SuppressWarnings("unchecked")
     @Test
-    public void testCRUD() throws JEConflictException, JENotFoundException, JEAccessDeniedException {
+    public void testCRUD() throws JEConflictException, JENotFoundException,
+            JEAccessDeniedException {
 
         // save a test data
-        (new JETestUtils()).storeTestDocTypeInfo();
-        final Map<String, Object> testMap = (new JETestUtils()).createTestMap();
-        final CRUDRequest jeReq = (new JETestUtils()).createTestCRUDRequest(testMap);
+        jtu.storeTestDocTypeInfo();
+        final Map<String, Object> testMap = jtu.createTestMap();
+        final CRUDRequest jeReq = jtu.createTestCRUDRequest(testMap);
         final String savedJson = (new CRUDService()).put(jeReq, false);
         final String docId =
             (String) ((Map<String, Object>) JSON.decode(savedJson))
@@ -44,19 +47,22 @@ public class CRUDServiceTest extends AppEngineTestCase {
         // verify it
         final Map<String, Object> resultMap =
             (Map<String, Object>) JSON.decode(resultJson);
-        final Long updatedAt = (new JETestUtils()).getUpdatedAtFromTestMap(resultMap);
+        final Long updatedAt = jtu.getUpdatedAtFromTestMap(resultMap);
         assertNotNull("_updatedAt must exists", updatedAt);
         assertEquals(docId, resultMap.remove(JEDoc.PROP_NAME_DOCID));
-        assertTrue((new JETestUtils()).areMapsEqual(testMap, resultMap));
+        assertTrue(jtu.areMapsEqual(testMap, resultMap));
 
         // update the test data
         testMap.put("001", "foo2");
         testMap.put("004", "hoge");
         testMap.remove("002");
-        final CRUDRequest jeReq2 = (new JETestUtils()).createTestCRUDRequest(testMap);
+        final CRUDRequest jeReq2 = jtu.createTestCRUDRequest(testMap);
         jeReq2.setCheckUpdatesAfter(updatedAt);
         jeReq2.setDocId(docId);
         (new CRUDService()).put(jeReq2, false);
+        
+        // get it again
+        jeReq2.setCheckUpdatesAfter(null);
         final String resultJson2 = (new CRUDService()).get(jeReq2);
         System.out.println(resultJson2);
 
@@ -66,7 +72,7 @@ public class CRUDServiceTest extends AppEngineTestCase {
         assertNotNull("_updatedAt must exists", resultMap2
             .remove(JEDoc.PROP_NAME_UPDATED_AT));
         assertEquals(docId, resultMap2.remove(JEDoc.PROP_NAME_DOCID));
-        assertTrue((new JETestUtils()).areMapsEqual(testMap, resultMap2));
+        assertTrue(jtu.areMapsEqual(testMap, resultMap2));
 
         // try saving the old data again and check if the conflict detection is
         // working
@@ -101,19 +107,20 @@ public class CRUDServiceTest extends AppEngineTestCase {
             // OK
         }
     }
-    
-//    @SuppressWarnings("unchecked")
+
+    // @SuppressWarnings("unchecked")
     @Test
-    public void testDeleteDocType() throws JEConflictException, JENotFoundException, JEAccessDeniedException {
-        
+    public void testDeleteDocType() throws JEConflictException,
+            JENotFoundException, JEAccessDeniedException {
+
         // save test data
         (new JETestUtils()).storeTestDocTypeInfo();
         (new JETestUtils()).storeTestUsers(JETestUtils.TEST_DOCTYPE);
-        
+
         // delete all
         final CRUDRequest cr = (new JETestUtils()).createTestCRUDRequest();
         (new CRUDService()).delete(cr);
-        
+
     }
-    
+
 }
