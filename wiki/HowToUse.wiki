@@ -4,11 +4,16 @@
 
 jsonengine provides REST API described below for creating, reading, updating and deleting JSON documents. Client can use the API in a RESTful way (e.g. using GET/POST/PUT/DELETE HTTP methods) but can also use only GET and POST for accessing the all features (this would be useful for Flash client).
 
+ * POST: create or update a doc.
+ * GET: read docs.
+ * PUT (or POST with _method=put parameter): update a doc.
+ * DELETE (or POST with _method=delete parameter): delete a doc.
+
 == Saving a JSON document to the Datastore ==
 
 === POST Example ===
 
-You can save a JSON doc on the Datastore with one of the following styles. Both of them stores a JSON doc {"name":"Foo",age:20}.
+You can save a doc on the Datastore with POST method. You can use one of the following styles and both of them stores a JSON doc {"name":"Foo",age:20}.
 
   * FORM parameter style
     * POST /`_`je/myDoc?name=Foo&age=20
@@ -16,59 +21,74 @@ You can save a JSON doc on the Datastore with one of the following styles. Both 
   * JSON doc style
     * POST /`_`je/myDoc?`_`doc={"name":"Foo",age:20}
 
+And you will get the following response:
+
   * Response (for status code 200):
     * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
 
-=== POST/PUT syntax ===
+=== POST syntax ===
 
-To create or update a JSON document, you can use POST or PUT HTTP method with "doc" parameter (there is no difference on behavior between the two methods).
+POST method will create or update a doc.
 
 {{{
 /POST /_je/<docType>
 }}}
 
-{{{
-/PUT /_je/<docType>
-}}}
-
   * HTTP Request URI values
-    * *docType* (required): docType (document type) of the JSON doc.
-      * Similar to table name or class name. For example, "address" docType may be for saving an address info JSON doc. 
+    * *docType* (required): docType (document type) of the doc.
+      * Similar to table name or class name. For example, "address" docType may be for saving a doc which contains address info.
 
-You can save a JSON doc with one of the following parameter styles:
+You can pass a doc to jsonengine by either "FORM parameter style parameters" or "JSON doc style parameters".
 
   * HTTP Request parameters (FORM parameter style)
-    * *<any parameters>*: You can put any pairs of parameter name and value. They will be saved as properties of a JSON doc.
+    * *<any parameters>*: You can put any pairs of parameter name and value. They will be interpreted as properties of a doc.
       * jsonengine will try to parse each parameter value as 1) a long number, 2) a double number, 3) a boolean and then 4) a string. So please be careful that strings like "001" or "true" will not be stored as String. If you want to specify exact types of properties to avoid it, please use JSON doc style.
-      * If you provide multiple property values with a same name, the values will be stored in an array in a JSON doc.
+      * If you provide multiple property values with a same name, the values will be stored in an array in a doc.
       * You can not use property names starting with `_` in this style.
-    * *`_`docId* (optional): docId of the JSON doc to be created/updated (see the following docId notes).
-    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`docId* (optional): docId of the doc to be created/updated (see the following docId notes).
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Request parameters (JSON doc style)
-    * *`_`doc* (required): JSON doc to be created/updated.
-      * You may include `_`docId property in the JSON doc to create/update it with the specified docId (see the following docId notes).
-      * The JSON doc should be URL encoded.
-    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`doc* (required): JSON string to be created/updated.
+      * You can include `_`docId property in the doc to create/update it with the specified docId (see the following docId notes).
+      * The JSON string should be URL encoded.
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the doc to check update conflict. See "Update conflict detection" section below for details.
+
+And you will get one of the following HTTP response:
 
   * HTTP Response
-    * Status code 200: Created or updated the JSON doc successfully.
-      * Response body: updated JSON doc includes the generated properties (see below) like `_`docId, `_`createdAt and `_`createdBy.
+    * Status code 200: Created or updated the doc successfully.
+      * Response body: the updated doc includes the generated properties (see below) like `_`docId, `_`createdAt and `_`createdBy.
     * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
-  * Notes on "docId" of the JSON doc
-    * The client can provide `_`docId property via `_`docId parameter (in the FORM parameter style) or `_`docId property (in the JSON doc style).
-    * If the client provides a `_`docId property, jsonengine will try to update the existing JSON doc. If not found, create and save a new JSON doc.
-    * If the client does not provides a `_`docId property, jsonengine will create and save a new JSON doc. 
-      * An auto-generated `_`docId can be retrived from the result JSON doc.
+  * Specifying docId and how POST method behaves
+    * You can provide `_`docId property via `_`docId parameter (in the FORM parameter style) or `_`docId property of a doc (in the JSON doc style).
+    * If you provide the `_`docId, POST method will try to update the existing doc. If not found, create a new doc.
+    * If you do not provide any `_`docId, jsonengine will create a new doc. An auto-generated `_`docId will be returned via the result doc.
+
+=== PUT syntax ===
+
+PUT method will only update an existing doc and will not create a new doc. If it can not find existing doc for specified docId, it will return a status code 404. You can also call this method by putting "_method=put" parameter on POST method.
+
+{{{
+/PUT /_je/<docType>
+}}}
+
+{{{
+/POST /_je/<docType>?_method=put
+}}}
+
+The syntax of HTTP request parameters and HTTP response are the same as POST method, except for that PUT can return the following HTTP response:
+
+    * Status code 404: No doc found for specified docId.
 
 == Getting a JSON document from the Datastore ==
 
 === GET Example ===
 
-The following GET request gets a JSON doc from the Datastore.
+The following GET request gets a doc from the Datastore.
 
   * GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
 
@@ -77,7 +97,7 @@ The following GET request gets a JSON doc from the Datastore.
 
 === GET syntax ===
 
-To get an existing JSON document, you can use GET method.
+GET finds existing JSON documents.
 
 {{{
 /GET /_je/<docType>/<docId>
