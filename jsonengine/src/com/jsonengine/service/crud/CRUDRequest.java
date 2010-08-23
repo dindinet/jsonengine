@@ -1,6 +1,5 @@
 package com.jsonengine.service.crud;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import net.arnx.jsonic.JSON;
@@ -77,16 +76,6 @@ public class CRUDRequest extends JERequest {
 
     public Map<String, Object> getJsonMap() {
         return jsonMap;
-    }
-
-    /**
-     * Returns _updatedAt property value of this JSON document. Returns null if
-     * it has not.
-     * 
-     * @return {@link BigDecimal} _updatedAt value.
-     */
-    public Long getUpdatedAt() {
-        return ((BigDecimal) jsonMap.get(JEDoc.PROP_NAME_UPDATED_AT)).longValue();
     }
 
     public void setCheckUpdatesAfter(Long checkUpdatesAfter) {

@@ -145,8 +145,8 @@ public class CRUDService {
     }
 
     private boolean isConflicted(CRUDRequest jeReq, JEDoc jeDoc) {
-        return jeReq.getUpdatedAt() != null
-            && jeDoc.getUpdatedAt() > jeReq.getUpdatedAt().longValue();
+        return jeReq.getCheckUpdatesAfter() != null
+            && jeDoc.getUpdatedAt() > jeReq.getCheckUpdatesAfter().longValue();
     }
 
     /**
