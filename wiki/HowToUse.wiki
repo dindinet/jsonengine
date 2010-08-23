@@ -9,6 +9,10 @@ jsonengine provides REST API described below for creating, reading, updating and
  * PUT (or POST with `_`method=put parameter): update a doc.
  * DELETE (or POST with `_`method=delete parameter): delete doc(s).
 
+== Getting JSON document(s) from the Datastore ==
+
+See [HowToUseQuery] for how to get JSON document(s) from Datastore.
+
 == Saving a JSON document to the Datastore ==
 
 === POST Example ===
