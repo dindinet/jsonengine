@@ -2,10 +2,12 @@
 
 == Getting a JSON document from the Datastore ==
 
+Here are some examples of GET method.
+
 === Getting one doc for a docId ===
 
 {{{
-/GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+/GET /_je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
 }}}
 
 This GET request will return a doc for the specified docId.
@@ -13,11 +15,10 @@ This GET request will return a doc for the specified docId.
   * Response (for status code 200):
     * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
 
-
-=== Getting multiple docs for a condition ===
+=== Getting multiple docs for a condition (query) ===
 
 {{{
-/GET /_q/myDoc?cond=name.eq.Foo
+/GET /_je/myDoc?cond=name.eq.Foo
 }}}
 
 This GET request returns an array of JSON documents for the following condition:
@@ -26,7 +27,7 @@ This GET request returns an array of JSON documents for the following condition:
   * "name" property equals to Foo.
 
 {{{
-/GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
+/GET /_je/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
 }}}
 
 This GET request returns an array of JSON documents that satisfies:
@@ -36,7 +37,7 @@ This GET request returns an array of JSON documents that satisfies:
   * Sorted by "age" property in ascending order.
   * Number of returned documents will be limited to 10.
 
-=== GET syntax ===
+== GET syntax ==
 
 GET finds existing JSON documents.
 
@@ -45,7 +46,7 @@ GET finds existing JSON documents.
 }}}
 
 {{{
-/GET /_q/<docType>[?<queryFilter>{&<queryFilter>}]
+/GET /_je/<docType>[?<queryFilter>{&<queryFilter>}]
 }}}
 
 where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or more `<`queryFilter`>` as query string on the URI. `<`queryFilter`>` is defined below.
@@ -64,17 +65,17 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 }}}
 
   * HTTP Request URI values
-    * *docType* (required): docType (document type) of the JSON doc. 
-    * *docId* (required): docID (document id) of the JSON doc to be retrieved.
+    * *docType* (required): docType (document type) of the doc. 
+    * *docId* (required): docID (document id) of the doc to be retrieved.
 
   * HTTP Request parameters
     * None.
 
   * HTTP Response
-    * Status code 200: Returned the JSON doc(s) successfully.
-      * Response body: retrived JSON doc(s).
+    * Status code 200: Returned the doc(s) successfully.
+      * Response body: retrived doc(s).
     * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
-    * Status code 404: If there is no such JSON doc stored in jsonengine.
+    * Status code 404: If there is no such doc stored in jsonengine.
     * Status code 500: Caught an unexpected system error.
 
 == Notes ==
