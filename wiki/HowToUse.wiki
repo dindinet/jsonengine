@@ -89,10 +89,10 @@ The syntax of HTTP request parameters and HTTP response are the same as POST met
 
 === DELETE example ===
 
-These following POST requests are same: both removes the JSON doc from the Datastore.
+DELETE method (and POST method with `_`method=delete parameter) will delete the specified doc.
 
-  * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?`_`delete=true
   * DELETE /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+  * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?`_`method=delete
 
   * Response (for status code 200):
     * None.
