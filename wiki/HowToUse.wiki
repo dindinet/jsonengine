@@ -71,7 +71,7 @@ And you will get one of the following HTTP response:
 
 === PUT syntax ===
 
-PUT method will only update an existing doc and will not create a new doc. If it can not find existing doc for specified docId, it will return a status code 404. You can also call this method by putting "_method=put" parameter on POST method.
+PUT method will only update an existing doc and will not create a new doc. If it can not find existing doc for specified docId, it will return a status code 404. You can also call this method by putting `_`method=put parameter on POST method.
 
 {{{
 /PUT /_je/<docType>
