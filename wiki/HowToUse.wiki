@@ -44,6 +44,7 @@ You can pass a doc to jsonengine by either "FORM parameter style parameters" or 
     * *<any parameters>*: You can put any pairs of parameter name and value. They will be interpreted as properties of a doc.
       * jsonengine will try to parse each parameter value as 1) a long number, 2) a double number, 3) a boolean and then 4) a string. So please be careful that strings like "001" or "true" will not be stored as String. If you want to specify exact types of properties to avoid it, please use JSON doc style.
       * If you provide multiple property values with a same name, the values will be stored in an array in a doc.
+      * If you are updating an existing doc, you can provide only the properties you want to update.
       * You can not use property names starting with `_` in this style.
     * *`_`docId* (optional): docId of the doc to be created/updated (see the following docId notes).
     * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the doc to check update conflict. See "Update conflict detection" section below for details.
