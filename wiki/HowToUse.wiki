@@ -84,39 +84,6 @@ The syntax of HTTP request parameters and HTTP response are the same as POST met
 
     * Status code 404: No doc found for specified docId.
 
-== Getting a JSON document from the Datastore ==
-
-=== GET Example ===
-
-The following GET request gets a doc from the Datastore.
-
-  * GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
-
-  * Response (for status code 200):
-    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
-
-=== GET syntax ===
-
-GET finds existing JSON documents.
-
-{{{
-/GET /_je/<docType>/<docId>
-}}}
-
-  * HTTP Request URI values
-    * *docType* (required): docType (document type) of the JSON doc. 
-    * *docId* (required): docID (document id) of the JSON doc to be retrieved.
-
-  * HTTP Request parameters
-    * None.
-
-  * HTTP Response
-    * Status code 200: Retrieved the JSON doc successfully.
-      * Response body: retrived JSON doc.
-    * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
-    * Status code 404: If there is no such JSON doc stored in jsonengine.
-    * Status code 500: Caught an unexpected system error.
-
 == Deleting a JSON document from the Datastore ==
 
 === DELETE example ===
