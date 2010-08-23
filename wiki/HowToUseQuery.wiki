@@ -1,37 +1,48 @@
 #summary How to use query on jsonengine
 
-== Example query ==
+== Getting a JSON document from the Datastore ==
+
+=== Getting one doc for a docId ===
+
+{{{
+/GET /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
+}}}
+
+This GET request will return a doc for the specified docId.
+
+  * Response (for status code 200):
+    * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
+
+
+=== Getting multiple docs for a condition ===
 
 {{{
 /GET /_q/myDoc?cond=name.eq.Foo
 }}}
 
-This query would return an array of JSON documents that satisfies:
+This GET request returns an array of JSON documents for the following condition:
 
   * docType is "myDoc".
   * "name" property equals to Foo.
-
 
 {{{
 /GET /_q/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
 }}}
 
-This query would return an array of JSON documents that satisfies:
+This GET request returns an array of JSON documents that satisfies:
 
   * docType is "myDoc".
   * "age" property is "greater than or equal to 20" *and* "less than 60".
   * Sorted by "age" property in ascending order.
   * Number of returned documents will be limited to 10.
 
-  * HTTP Response
-    * Status code 200: Exexuted the query successfully.
-      * Response body: Array of JSON docs as a result of the query.
-    * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
-    * Status code 500: Caught an unexpected system error.
+=== GET syntax ===
 
-== Query URI format ==
+GET finds existing JSON documents.
 
-You can issue simple queries on jsonengine with the following request format:
+{{{
+/GET /_je/<docType>/<docId>
+}}}
 
 {{{
 /GET /_q/<docType>[?<queryFilter>{&<queryFilter>}]
@@ -51,6 +62,20 @@ where `[`?`<`queryFilter`>``{`&`<`queryFilter`>``}``]` means you can write 0 or 
 
 <limitFilter> = 'limit=' <integer>
 }}}
+
+  * HTTP Request URI values
+    * *docType* (required): docType (document type) of the JSON doc. 
+    * *docId* (required): docID (document id) of the JSON doc to be retrieved.
+
+  * HTTP Request parameters
+    * None.
+
+  * HTTP Response
+    * Status code 200: Returned the JSON doc(s) successfully.
+      * Response body: retrived JSON doc(s).
+    * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
+    * Status code 404: If there is no such JSON doc stored in jsonengine.
+    * Status code 500: Caught an unexpected system error.
 
 == Notes ==
 
