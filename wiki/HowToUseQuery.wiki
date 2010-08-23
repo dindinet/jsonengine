@@ -10,7 +10,7 @@ Here are some examples of GET method.
 /GET /_je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
 }}}
 
-This GET request will return a doc for the specified docId "kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8".
+This GET request will return a doc for the docId "kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8".
 
   * Response (for status code 200):
     * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
