@@ -99,7 +99,7 @@ DELETE method (and POST method with `_`method=delete parameter) will delete the 
 
 === DELETE syntax ===
 
-To delete an existing JSON document, you can use DELETE HTTP method, or POST method with "`_`delete=true" parameter. You can delete all JSON docs under a docType by omitting `<`docId`>`.
+To delete an existing JSON document, you can use DELETE HTTP method, or POST method with `_`delete=true parameter. You can delete all docs under a docType by omitting `<`docId`>`.
 
 {{{
 /DELETE /_je/<docType>/<docId>
@@ -111,34 +111,33 @@ To delete an existing JSON document, you can use DELETE HTTP method, or POST met
 
   * HTTP Request URI values
     * *docType* (required): docType (document type) of the JSON doc. 
-    * *docId* (optional): docID (document id) of the JSON doc to be deleted. By omitting this, you can delete all the JSON docs under the docType. Please note that this will be processed in background and may take a while if there are many JSON docs to delete.
+    * *docId* (optional): docID (document id) of the doc to be deleted. By omitting this, you can delete all the docs under the docType. Please note that this will be processed in background and may take a while if there are many docs to delete.
 
   * HTTP Request parameters
-    * *`_`delete* (optional) : set "true" if client need to delete the JSON doc with POST method.
-    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the JSON doc to check update conflict. See "Update conflict detection" section below for details.
+    * *`_`checkUpdatesAfter* (optional): set the value of `_`updatedAt property of the client-side copy of the doc to check update conflict. See "Update conflict detection" section below for details.
 
   * HTTP Response
-    * Status code 200: Deleted the JSON doc successfully.
+    * Status code 200: Deleted the doc successfully.
       * Response body: empty.
     * Status code 403: Access not authorized (see [HowToAdmin] for access control setting).
-    * Status code 404: If there is no such JSON doc stored in jsonengine.
+    * Status code 404: If there is no such doc stored in jsonengine.
     * Status code 409: Detected update conflict.
     * Status code 500: Caught an unexpected system error.
 
 == Update conflict detection ==
 
-jsonengine provides an "update conflict detection" as an optional feature. A client may set "`_`checkUpdatesAfter" parameter to the `_`updatedAt value of the client-side copy of the JSON doc on POST/PUT/DELETE methods. Then jsonengine will compare it with the `_`updatedAt property value of the JSON doc stored in jsonengine. If the latter is newer, it means some other client has updated the JSON doc already and the client's JSON doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest JSON doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
+jsonengine provides an "update conflict detection" as an optional feature. A client may set "`_`checkUpdatesAfter" parameter to the `_`updatedAt value of the client-side copy of the doc on POST/PUT/DELETE methods. Then jsonengine will compare it with the `_`updatedAt property value of the doc stored in jsonengine. If the latter is newer, it means some other client has updated the doc already and the client's doc is not the latest anymore. jsonengine will return Status code 409 (Conflict) without updating it so that client may get the latest doc again and let user retry the update. In this way the web application can maintain data integrity across the service (a.k.a. optimistic concurrency control).
 
 == JSON Document Format ==
 
-jsonengine can handle arbitrary JSON documents with the features below.
+jsonengine can handle arbitrary docs with the features below.
 
-  * Schemaless: even though you need to specify the docType when you store a JSON doc on jsonengine, each JSON doc can have different schema. A docType is just a "tag" for grouping JSON docs and it does not represent any fixed schema.
-  * Nested: You can let JSON doc having children or grand-children JSON docs. But only the top-level literal properties can be used as filtering/sorting condition on query.
+  * Schemaless: even though you need to specify the docType when you store a doc on jsonengine, each doc can have different schema. A docType is just a "tag" for grouping docs and it does not represent any fixed schema.
+  * Nested: You can let doc having children or grand-children docs. But only the top-level literal properties can be used as filtering/sorting condition on query.
 
 === Restrictions ===
 
-  * JSON doc size `<` 1MB: Because of the restriction of App Engine, a JSON doc should be smaller than 1MB.
+  * A doc's size should be smaller than `<` 1MB: Because of the restriction of App Engine, a doc should be smaller than 1MB.
   * Indexed property size `<` 500 chars: Any properties with literal value (i.e. string, boolean and number) will be added to the jsonengine's internal index automatically, so that the document can be filtered or sorted by the property on queries. 
     * The size of the indexed property (= the property name length + property value length) should be less than 500 characters. 
     * By adding "`_`" prefix to the property name (e.g. `_`foo), it will be excluded from the index and you can store more than 500 chars to it.
@@ -147,8 +146,8 @@ jsonengine can handle arbitrary JSON documents with the features below.
 
 The following properties are generated by jsonengine automatically and client must not modify those values. You can use generated properties as a filtering or sorting condition on query.
 
-  * *`_`docId*: an unique ID of each JSON document.
-  * *`_`createdAt*: a long value of timestamp when the JSON document has been created.
-  * *`_`createdBy*: An user ID of the person created the JSON document.
-  * *`_`updatedAt*: a long value of timestamp when the JSON document has been updated.
-  * *`_`updatedBy*: An user ID of the person updatedthe JSON document.
+  * *`_`docId*: an unique ID of each doc.
+  * *`_`createdAt*: a long value of timestamp when the doc has been created.
+  * *`_`createdBy*: An user ID of the person created the doc.
+  * *`_`updatedAt*: a long value of timestamp when the doc has been updated.
+  * *`_`updatedBy*: An user ID of the person updated the doc.
