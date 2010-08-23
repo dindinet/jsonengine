@@ -4,7 +4,7 @@
 
 Here are some examples of GET method.
 
-=== Getting one doc for a docId ===
+=== Example 1: Getting one doc for a docId ===
 
 {{{
 /GET /_je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8
@@ -15,7 +15,7 @@ This GET request will return a doc for the docId "kzlQxBmFhuOLneBQMdvLR5jjGktR8K
   * Response (for status code 200):
     * {"name":"Foo",age:20,`_`docId:"kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8",`_`updatedAt:1266738290619, ... }
 
-=== Getting multiple docs for a condition (query) ===
+=== Example 2: Searching for docs with specified condition ===
 
 {{{
 /GET /_je/myDoc?cond=name.eq.Foo
@@ -25,6 +25,8 @@ This GET request returns an array of JSON documents for the following condition:
 
   * docType is "myDoc".
   * "name" property equals to Foo.
+
+=== Example 3: Searching for docs with sorting and limit ===
 
 {{{
 /GET /_je/myDoc?cond=age.ge.20&cond=age.lt.60&sort=age.asc&limit=10
