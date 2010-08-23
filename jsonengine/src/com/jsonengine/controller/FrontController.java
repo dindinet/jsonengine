@@ -190,8 +190,8 @@ public class FrontController extends Controller {
     private Object decodeOneParam(HttpServletRequest req, String paramName) {
         final String[] paramValues = req.getParameterValues(paramName);
         final Object paramValue;
-        if (paramValues.length == 1) {
-            // if there's only one param value, use it
+        if (paramValues.length == 1 || PARAM_DOCID.equals(paramName)) {
+            // if there's only one param value or paramName is _docId, use it
             paramValue = decodeOneParamValue(paramValues[0]);
         } else {
             // if there're multiple param values, put them into a List
