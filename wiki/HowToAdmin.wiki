@@ -38,14 +38,6 @@ Notes:
 
 On the Test tab, you can start a series of unit tests.
 
-=== External Testing ===
-
-By pressing the "Start External Testing" button at the bottom of the screen, the script inside the testing page will issue a series of test requests to the server and check if the results are correct. If the test finishes positively, a green bar will appear to confirm that your jsonengine is working properly on the cloud environment. 
-
-http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223044.png?1278595863
-
-=== Internal Testing ===
-
-By pressing the "Start Internal Testing" button, your browser will show a "Kotori Web JUnit Runner" page below. Click the "Check All" button and then click the "Run" button to start the testing. The script inside the jsonengine on the cloud will issue a series of test requests to itself and check if the results are correct. If a green bar appears, it indicates the jsonengine is working properly.
+By pressing the "Start Testing on the cloud" button, your browser will show a "Kotori Web JUnit Runner" page below. Click the "Check All" button and then click the "Run" button to start the testing. The script inside the jsonengine on the cloud will issue a series of test requests to itself and check if the results are correct. If a green bar appears, it indicates the jsonengine is working properly.
 
 http://img.f.hatena.ne.jp/images/fotolife/k/kazunori_279/20100708/20100708223045.png?1278595938
