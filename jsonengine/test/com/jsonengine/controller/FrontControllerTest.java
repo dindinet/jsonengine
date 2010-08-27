@@ -185,7 +185,15 @@ public class FrontControllerTest extends ControllerTestCase {
         final Map<String, Object> jeMap = jeDoc.getDocValues();
         assertThat(jeMap.get("age").toString(), is("40"));
         assertThat(jeMap.get("name"), is(betty.get("name")));
-
+    }
+    
+    @Test
+    public void duplicated_docIds() throws Exception {
+        tester.request.setMethod("post");
+        tester.param("_docId", "001");
+        tester.start("/_je/myDoc/001");
+        FrontController controller = tester.getController();
+        assertThat(controller, is(notNullValue()));        
     }
 
 }

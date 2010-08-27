@@ -56,7 +56,10 @@ public class CRUDRequest extends JERequest {
         if (jsonDoc != null) {
             // decode jsonDoc and fill it into jsonMap
             jsonMap = JSON.decode(jsonDoc, Map.class);
-            setDocId((String) jsonMap.get(JEDoc.PROP_NAME_DOCID));
+            final Object docId = jsonMap.get(JEDoc.PROP_NAME_DOCID);
+            if (docId != null) {
+                setDocId(docId.toString());
+            }
         } else {
             jsonMap = null;
         }
