@@ -153,8 +153,8 @@ public class FrontController extends Controller {
         // init the request
         initJERequest(jeReq, req);
 
-        // decode docId
-        String docId = asString(PARAM_DOCID);
+        // decode docId        
+        final String docId = req.getParameter(PARAM_DOCID);
         if (!StringUtil.isEmpty(docId)) {
             jeReq.setDocId(docId);
         }
