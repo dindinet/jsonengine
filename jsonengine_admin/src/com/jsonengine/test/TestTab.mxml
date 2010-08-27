@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
 	paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10"
-	xmlns:as3unit="http://as3unit.libspark.org/" horizontalAlign="center" 
-	show="focusManager.setFocus(btStart)">
+	xmlns:as3unit="http://as3unit.libspark.org/" horizontalAlign="center">
 
 	<mx:Script>
 		<![CDATA[
@@ -11,7 +10,7 @@
 			import com.jsonengine.test.AllTests;
 			
 			private function start():void {
-				as3unit.run(AllTests)
+//				as3unit.run(AllTests)
 			}
 			
 			private function startKtrwjr():void {
@@ -22,11 +21,11 @@
 		]]>
 	</mx:Script>
 
-	<as3unit:AS3Unit id="as3unit"/>
+<!--	<as3unit:AS3Unit id="as3unit"/> -->
 
 	<mx:HBox width="100%">
-		<mx:Button label="Start External Testing" click="start()" id="btStart"/>		
-		<mx:Button label="Start Internal Testing" click="startKtrwjr()"/>		
+<!--		<mx:Button label="Start External Testing" click="start()" id="btStart"/> -->
+		<mx:Button label="Start Testing on the cloud" click="startKtrwjr()"/>		
 	</mx:HBox>
 			
 </mx:VBox>

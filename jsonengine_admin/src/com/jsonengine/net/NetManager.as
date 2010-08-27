@@ -4,6 +4,7 @@ package com.jsonengine.net
 	
 	import mx.controls.Alert;
 	import mx.core.Application;
+	import mx.core.FlexGlobals;
 	import mx.managers.CursorManager;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.FaultEvent;
@@ -36,8 +37,8 @@ package com.jsonengine.net
             httpService.addEventListener(FaultEvent.FAULT, onFault);
             
             // determine URL host
-            var url:String = Application.application.url;
-            if (url.match(/file:.*/)) {
+            var url:String = FlexGlobals.topLevelApplication.url;
+            if (url && url.match(/file:.*/)) {
             	urlHost = URL_HOST_DEV;
             } else {
             	urlHost = "http://" + URLUtil.getServerNameWithPort(url);

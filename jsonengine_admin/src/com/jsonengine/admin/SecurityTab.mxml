@@ -28,7 +28,7 @@
 			private function readDocTypeInfo():void {
 				var params:URLVariables = new URLVariables();
 				params.sort = "docType.asc";
-				NetManager.i.sendReq("/_q/_docTypeInfo", params, "GET", showDocTypeInfo);
+				NetManager.i.sendReq("/_je/_docTypeInfo", params, "GET", showDocTypeInfo);
 			}
 			
 			private function showDocTypeInfo(result:Object):void {
@@ -38,7 +38,7 @@
 				
 				// try to select the current docTypeInfo on the DataGrid
 				for each (var o:Object in docTypeInfoList) {
-					if (o.docType == curDocTypeInfo.docType) {
+					if (curDocTypeInfo && o.docType == curDocTypeInfo.docType) {
 						dgDocTypeInfo.selectedItem = o;
 					}
 				}				
@@ -73,7 +73,7 @@
 			
 			private function onDeleteClick():void {
 				var params:URLVariables = new URLVariables();
-				params["_delete"] = "true";
+				params["_method"] = "delete";
 				NetManager.i.sendReq("/_je/_docTypeInfo/" + getDocId(), params, "POST", onDeleted);
 			}
 			
