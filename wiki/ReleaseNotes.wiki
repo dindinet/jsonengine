@@ -1,5 +1,9 @@
 #summary Release notes
 
+=== release 0.2.20100827 (Aug 27, 2010) ===
+
+ * Fixed bugs (issue 16, and Admin console)
+
 === release 0.2.20100823 (Aug 23, 2010) ===
 
  * Changed the query API.
