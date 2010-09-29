@@ -6,6 +6,8 @@ Once you have installed your jsonengine, you can access the jsonengine admin pag
 
  * http://my-appid.appspot.com/_admin/
 
+At the first time of accessing to the page, you will see the login page. Check "Sign in as Administrator" checkbox and press "Log In" button. You will see the admin page.
+
 On the admin page, you can use the tabs described below.
 
 == Security tab ==
