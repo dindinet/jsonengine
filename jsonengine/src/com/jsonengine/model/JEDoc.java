@@ -2,6 +2,8 @@ package com.jsonengine.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -112,12 +114,23 @@ public class JEDoc implements Serializable {
             // an index entry will be like: <docType>:<propName>:<propValue>
             final String propValue =
                 (new JEUtils()).encodePropValue(docValues.get(propName));
-            if (propValue != null) {
-                indexEntries.add(jeReq.getDocType()
-                    + ":"
-                    + propName
-                    + ":"
-                    + propValue);
+            final List<String> propValues = new LinkedList<String>();
+
+            // extract terms if the propName ends with "_"
+            if (propName.endsWith("_")) {
+                propValues.addAll((new JEUtils()).extractTerms(propValue));
+            }
+            propValues.add(propValue);
+
+            // add prop value
+            for (String pv : propValues) {
+                if (pv != null) {
+                    indexEntries.add(jeReq.getDocType()
+                        + ":"
+                        + propName
+                        + ":"
+                        + pv);
+                }
             }
         }
         return indexEntries;
@@ -274,7 +287,7 @@ public class JEDoc implements Serializable {
      * @param cReq
      */
     public void update(CRUDRequest cReq) {
-        
+
         // update properties
         setUpdatedAt(cReq.getRequestedAt());
         setUpdatedBy(cReq.getRequestedBy());

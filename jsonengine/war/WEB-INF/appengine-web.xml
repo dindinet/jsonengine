@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-	<application>jsonengine</application>
-	<version>2010-09-23</version>
-
-	<precompilation-enabled>true</precompilation-enabled>
-
-	<system-properties>
-	    <property name="slim3.hotReloading" value="false"/>
-	    <property name="java.util.logging.config.file" value="WEB-INF/classes/logging.properties"/>
-	</system-properties>
-	<sessions-enabled>false</sessions-enabled>
-
+<!-- Generated from app.yaml. Do not edit. -->
+<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>
+  <application>jsonengine</application>
+  <version>2010-09-23</version>
+  <static-files>
+  </static-files>
+  <resource-files>
+  </resource-files>
+  <ssl-enabled>true</ssl-enabled>
+  <precompilation-enabled>true</precompilation-enabled>
+  <sessions-enabled>false</sessions-enabled>
+  <admin-console>
+    <page name='jsonengine Admin' url='/_admin/'/>
+    <page name='jsonengine BBS Sample' url='/samples/bbs.html'/>
+  </admin-console>
 </appengine-web-app>
