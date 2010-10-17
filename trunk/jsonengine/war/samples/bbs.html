@@ -7,25 +7,31 @@
 <script type="text/javascript">
 
 $(function() {
-  query();
+  query(null);
 });
 
 // post a message
 function post(msg) {
   disableButton(true);
   $("#msgTxt").val("");
-  $.post("/_je/msg", { msg: msg }, function (result){	
-    query();
+  $.post("/_je/messages", { messageBody_: msg }, function (result){	
+    query(null);
   }, "text");
 }
 
 // get all posts and show it
-function query() {
+function query(keyword) {
   disableButton(true);
-  $.get("/_je/msg", { sort: "_createdAt.desc" }, function (result) {
+  
+  // build query params
+  if (keyword) params = {cond : "messageBody_.eq." + keyword};
+  else params = { sort: "_createdAt.desc", limit: 100};
+  
+  // do query
+  $.get("/_je/messages", params, function (result) {
     $("#messages").empty();
     for (i = 0; i < result.length; i++) {
-      $("#messages").append("<br>(" + getUserName(result[i]) + ") " + result[i].msg);        
+      $("#messages").append("<br>(" + getUserName(result[i]) + ") " + result[i].messageBody_);
     }
     disableButton(false);
   });
@@ -40,8 +46,10 @@ function getUserName(doc) {
 function disableButton(isDisabled) {
   if (isDisabled) {
     $("#sendBtn").attr("disabled", true);
+    $("#searchBtn").attr("disabled", true);
   } else {
     $("#sendBtn").removeAttr("disabled");
+    $("#searchBtn").removeAttr("disabled");
   }
 }
 
@@ -52,6 +60,8 @@ function disableButton(isDisabled) {
 <h1>BBS sample by jsonengine</h1>
 <input id="msgTxt" type="text" value=""  size="50">
 <input id="sendBtn" type="button" value="Send" onclick="post($('#msgTxt').val());" ><br>
+<input id="searchTxt" type="text" value=""  size="50">
+<input id="searchBtn" type="button" value="Search" onclick="query($('#searchTxt').val());" ><br>
 <span id="messages"></span><br>
 <br>
 <hr>

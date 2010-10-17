@@ -1,6 +1,15 @@
 package com.jsonengine.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slim3.memcache.Memcache;
 
@@ -18,6 +27,17 @@ public class JEUtils {
         "com.jsonengine.common.LogCounterService#timestamp";
 
     public static final int UUID_DIGITS = 32;
+
+    public static final String YAHOO_APPID_JA =
+        "QZWK7SGxg67FGZpOHgk2rMkwNL5EMOXhnNXqEDKpk32FwzA8PFcgFirTdE6zXJDnKtnp";
+
+    public static final String YAHOO_PARSE_JA =
+        "http://jlp.yahooapis.jp/MAService/V1/parse?filter=1|3|5|6|7|8|9|10&response=surface,reading&appid="
+            + YAHOO_APPID_JA
+            + "&sentence=";
+
+    private static Pattern termPattern =
+        Pattern.compile("<(surface|reading)>([^<]*)</(surface|reading)>");
 
     /**
      * Converts specified {@link BigDecimal} value to a String which can be
@@ -64,12 +84,13 @@ public class JEUtils {
         } else if (val instanceof Boolean) {
             return val.toString();
         } else if (val instanceof BigDecimal) {
-            return (new JEUtils()).convertBigDecimalToIndexKey((BigDecimal) val);
+            return (new JEUtils())
+                .convertBigDecimalToIndexKey((BigDecimal) val);
         } else {
             // try to convert the value to BigDecimal
             try {
-                return (new JEUtils()).convertBigDecimalToIndexKey(new BigDecimal(val
-                    .toString()));
+                return (new JEUtils())
+                    .convertBigDecimalToIndexKey(new BigDecimal(val.toString()));
             } catch (Exception e) {
                 // failed
             }
@@ -121,6 +142,47 @@ public class JEUtils {
         }
         Memcache.put(MC_KEY_TIMESTAMP, timestamp);
         return timestamp;
+    }
+
+    /**
+     * Extract terms from the text by using Yahoo's term extraction web service.
+     * 
+     * @param text
+     * @return a Set of extracted terms
+     */
+    public Set<String> extractTerms(String text) {
+        final Set<String> propValues = new HashSet<String>();
+        final String result = callURL(YAHOO_PARSE_JA + text);
+        final Matcher m = termPattern.matcher(result);
+        while (m.find()) {
+            propValues.add(m.group(2));
+        }
+        return propValues;
+    }
+
+    /**
+     * Calls the specified URL and returns the response text.
+     * 
+     * @param url
+     * @return String of the response
+     */
+    public String callURL(String url) {
+        final StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader =
+                new BufferedReader(new InputStreamReader(new URL(url)
+                    .openStream(), "UTF-8"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
 }

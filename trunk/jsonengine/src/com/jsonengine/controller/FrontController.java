@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -264,9 +265,16 @@ public class FrontController extends Controller {
 
         // try to convert propValue
         final Object propValueObj = convertPropValue(propValue);
-
-        // create confFilter
-        QueryFilter.addCondFilter(qReq, propName, condToken, propValueObj);
+        
+        // if propName ends with "_", extract terms from propValue;
+        if (propName.endsWith("_")) {
+            final Set<String> values = (new JEUtils()).extractTerms(propValue);
+            for (String value : values) {
+                QueryFilter.addCondFilter(qReq, propName, condToken, value);
+            }
+        } else {
+            QueryFilter.addCondFilter(qReq, propName, condToken, propValueObj);            
+        }
     }
 
     private void parseLimitFilter(final QueryRequest qReq,
