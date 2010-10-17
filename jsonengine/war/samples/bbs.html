@@ -12,22 +12,26 @@ $(function() {
 
 // post a message
 function post(msg) {
+
+  // disable the buttons and clear the text field
   disableButton(true);
   $("#msgTxt").val("");
+  
+  // post a message
   $.post("/_je/messages", { messageBody_: msg }, function (result){	
     query(null);
   }, "text");
 }
 
-// get all posts and show it
+// get all posts and list them
 function query(keyword) {
-  disableButton(true);
   
   // build query params
+  disableButton(true);
   if (keyword) params = {cond : "messageBody_.eq." + keyword};
   else params = { sort: "_createdAt.desc", limit: 100};
   
-  // do query
+  // query for the messages
   $.get("/_je/messages", params, function (result) {
     $("#messages").empty();
     for (i = 0; i < result.length; i++) {
@@ -59,7 +63,7 @@ function disableButton(isDisabled) {
 <body>
 <h1>BBS sample by jsonengine</h1>
 <input id="msgTxt" type="text" value=""  size="50">
-<input id="sendBtn" type="button" value="Send" onclick="post($('#msgTxt').val());" ><br>
+<input id="sendBtn" type="button" value="Post" onclick="post($('#msgTxt').val());" ><br>
 <input id="searchTxt" type="text" value=""  size="50">
 <input id="searchBtn" type="button" value="Search" onclick="query($('#searchTxt').val());" ><br>
 <span id="messages"></span><br>
