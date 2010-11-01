@@ -103,14 +103,14 @@ DELETE method (and POST method with `_`method=delete parameter) will delete the 
 
 === DELETE syntax ===
 
-To delete an existing JSON document, you can use DELETE HTTP method, or POST method with `_`delete=true parameter. You can delete all docs under a docType by omitting `<`docId`>`.
+To delete an existing JSON document, you can use DELETE HTTP method, or POST method with `_`method=delete parameter. You can delete all docs under a docType by omitting `<`docId`>`.
 
 {{{
 /DELETE /_je/<docType>/<docId>
 }}}
 
 {{{
-/POST /_je/<docType>/<docId>?_delete=true
+/POST /_je/<docType>/<docId>?_method=delete
 }}}
 
   * HTTP Request URI values
