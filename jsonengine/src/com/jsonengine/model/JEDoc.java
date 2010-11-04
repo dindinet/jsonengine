@@ -51,6 +51,8 @@ public class JEDoc implements Serializable {
      */
     public static final String PROP_NAME_CREATED_BY = "_createdBy";
 
+    private static final String PROP_NAME_DISPLAY_NAME = "_displayName";
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -104,6 +106,9 @@ public class JEDoc implements Serializable {
     private Set<String> buildIndexEntries(JERequest jeReq,
             Map<String, Object> docValues) {
         final Set<String> indexEntries = new HashSet<String>();
+        if (jeReq.getDisplayName() != null) {
+            docValues.put(PROP_NAME_DISPLAY_NAME, jeReq.getDisplayName());
+        }
         for (String propName : docValues.keySet()) {
 
             // skip any props start with "_" (e.g. _foo, _bar)
@@ -140,8 +145,9 @@ public class JEDoc implements Serializable {
         return propName.startsWith("_")
             && !(propName.equals(PROP_NAME_CREATED_AT)
                 || propName.equals(PROP_NAME_CREATED_BY)
-                || propName.equals(PROP_NAME_UPDATED_AT) || propName
-                .equals(PROP_NAME_UPDATED_BY));
+                || propName.equals(PROP_NAME_UPDATED_AT)
+                || propName.equals(PROP_NAME_UPDATED_BY) || propName
+                .equals(PROP_NAME_DISPLAY_NAME));
     }
 
     /**
@@ -295,8 +301,6 @@ public class JEDoc implements Serializable {
         getDocValues().put(JEDoc.PROP_NAME_DOCID, getDocId());
         getDocValues().put(PROP_NAME_UPDATED_AT, getUpdatedAt());
         getDocValues().put(PROP_NAME_CREATED_AT, getCreatedAt());
-        getDocValues().put(PROP_NAME_UPDATED_BY, getUpdatedBy());
-        getDocValues().put(PROP_NAME_CREATED_BY, getCreatedBy());
 
         // build index entries of the JEDoc
         setIndexEntries(buildIndexEntries(cReq, getDocValues()));

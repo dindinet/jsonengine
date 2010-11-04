@@ -141,7 +141,8 @@ public class DocTypeService {
      * @return true if the access is allowed.
      */
     public boolean isAccessible(String docType, String requestedBy,
-            String createdBy, boolean isRead, boolean isAdmin) {
+            String displayName, String createdBy, boolean isRead,
+            boolean isAdmin) {
 
         // get docTypeInfo
         final DocTypeInfo jdti = getDocTypeInfo(docType);
@@ -163,7 +164,11 @@ public class DocTypeService {
 
         // if it's "protected", check requestor has an ID
         if (ACCESS_LEVEL_PROTECTED.equals(jdti.getAccessLevel(isRead))) {
-            return requestedBy != null;
+            final boolean accessible = requestedBy != null;
+            if(accessible && !isRead) {
+                return (displayName != null);
+            }
+            return accessible;
         }
 
         // if it's "private", check if this is a create request, requestor =
@@ -173,7 +178,11 @@ public class DocTypeService {
                 !isRead && createdBy == null && requestedBy != null;
             final boolean isCreatorAccess =
                 requestedBy != null && requestedBy.equals(createdBy);
-            return isCreateRequest || isCreatorAccess || isAdmin;
+            final boolean accessible = isCreateRequest || isCreatorAccess || isAdmin;
+            if(accessible && !isRead) {
+                return (displayName != null);
+            }
+            return accessible;
         }
 
         // otherwise, disallow the access

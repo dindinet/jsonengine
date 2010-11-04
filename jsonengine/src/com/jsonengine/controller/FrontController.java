@@ -154,7 +154,7 @@ public class FrontController extends Controller {
         // init the request
         initJERequest(jeReq, req);
 
-        // decode docId        
+        // decode docId
         final String docId = req.getParameter(PARAM_DOCID);
         if (!StringUtil.isEmpty(docId)) {
             jeReq.setDocId(docId);
@@ -250,6 +250,9 @@ public class FrontController extends Controller {
             jeReq.setAdmin(JEUserUtils.isAdmin());
         }
 
+        // set display name
+        String displayName = JEUserUtils.getDisplayName();
+        jeReq.setDisplayName(displayName);
     }
 
     private void parseCondFilter(final QueryRequest qReq, final String cond) {
@@ -265,7 +268,7 @@ public class FrontController extends Controller {
 
         // try to convert propValue
         final Object propValueObj = convertPropValue(propValue);
-        
+
         // if propName ends with "_", extract terms from propValue;
         if (propName.endsWith("_")) {
             final Set<String> values = (new JEUtils()).extractTerms(propValue);
@@ -273,7 +276,7 @@ public class FrontController extends Controller {
                 QueryFilter.addCondFilter(qReq, propName, condToken, value);
             }
         } else {
-            QueryFilter.addCondFilter(qReq, propName, condToken, propValueObj);            
+            QueryFilter.addCondFilter(qReq, propName, condToken, propValueObj);
         }
     }
 
@@ -291,7 +294,7 @@ public class FrontController extends Controller {
     }
 
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-            throws UnsupportedEncodingException {
+            throws IOException {
 
         // do delete
         final CRUDRequest jeReq = createCRUDRequest(req);
@@ -304,6 +307,10 @@ public class FrontController extends Controller {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         } catch (JEAccessDeniedException e) {
+            if (JEUserUtils.isLoggedIn() == false) {
+                jsonRedirectToLogin();
+                return;
+            }
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -321,6 +328,14 @@ public class FrontController extends Controller {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         } catch (JEAccessDeniedException e) {
+            if (JEUserUtils.isLoggedIn() == false) {
+                jsonRedirectToLogin();
+                return;
+            }
+            if (jeReq.getDisplayName() == null) {
+                jsonRedirectToDisplayName();
+                return;
+            }
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         } catch (JENotFoundException e) {
@@ -350,6 +365,10 @@ public class FrontController extends Controller {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         } catch (JEAccessDeniedException e) {
+            if (JEUserUtils.isLoggedIn() == false) {
+                jsonRedirectToLogin();
+                return;
+            }
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -393,6 +412,10 @@ public class FrontController extends Controller {
         try {
             resultJson = (new QueryService()).query(qReq);
         } catch (JEAccessDeniedException e) {
+            if (JEUserUtils.isLoggedIn() == false) {
+                jsonRedirectToLogin();
+                return;
+            }
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -404,4 +427,38 @@ public class FrontController extends Controller {
         pw.close();
     }
 
+    /**
+     * redirect to loginURL.
+     * 
+     * @throws IOException
+     */
+    protected void jsonRedirectToLogin() throws IOException {
+        final String redirectURL =
+            JEUserUtils.getLoginURL("/user/index").toString();
+        jsonRedirect(redirectURL);
+    }
+
+    /**
+     * redirect to Setting DisplayName URL.
+     * 
+     * @throws IOException
+     */
+    protected void jsonRedirectToDisplayName() throws IOException {
+        final String redirectURL =
+            JEUtils.getRequestServer() + "/user/displayName";
+        jsonRedirect(redirectURL);
+    }
+
+    /**
+     * return the special json, instead of status code 302.
+     * 
+     * @throws IOException
+     */
+    protected void jsonRedirect(String redirectURL) throws IOException {
+        final String resultJson = "{ \"redirect\": \"" + redirectURL + "\"}";
+        response.setContentType(RESP_CONTENT_TYPE);
+        final PrintWriter pw = response.getWriter();
+        pw.append(resultJson);
+        pw.close();
+    }
 }

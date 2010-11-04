@@ -13,6 +13,8 @@ public class DocTypeServiceTest extends AppEngineTestCase {
 
     public static final String TEST_USER_BAR = "bar";
 
+    public static final String DISPLAY_NAME = "display_name";
+    
     private DocTypeService service = new DocTypeService();
 
     @Test
@@ -41,6 +43,8 @@ public class DocTypeServiceTest extends AppEngineTestCase {
         assertFalse(isAccessibleByPublic(false));
         assertTrue(isAccessibleByProtected(true));
         assertTrue(isAccessibleByProtected(false));
+        assertTrue(isAccessibleByProtectedWithoutDisplayName(true));
+        assertFalse(isAccessibleByProtectedWithoutDisplayName(false));
     }
 
     @Test
@@ -55,6 +59,8 @@ public class DocTypeServiceTest extends AppEngineTestCase {
         assertFalse(isAccessibleByProtected(false));
         assertTrue(isAccessibleByPrivate(true));
         assertTrue(isAccessibleByPrivate(false));
+        assertTrue(isAccessibleByPrivateWithoutDisplayName(true));
+        assertFalse(isAccessibleByPrivateWithoutDisplayName(false));
     }
 
     @Test
@@ -77,6 +83,7 @@ public class DocTypeServiceTest extends AppEngineTestCase {
         return service.isAccessible(
             TEST_DOCTYPE,
             null,
+            null,
             TEST_USER_BAR,
             isRead,
             false);
@@ -86,6 +93,7 @@ public class DocTypeServiceTest extends AppEngineTestCase {
         return service.isAccessible(
             TEST_DOCTYPE,
             TEST_USER_FOO,
+            DISPLAY_NAME ,
             TEST_USER_BAR,
             isRead,
             false);
@@ -95,15 +103,37 @@ public class DocTypeServiceTest extends AppEngineTestCase {
         return service.isAccessible(
             TEST_DOCTYPE,
             TEST_USER_BAR,
+            DISPLAY_NAME,
             TEST_USER_BAR,
             isRead,
             false);
     }
 
+    private boolean isAccessibleByProtectedWithoutDisplayName(boolean isRead) {
+        return service.isAccessible(
+            TEST_DOCTYPE,
+            TEST_USER_FOO,
+            null,
+            TEST_USER_BAR,
+            isRead,
+            false);
+    }
+
+    private boolean isAccessibleByPrivateWithoutDisplayName(boolean isRead) {
+        return service.isAccessible(
+            TEST_DOCTYPE,
+            TEST_USER_BAR,
+            null,
+            TEST_USER_BAR,
+            isRead,
+            false);
+    }
+    
     private boolean isAccessibleByAdmin(boolean isRead) {
         return service.isAccessible(
             TEST_DOCTYPE,
             TEST_USER_BAR,
+            null,
             TEST_USER_BAR,
             isRead,
             true);

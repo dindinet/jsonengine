@@ -142,8 +142,9 @@ public class FrontControllerTest extends ControllerTestCase {
         assertThat(jeDoc, is(notNullValue()));
         assertThat(jeDoc.getDocType(), is("myDoc"));
 
-        Map<String, Object> values = jeDoc.getDocValues();
-        String createdBy = values.get(JEDoc.PROP_NAME_CREATED_BY).toString();
+        //Map<String, Object> values = jeDoc.getDocValues();
+        //String createdBy = values.get(JEDoc.PROP_NAME_CREATED_BY).toString();
+        String createdBy = jeDoc.getCreatedBy();
         assertThat(createdBy, is("unitTest@gmail.com"));
     }
 
