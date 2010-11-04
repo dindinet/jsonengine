@@ -22,6 +22,9 @@ public abstract class JERequest {
     // an User ID of the requestor
     private String requestedBy;
 
+    // an User displayName of the requestor
+    private String displayName;
+
     public JERequest() {
         super();
     }
@@ -38,6 +41,10 @@ public abstract class JERequest {
         return requestedBy;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     /**
      * Checks if the docType is accessible for this request.
      * 
@@ -51,6 +58,7 @@ public abstract class JERequest {
         return (new DocTypeService()).isAccessible(
             docType,
             requestedBy,
+            displayName,
             createdBy,
             isRead,
             isAdmin);
@@ -86,6 +94,10 @@ public abstract class JERequest {
 
     public void setRequestedBy(String requestedBy) {
         this.requestedBy = requestedBy;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
 }

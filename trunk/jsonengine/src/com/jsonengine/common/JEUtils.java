@@ -11,7 +11,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slim3.memcache.Memcache;
+import org.slim3.util.RequestLocator;
 
 /**
  * Provides utility methods for jsonengine.
@@ -185,4 +188,14 @@ public class JEUtils {
         return sb.toString();
     }
 
+    public static String getRequestServer() {
+        final HttpServletRequest request = RequestLocator.get();
+        StringBuilder sb =
+            new StringBuilder(request.getScheme()).append("://").append(request.getServerName());
+        if ((request.getScheme().equalsIgnoreCase("http") && request.getServerPort() != 80)
+            || (request.getScheme().equalsIgnoreCase("https") && request.getServerPort() != 443)) {
+            sb.append(":").append(request.getServerPort());
+        }
+        return sb.toString();
+    }
 }
