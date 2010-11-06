@@ -35,7 +35,7 @@ And you will get the following response:
 To update an existing doc, put its docId on the path:
 
     * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?age=25
-    * POST /`_`je/myDoc?`_`doc={"age":25}
+    * POST /`_`je/myDoc/kzlQxBmFhuOLneBQMdvLR5jjGktR8KG8?`_`doc={"age":25}
 
 You can specify only the properties you want to update.
 
