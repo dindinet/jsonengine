@@ -44,12 +44,13 @@ You can specify only the properties you want to update.
 POST method will create or update a doc.
 
 {{{
-/POST /_je/<docType>
+/POST /_je/<docType>[/<docId>]
 }}}
 
   * HTTP Request URI values
     * *docType* (required): docType (document type) of the doc.
       * Similar to table name or class name. For example, "address" docType may be for saving a doc which contains address info.
+    * *docId* (optional): docID (document id) of the doc to be updated.
 
 You can pass a doc to jsonengine by either "FORM parameter style parameters" or "JSON doc style parameters".
 
@@ -87,11 +88,11 @@ And you will get one of the following HTTP response:
 PUT method will only update an existing doc and will not create a new doc. If it can not find existing doc for specified docId, it will return a status code 404. You can also call this method by putting `_`method=put parameter on POST method.
 
 {{{
-/PUT /_je/<docType>
+/PUT /_je/<docType>[/<docId>]
 }}}
 
 {{{
-/POST /_je/<docType>?_method=put
+/POST /_je/<docType>[/<docId>]?_method=put
 }}}
 
 The syntax of HTTP request parameters and HTTP response are the same as POST method, except for that PUT can return the following HTTP response:
