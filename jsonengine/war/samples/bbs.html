@@ -35,7 +35,8 @@ function query(keyword) {
   $.get("/_je/messages", params, function (result) {
     $("#messages").empty();
     for (i = 0; i < result.length; i++) {
-      $("#messages").append("<br>(" + getUserName(result[i]) + ") " + result[i].messageBody_);
+      var msg = $("<div/>").text("(" + getUserName(result[i]) + ") " + result[i].messageBody_);
+      $("#messages").append(msg);
     }
     disableButton(false);
   });
