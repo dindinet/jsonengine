@@ -65,7 +65,7 @@ On Windows command prompt:
 On Mac/Linux shell:
 {{{
 > cd appengine-java-sdk-dir/bin
-> dev_appserver.sh jsonengine-dir/war
+> ./dev_appserver.sh jsonengine-dir/war
 }}}
 
 Now your jsonengine is running on the dev server. You can open the following URL to check if your jsonengine is working properly.
@@ -112,7 +112,7 @@ On Windows command prompt:
 On Mac/Linux shell:
 {{{
 > cd appengine-java-sdk-dir/bin
-> appcfg.sh update jsonengine-dir/war
+> ./appcfg.sh update jsonengine-dir/war
 }}}
 
   * Enter your Google username and password at the prompts. Once the updating has finished successfully, it will show a message: "Update completed successfully."
