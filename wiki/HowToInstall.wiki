@@ -71,7 +71,7 @@ On Mac/Linux shell:
 Now your jsonengine is running on the dev server. You can open the following URL to check if your jsonengine is working properly.
 
   * http://localhost:8080/samples/bbs.html
-  ** Note: this sample code does not work on the dev server now. Please replace all "messageBody_" to "messageBody" in /samples/bbs.html to solve this problem. Or you can just skip this process and test it on the App Engine cloud.
+  ** Note: this sample code does not work on the dev server now. Please replace all "messageBody`_`" to "messageBody" in /samples/bbs.html to solve this problem. Or you can just skip this process and test it on the App Engine cloud.
 
 == Running jsonengine on App Engine cloud ==
 
